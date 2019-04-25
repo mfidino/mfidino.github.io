@@ -1,0 +1,7 @@
+0000000000000000000000000000000000000000 cc85632923b6ea63fedcd003edfd7e079f327110 Mason Fidino <mfidino@lpzoo.org> 1552569924 -0500	branch: Created from master
+cc85632923b6ea63fedcd003edfd7e079f327110 725a3454207b14f87630a77adf1b2a995deab0b2 Mason Fidino <mfidino@lpzoo.org> 1552570336 -0500	commit: added R stuff to page
+725a3454207b14f87630a77adf1b2a995deab0b2 c0dddbb0da52bf89aa988a00ba6d6c7f3463a925 Mason Fidino <mfidino@lpzoo.org> 1552570888 -0500	commit: got plots running
+c0dddbb0da52bf89aa988a00ba6d6c7f3463a925 07c9b8de5729834a8fc48c11f65f2f164f56a88d Mason Fidino <mfidino@lpzoo.org> 1552571210 -0500	commit: put date in image plots
+07c9b8de5729834a8fc48c11f65f2f164f56a88d 673c27c512b07f1578f9f4715d354557e3021e41 Mason Fidino <mfidino@lpzoo.org> 1552574562 -0500	commit: preparing report generation
+673c27c512b07f1578f9f4715d354557e3021e41 7db61dcd18bf917ea0053fc09622682e2992b6de Mason Fidino <mfidino@lpzoo.org> 1552575582 -0500	commit: moved markdown functions
+7db61dcd18bf917ea0053fc09622682e2992b6de fc0493c3f1ad99800f629978ffca2718248ca7d9 Mason Fidino <mfidino@lpzoo.org> 1552575876 -0500	commit: new report for 2019-3-18

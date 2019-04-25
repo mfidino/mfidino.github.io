@@ -1,0 +1,32 @@
+---
+layout: default
+title: Time reports
+permalink: /timereport/
+---
+
+<div class="posts">
+  <div class="container">
+    This page contains reports that track how much time I spend on different
+    projects to make it easier for me to shift my priorities from week to week.
+    I track the time I spend on different tasks with
+    <a href="https://clockify.me/tracker">clockify</a>. I then created a suite
+    of <code>R</code> functions to collect these data through the clockify api,
+    summarize my time spent, and auto-generate a markdown file that reports on
+    what I have worked on. I generate these reports every other Monday.
+  </div>
+  <br />
+  <div class="container">
+    You can see how I did this on my github page
+    <a href="https://github.com/mfidino/mfidino.github.io/tree/master/R">here</a
+    >.
+  </div>
+  {% for post in site.posts %} {% if post.category != null%} {% else %}
+  <article class="post">
+    <h3><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
+
+    <div class="entry">{{ post.excerpt }}</div>
+
+    <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
+  </article>
+  {% endif %} {% endfor %}
+</div>

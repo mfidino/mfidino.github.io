@@ -1,0 +1,33 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[submodule]
+	active = .
+[remote "origin"]
+	url = https://github.com/mfidino/mfidino.github.io.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[remote "upstream"]
+	url = https://github.com/barryclark/jekyll-now.git
+	fetch = +refs/heads/*:refs/remotes/upstream/*
+[branch "add-R-report"]
+	remote = origin
+	merge = refs/heads/add-R-report
+[branch "research-page"]
+	remote = origin
+	merge = refs/heads/research-page
+[branch "modify-collapsible"]
+	remote = origin
+	merge = refs/heads/modify-collapsible
+[branch "new-home-page"]
+	remote = origin
+	merge = refs/heads/new-home-page
+[branch "multiple-blog-pages"]
+	remote = origin
+	merge = refs/heads/multiple-blog-pages

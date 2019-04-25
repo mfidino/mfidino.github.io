@@ -1,0 +1,6 @@
+# pack-refs with: peeled fully-peeled sorted 
+8c8154bc9cdfb4cba19f1f3a3eba05b602a70ccd refs/remotes/origin/kramdown-and-rouge
+d77d96ab85fbffa72bd4b00fc9fad2af03ee6938 refs/remotes/origin/master
+5d93016e580ee17ec5f9d3d4fe9e8e18805c7708 refs/tags/v1.0.0
+70fda2a5b43d1942f116fefe680eabe702070638 refs/tags/v1.1.0
+da13f8d9294dededb628904880808a713c0e9a60 refs/tags/v1.2.0
