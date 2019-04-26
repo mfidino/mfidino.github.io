@@ -251,7 +251,7 @@ plot_weeks <- function(x, filename = "weeks_since.jpg",
   par(mar =c(6,12,0.5,1))
 
   xmax <- as.numeric(ceiling(max(x$last_touch)/5)*5)
-  if(xmax < 20){
+  if(xmax <= 20){
     xse <- 3
   } else if(xmax > 20){
     xse <- 5
