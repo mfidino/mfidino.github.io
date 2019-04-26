@@ -35,14 +35,15 @@ report_summary <- function(x = NULL, next_meeting = NULL){
     dplyr::arrange(dplyr::desc(prop_time)) %>%
     dplyr::left_join(., x, by = "project_name") %>%
     dplyr::select(project_name, client_category, prop_time) %>%
-    dplyr::distinct()
+    dplyr::distinct() %>%
+    na.omit()
   check_tibble(by_project)
   cat(crayon::cyan( cli::symbol$bullet," Time spent on each client:    "))
   by_client <- first_pass %>%
     dplyr::group_by(client_name) %>%
     dplyr::summarise(prop_time = sum(prop_time)) %>%
     dplyr::arrange(dplyr::desc(prop_time))%>%
-    dplyr::left_join(., x, by = "client_name") %>%
+    dplyr::left_join(., x[,c("client_name", "client_category")], by = "client_name") %>%
     dplyr::select(client_name, client_category, prop_time) %>%
     dplyr::distinct()
   check_tibble(by_client)

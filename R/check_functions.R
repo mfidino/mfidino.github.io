@@ -18,7 +18,7 @@ check_clients <- function(clients = NULL){
     # update the client names
     clients_csv <- clients_csv %>%
       dplyr::select(client_id, client_category) %>%
-      dplyr::left_join(., clients, by = 'client_id') %>%
+      dplyr::right_join(., clients, by = 'client_id') %>%
       dplyr::select(client_id, client_name, client_category)
     # fill NAs
     if(any(is.na(clients_csv$client_category))){
