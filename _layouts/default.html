@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html>
   <!-- Mathjax Support -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: [
+        "MathMenu.js",
+        "MathZoom.js",
+        "AssistiveMML.js",
+        "a11y/accessibility-menu.js"
+      ],
+      jax: ["input/TeX", "output/CommonHTML"],
+      TeX: {
+        extensions: [
+          "cancel.js",
+          "color.js"
+        ],
+        Macros: {
+      ccancel: ['\\color{#1}{\\cancel{\\color{black}{ #2}}}\\color{black}',2]
+    }
+      }
+    });
+  </script>
   <script
     type="text/javascript"
     async
