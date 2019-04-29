@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html>
   <!-- Mathjax Support -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: [
+        "MathMenu.js",
+        "MathZoom.js",
+        "AssistiveMML.js",
+        "a11y/accessibility-menu.js"
+      ],
+      jax: ["input/TeX", "output/CommonHTML"],
+      TeX: {
+        extensions: [
+          "cancel.js",
+          "color.js"
+        ],
+        Macros: {
+      ccancel: ['\\color{#1}{\\cancel{\\color{black}{ #2}}}\\color{black}',2]
+    }
+      }
+    });
+  </script>
   <script
     type="text/javascript"
     async
@@ -50,9 +70,7 @@
 
           <nav>
             <a href="{{ site.baseurl }}/">Home</a>
-            <!--
-              <a href="{{ site.baseurl }}/blog">Blog</a> TURN OFF BLOG FOR NOW
-            -->
+            <a href="{{ site.baseurl }}/blog">Blog</a>
             <a href="{{ site.baseurl }}/research">Research</a>
             <a href="{{ site.baseurl}}/timereport">Time reports</a>
             <a href="{{ site.CVurl }}">CV</a>
