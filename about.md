@@ -18,4 +18,4 @@ or
 
 ### Contact me
 
-[mfidino@lpzoo.org](mailto:mfidino@lpzoo.org)
+[mfidino(at)lpzoo(dot)org](mailto:mfidino@lpzoo.org)
