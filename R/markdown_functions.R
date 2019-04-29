@@ -4,6 +4,7 @@ cat(
 paste0("---\n"),
 paste0("layout: post\n"),
 paste0("title: Time report for ",as.character(x$next_meeting),"\n"),
+paste0("category: timereport\n"),
 paste0("---\n\n"),
 paste0("This is a summary of what I have done between ", as.character(x$time_range$start)," and " ,as.character(x$time_range$end),".\n"),
 paste0("At the most broad scale, here is the proportion of time I have spent working across four different categories: for UWIN, for those in UWI, for those in the Conservation & Science department, and external collaborations.\n"),
