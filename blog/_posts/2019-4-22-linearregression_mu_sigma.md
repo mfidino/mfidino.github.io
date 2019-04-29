@@ -4,7 +4,9 @@ title: Linear regression&#58 Using maximum likelihood to estimate the mean and s
 category: blog
 ---
 
-When a regression is fit to data in `R`, there is a fair bit of math that occurs *behind the scenes* between when the regression is executed and what `R` formats and returns. Doing so is generally useful as it does not require a person to code common statistical algorithms on their own. However, the math that is hidden away is really interesting! This set of posts breaks down a bit of the math that may occur when a regression model is fit to data. Starting here, I will discuss how to use maximum likelihood to estimate the mean and standard deviation of a normal distribution. Maximum likelihood is an incredibly useful method that determines the most likely values for the parameters in a model given the data. In very simple cases, like the example here, these values can actually be calculated by hand.
+When a regression is fit to data in `R`, there is a fair bit of math that occurs *behind the scenes* between when the regression is executed and what `R` formats and returns. Hiding some of this code and math is generally useful as it does not require a person to code common statistical algorithms on their own. However, the math that is hidden away is not only interesting but also important to understand regression.
+
+This set of posts breaks down a bit of the math that may occur when a regression model is fit to data. Starting here, I will discuss how to use maximum likelihood to estimate the mean and standard deviation of a normal distribution from data. Maximum likelihood is an incredibly useful method that determines the most likely values for the parameters in a model given the data. In very simple cases, like the example here, these values can actually be calculated by hand.
 
 
 ### Motivating example
