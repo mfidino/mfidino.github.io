@@ -1,5 +1,5 @@
 make_md <- function(x = NULL){
-  sink(paste0("./_posts/",x$next_meeting,"-time_report.md"))
+  sink(paste0("./timereport/_posts/",x$next_meeting,"-timereport_",x$next_meeting,".md"))
 cat(
 paste0("---\n"),
 paste0("layout: post\n"),
