@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Time reports
-permalink: /timereport/
 ---
 
 <div class="posts">
@@ -20,7 +19,7 @@ permalink: /timereport/
     <a href="https://github.com/mfidino/mfidino.github.io/tree/master/R">here</a
     >.
   </div>
-  {% for post in site.posts %} {% if post.category != null%} {% else %}
+  {% for post in site.posts %} {% if post.category == 'timereport'%}
   <article class="post">
     <h3><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
 
