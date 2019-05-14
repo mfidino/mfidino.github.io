@@ -11,7 +11,7 @@ title: Blog
     (hopefully) make it a little easier to understand and interpret the output
     of a given model when conducting different analyses.
   </div>
-  {% for post in site.posts %} {% if post.category == 'blog'%}
+  {% for post in site.posts %} {% if post.category contains 'blog' %}
   <article class="post">
     <h4><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h4>
   </article>

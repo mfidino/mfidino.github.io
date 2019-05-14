@@ -461,3 +461,8 @@ p {
 .aligncenter {
   text-align: center;
 }
+
+img[src*="#center"] {
+  display: block;
+  margin: auto;
+}
