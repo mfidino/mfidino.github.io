@@ -7,6 +7,8 @@ jpeg("./blog/images/normal_plot1.jpg", quality = 100)
 par(mar = c(5,5,0.5,0.5))
 plot(y~x, type ='l', bty = 'l', las = 1, lwd = 4, xlab = 'Experimental outcome',
      ylab = 'Probability density of outcome', col = 'blue', cex.lab = 1.5)
+polygon(c(x, rev(x)), c(y,rep(0, length(y))), col = scales::alpha('blue', 0.5),
+        border = NA)
 dev.off()
 
 
@@ -17,7 +19,11 @@ y1 <- dnorm(x, 0, 2)
 y2 <- dnorm(x, -2, 1)
 plot(y1~x, type ='l', bty = 'l', las = 1, lwd = 4, xlab = 'Experimental outcome',
      ylab = 'Probability density of outcome', col = 'blue', cex.lab = 1.5, ylim = c(0, 0.5))
-lines(y2 ~ x, col ='gray30', lwd = 4, lty = 2)
+polygon(c(x, rev(x)), c(y1,rep(0, length(y))), col = scales::alpha('blue', 0.5),
+        border = NA)
+polygon(c(x, rev(x)), c(y2,rep(0, length(y))), col = scales::alpha('gray30', 0.5),
+        border = NA)
+lines(y2 ~ x, col ='gray30', lwd = 4)
 text(x = 2.75, y = 0.1, pos = 4, labels = 'Normal(0, 2)', col = 'blue', cex = 1.5)
 text(x = -0.75, y = 0.3, pos = 4, labels = 'Normal(-2, 1)', col = 'gray30', cex=1.5)
 dev.off()
