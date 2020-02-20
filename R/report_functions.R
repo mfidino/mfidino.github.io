@@ -54,7 +54,7 @@ report_summary <- function(x = NULL, next_meeting = NULL){
     dplyr::select( start, project_name) %>%
     dplyr::summarise(last_touch = difftime(Sys.Date(), as.Date(start),
                                            units = "weeks") %>%
-                       ceiling) %>%
+                        unique %>% ceiling) %>%
     dplyr::arrange(dplyr::desc(last_touch)) %>%
     dplyr::left_join(., x, by = "project_name") %>%
     dplyr::select(project_name, client_name, last_touch) %>%

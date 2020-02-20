@@ -28,9 +28,10 @@ get_times <- function(check_first = FALSE){
       my_response <- httr::VERB(
         verb = "GET",
         url = paste0(
-          "https://api.clockify.me/api/workspaces/",
+          "https://api.clockify.me/api/v1/workspaces/",
           keyring::key_get("clockify_wsid"),
-          "/timeEntries/?page=",
+          "/user/5c7d71c7b079877a78ba1de1",
+          "/time-entries/?page=",
           page
         ),
         httr::add_headers(`X-Api-Key` = keyring::key_get("clockify_pw")),
