@@ -1,16 +1,33 @@
 
 
-do_everything("2020-3-2")
+do_everything("2020-4-27")
 
 
+str(dat)
+
+dat$start <-lubridate::ymd(dat$start)
+dat$end <-lubridate::ymd(dat$end)
+
+# add more time
+test <- dplyr::bind_rows(
+  dat,
+  data.frame(
+    start = seq(tail(dat$start,1), length.out = 50, by = "14 days"),
+    end = seq(tail(dat$end,1), length.out = 50, by = "14 days"),
+    stringsAsFactors = FALSE
+  )
+)
+
+dat <- apply(dat, 2, function(x) lubridate::ymd(as.character(x)))
 #####
 
 test <- get_all() %>%
   check_all() %>%
   join_data()
-
 test2 <- test %>%
   dplyr::filter(lubridate::year(start) == 2019)
+
+write.csv(test, "./data/meeting_days.csv", row.names = FALSE)
 
 
   dplyr::filter(test$end < lubridate::ymd_hms('2020-1-1 0:00:00'))
