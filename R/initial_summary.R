@@ -1,6 +1,6 @@
 
 
-do_everything("2020-6-22")
+do_everything("2020-7-6")
 
 
 str(dat)
