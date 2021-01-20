@@ -9,7 +9,13 @@ get_clients <- function(){
     encode = "json"
   )
   #
-  client_content <- httr::content(client_response) %>%
+  client_content <- httr::content(client_response)
+  to_go <- which(names(client_content[[1]]) == "address")
+  client_content <- lapply(
+    client_content,
+    function(x) x[-to_go]
+    )
+    client_content <- client_content %>%
     dplyr::bind_rows() %>%
     dplyr::arrange(name) %>%
     dplyr::select(., -dplyr::starts_with("workspace")) %>%
