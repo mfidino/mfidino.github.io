@@ -1,6 +1,6 @@
 
 
-do_everything("2021-01-18")
+do_everything("2021-03-01")
 
 # For year end ARCs reporting
 arcs <- get_all() %>%
