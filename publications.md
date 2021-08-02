@@ -34,7 +34,7 @@ considerations for nature-based urban planning. *Landscape and Urban Planning*,
 
 
 [20] Magle, S. B., Kay, C., Fake, K., **Fidino, M.**, Murray, M. H., Buckley, J., and Lehrer,
-E. W. (2021). Why do animals live in cities? *Frontiers for Young Minds*, 9:566272. [LINK](https://kids.frontiersin.org/articles/10.3389/frym.2021.566272)
+E. W. (2021). Why do animals live in cities? *Frontiers for Young Minds*, 9:566272. [Link](https://kids.frontiersin.org/articles/10.3389/frym.2021.566272)
 
 #### 2020
 
@@ -57,8 +57,7 @@ during the covid-19 global shutdown? *Ecosphere*, 11(8):e03215. [Link](https://e
 
 [16] **Fidino, M.**, Simonis, J. L., and Magle, S. B. (2019). A multi-state dynamic occupancy
 model to estimate local colonization-extinction rates and patterns of co-occurrence
-between two or more interacting species. *Methods in Ecology and Evolution*, 10(2):233–
-244. [PDF](../public/Fidino_2019.pdf)
+between two or more interacting species. *Methods in Ecology and Evolution*, 10(2):233–244. [PDF](../public/Fidino_2019.pdf)
 
 [15] Gallo<sup>\*</sup>, T., **Fidino<sup>\*</sup>, M.**, Lehrer, E. W., and Magle, S. B. (2019). Urbanization alters
 predator avoidance behaviors. *Journal of Animal Ecology*, 88(5):793–803. [PDF](../public/Gallo_2019.pdf)
