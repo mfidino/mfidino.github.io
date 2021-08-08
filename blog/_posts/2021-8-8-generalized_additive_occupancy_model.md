@@ -380,26 +380,26 @@ my_inits <- function(chain){
 			b = rnorm(length(tmp_jags$jags.ini$b), tmp_jags$jags.ini$b, 0.2),
 			lambda = rgamma(1,1,1),
 			.RNG.name = switch(chain,
-												 "1" = "base::Wichmann-Hill",
-												 "2" = "base::Wichmann-Hill",
-												 "3" = "base::Super-Duper",
-												 "4" = "base::Mersenne-Twister",
-												 "5" = "base::Wichmann-Hill",
-												 "6" = "base::Marsaglia-Multicarry",
-												 "7" = "base::Super-Duper",
-												 "8" = "base::Mersenne-Twister"),
+			  "1" = "base::Wichmann-Hill",
+			  "2" = "base::Wichmann-Hill",
+			  "3" = "base::Super-Duper",
+			  "4" = "base::Mersenne-Twister",
+			  "5" = "base::Wichmann-Hill",
+			  "6" = "base::Marsaglia-Multicarry",
+			  "7" = "base::Super-Duper",
+			  "8" = "base::Mersenne-Twister"),
 			.RNG.seed = sample(1:1e+06, 1)
 		)
 	}
 	return(switch(chain,
-								"1" = gen_list(chain),
-								"2" = gen_list(chain),
-								"3" = gen_list(chain),
-								"4" = gen_list(chain),
-								"5" = gen_list(chain),
-								"6" = gen_list(chain),
-								"7" = gen_list(chain),
-								"8" = gen_list(chain)
+		"1" = gen_list(chain),
+		"2" = gen_list(chain),
+		"3" = gen_list(chain),
+		"4" = gen_list(chain),
+		"5" = gen_list(chain),
+		"6" = gen_list(chain),
+		"7" = gen_list(chain),
+		"8" = gen_list(chain)
 	)
 	)
 }
