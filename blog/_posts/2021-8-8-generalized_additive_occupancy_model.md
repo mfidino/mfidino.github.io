@@ -7,7 +7,7 @@ category: blog
 
 Occupancy models, generally speaking, allow you to estimate the effect of spatial or temporal covariates on a species distribution. Through this example, we will add a spatial smoothing function into an occupancy model using the `jagam()` function in the `mgcv` package. This already long post is not
 meant to be an introduction into generalized additive models (GAMs) or occupancy models. There are already lots of resources freely available online,
-such as [this review paper on occupancy models](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100), [this review paper on hierarchical GAMS](https://peerj.com/articles/6876/?td=tw), and [this paper that included a GAM into an occupancy model](https://www.nature.com/articles/s41598-019-48851-5). Instead, I am simply walking through how you may add a GAM into a Bayesian occupancy model but cannibalizing some of the code that comes out of the `jagam()` function in the `mgcv` package.  
+such as [this review paper on occupancy models](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100), [this review paper on hierarchical GAMS](https://peerj.com/articles/6876/?td=tw), and [this paper that included a GAM into an occupancy model](https://www.nature.com/articles/s41598-019-48851-5). Instead, I am simply walking through how you may add a GAM into a Bayesian occupancy model by cannibalizing some of the code that comes out of the `jagam()` function in the `mgcv` package.  
 
 
 ### Why would you want to do this?
