@@ -4,7 +4,6 @@ title: Using the `mgcv` package to create a generalized additive occupancy model
 category: blog
 ---
 
-## Using the `mgcv` package to create a generalized additive occupancy model in `R`
 
 Occupancy models, generally speaking, allow you to estimate the effect of spatial or temporal covariates on a species distribution. Through this example, we will add a spatial smoothing function into an occupancy model using the `jagam()` function in the `mgcv` package. This already long post is not
 meant to be an introduction into generalized additive models (GAMs) or occupancy models. There are already lots of resources freely available online,
@@ -230,7 +229,7 @@ legend(
   bty = "n"
 )
 ```
-And here is where we have the opportunity to detect the species. Generally, this species is not found in that central circle on the landscape.
+And here are the sites where this species does and does not occupy. Generally, this species is not found in that central circle on the landscape.
 
 
 ![Species presence or absence plotted over the spatially autocorrelated data]({{site.url}}/blog/images/gaom3.jpeg#center)
@@ -263,7 +262,7 @@ The `mgcv::jagam()` function essentially spins up a GAM in the JAGS
 programming language. Therefore, all we need to do is pull out the essential
 pieces of that JAGS script and add it to a standard Bayesian occupancy model. Aside
 from specifying the type of smoother you want to fit, you also need
-to input the number of basis functions to generate for the GAM. The higher the number, the slower the model fit, but you also want to make sure you add enough to be able to capture the non-linear complexity in the data (see `?mgcv::choose.k` for more details on this). For this somewhat example, we are going to use 15. Finally, `mgcv::jagam()` also creates a few
+to input the number of basis functions to generate for the GAM. The higher the number, the slower the model fit, but you also want to make sure you add enough to be able to capture the non-linear complexity in the data (see `?mgcv::choose.k` for more details on this). For this example, we are going to use 15. Finally, `mgcv::jagam()` also creates a few
 data objects we need to pass to the model, so it's important to assign the output to some variable.
 
 ```R
@@ -309,7 +308,7 @@ model {
   }
 }
 ```
-Most overything we need is towards the bottom of the script (i.e., we don't need the top few lines). After removing some
+Most everything we need is towards the bottom of the script. After removing some
 for loops we did not need and modifying some priors we end up with:
 
 ```R
@@ -426,7 +425,7 @@ my_sum <- summary(my_mod)
 
 ### Step 4. Check how well the model did
 
-Because we have simulated data, we can actually see how well the smoothing term captured the spatial autocorrelation in our data. Now, our goal is for the model to estimate the simulated values in our spatially autocorrelated data. We used 15 basis functions to do this. What's important to note here is that the individual regression coefficients for each of the `b` should not especially be interpretted on their own. Instead, it is the combined effect of all of them that create our spatial pattern. To check how well the model performs then, we can simply generate a model prediction for what each spatial value should be at each of our 250 survey sites and see if the true value is within the 95% credible interval of each estimate. I'm leaving out graphical model checking for the other parameters, but the true parameter values fell well within the 95% credible intervals for the effect of forest cover (true = 0.5, estimate = 0.63, 95% CI = 0.24, 1.05) and detection probability (true = -0.4, estimate = -0.5, 95% CI = -0.74, 0.26).
+Because we have simulated data, we can actually see how well the smoothing term captured the spatial autocorrelation in our data. Now, our goal is for the model to estimate the simulated values in our spatially autocorrelated data. We used 15 basis functions to do this. What's important to note here is that the individual regression coefficients for each of the `b` should not especially be interpreted on their own. Instead, it is the combined effect of all of them that create our spatial pattern. To check how well the model performs then, we can simply generate a model prediction for what each spatial value should be at each of our 250 survey sites and see if the true value is within the 95% credible interval of that estimate. I'm leaving out graphical model checking for the other parameters, but the true parameter values fell well within the 95% credible intervals for the effect of forest cover (true = 0.5, estimate = 0.63, 95% CI = 0.24, 1.05) and detection probability (true = -0.4, estimate = -0.5, 95% CI = -0.74, 0.26).
 
 ```R
 
@@ -480,8 +479,8 @@ looks like we've done an okay job with capturing the spatial autocorrelation in 
 
 ![Comparison of smoothing function estimate to true values]({{site.url}}/blog/images/gaom4.jpeg#center)
 
-However, in an actual analysis, you will not have simualted values for comparison. So how do you interpret your 
-spatial smoothing term? But that is relatively easy to plot out. 
+However, in an actual analysis, you will not have simulated values for comparison. So how do you interpret your 
+spatial smoothing term? One way is to plot it out.
 
 ```R
 
@@ -524,4 +523,59 @@ We can take this one step further, however, and plot those simulated values over
 
 ![Smoothing function estimate across fake landscape]({{site.url}}/blog/images/gaom6.jpeg#center)
 
-And that is one way you you can make a generalized additive occupancy model!
+And that is one way you you can make a generalized additive occupancy model in `R`!
+
+
+Session info.
+```R
+R version 4.0.3 (2020-10-10)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19043)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.1252 
+[2] LC_CTYPE=English_United States.1252   
+[3] LC_MONETARY=English_United States.1252
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets 
+[6] methods   base     
+
+other attached packages:
+[1] mvtnorm_1.1-0   raster_3.1-5    sp_1.4-2       
+[4] runjags_2.0.4-6 mgcv_1.8-33     nlme_3.1-149   
+
+loaded via a namespace (and not attached):
+ [1] rstan_2.21.2         tidyselect_1.1.0    
+ [3] xfun_0.13            purrr_0.3.4         
+ [5] splines_4.0.3        lattice_0.20-41     
+ [7] generics_0.1.0       V8_3.3.1            
+ [9] colorspace_1.4-1     vctrs_0.3.7         
+[11] stats4_4.0.3         loo_2.3.1           
+[13] rlang_0.4.10         pkgbuild_1.0.8      
+[15] pillar_1.4.3         glue_1.4.0          
+[17] withr_2.2.0          matrixStats_0.56.0  
+[19] lifecycle_1.0.0      munsell_0.5.0       
+[21] gtable_0.3.0         codetools_0.2-16    
+[23] coda_0.19-3          inline_0.3.16       
+[25] knitr_1.28           callr_3.4.3         
+[27] ps_1.3.3             parallel_4.0.3      
+[29] curl_4.3             fansi_0.4.1         
+[31] Rcpp_1.0.4.6         scales_1.1.1        
+[33] RcppParallel_5.0.2   StanHeaders_2.21.0-6
+[35] jsonlite_1.6.1       gridExtra_2.3       
+[37] ggplot2_3.3.0        processx_3.4.2      
+[39] dplyr_1.0.5          grid_4.0.3          
+[41] rgdal_1.5-8          cli_2.0.2           
+[43] tools_4.0.3          magrittr_1.5        
+[45] tibble_3.0.1         crayon_1.3.4        
+[47] pkgconfig_2.0.3      ellipsis_0.3.0      
+[49] Matrix_1.2-18        prettyunits_1.1.1   
+[51] assertthat_0.2.1     rstudioapi_0.11     
+[53] R6_2.4.1             compiler_4.0.3   
+
+```
