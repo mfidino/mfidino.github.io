@@ -38,15 +38,17 @@ library(mvtnorm) # For simulating some spatial data.
 #  Generate multivariate normal data. This functions simulate covariate
 #    values over cells in a raster.
 
-gen_mvn <- function(rast = NULL, mu = NULL,
-					sigma = NULL, rho = NULL){
+gen_mvn <- function(
+	rast = NULL, mu = NULL,
+	sigma = NULL, rho = NULL
+){
 # ARGUMENTS
 # ---------
 # rast = A raster object
 #
 # mu = numeric vector of length 2. Each mu is proportionally 
-#        where you want the mean value to be. (0,0) is the bottom left,
-#        (1,1) is top right.
+#  where you want the mean value to be. (0,0) is the bottom left,
+#  (1,1) is top right.
 # 
 # sigma = Variance of covariate on x and y axes
 #
@@ -67,18 +69,24 @@ gen_mvn <- function(rast = NULL, mu = NULL,
 	bounds <- raster::extent(rast)
 	
 	# input a proportion of where you want mu to be on x and y
-	mu_loc <- c(bounds@xmin + mu[1] * (bounds@xmax - bounds@xmin),
-							bounds@ymin + mu[2] * (bounds@ymax - bounds@ymin))
+	mu_loc <- c(
+		bounds@xmin + mu[1] * (bounds@xmax - bounds@xmin),
+		bounds@ymin + mu[2] * (bounds@ymax - bounds@ymin)
+  )
 	
 	# Make variance terms
-	Sigma <- diag(c(sigma[1] * abs(bounds@xmax - bounds@xmin),
-									sigma[2] * abs(bounds@ymax - bounds@ymin)))
+	Sigma <- diag(
+		c(
+			sigma[1] * abs(bounds@xmax - bounds@xmin),
+			sigma[2] * abs(bounds@ymax - bounds@ymin)
+		)
+	)
 	# fill the off diagonal terms
 	Sigma[2:3] <- rep(rho * prod(diag(Sigma)))
 	
 	response <- mvtnorm::dmvnorm(
-	  raster::xyFromCell(
-	    rast, 1:raster::ncell(rast)
+		raster::xyFromCell(
+			rast, 1:raster::ncell(rast)
 	   ), 
 		mean=mu_loc, 
 		sigma=Sigma
@@ -125,7 +133,7 @@ values(plane) <- as.numeric(scale(x_cov))
 names(plane) <- 'spatial'
 ```
 
-If we plot out the spatial term with `plot(plane$spatial)` it looks like
+If we plot out the spatial term with `plot(plane$spatial)` it looks
 a bit like circle. 
 
 ![The spatially autocorrelated data]({{site.url}}/blog/images/gaom1.jpeg#center)
@@ -372,23 +380,28 @@ data_list <- list(
 
 # initial values function
 my_inits <- function(chain){
-	gen_list <- function(chain = chain){
-		list(
-			z = rep(1, nsite),
-			beta_occ = rnorm(1),
-			beta_det = rnorm(1),
-			b = rnorm(length(tmp_jags$jags.ini$b), tmp_jags$jags.ini$b, 0.2),
-			lambda = rgamma(1,1,1),
-			.RNG.name = switch(chain,
-			  "1" = "base::Wichmann-Hill",
-			  "2" = "base::Wichmann-Hill",
-			  "3" = "base::Super-Duper",
-			  "4" = "base::Mersenne-Twister",
-			  "5" = "base::Wichmann-Hill",
-			  "6" = "base::Marsaglia-Multicarry",
-			  "7" = "base::Super-Duper",
-			  "8" = "base::Mersenne-Twister"),
-			.RNG.seed = sample(1:1e+06, 1)
+  gen_list <- function(chain = chain){
+    list(
+      z = rep(1, nsite),
+      beta_occ = rnorm(1),
+      beta_det = rnorm(1),
+      b = rnorm(
+      	length(tmp_jags$jags.ini$b),
+      	tmp_jags$jags.ini$b,
+      	0.2
+      ),
+      lambda = rgamma(1,1,1),
+      .RNG.name = switch(chain,
+        "1" = "base::Wichmann-Hill",
+        "2" = "base::Wichmann-Hill",
+        "3" = "base::Super-Duper",
+        "4" = "base::Mersenne-Twister",
+        "5" = "base::Wichmann-Hill",
+        "6" = "base::Marsaglia-Multicarry",
+        "7" = "base::Super-Duper",
+        "8" = "base::Mersenne-Twister"
+      ),
+      .RNG.seed = sample(1:1e+06, 1)
 		)
 	}
 	return(switch(chain,
