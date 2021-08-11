@@ -213,6 +213,18 @@ img {
   }
 }
 
+#myImg01 {
+  @include mobile {
+  max-width: none;
+  }
+}
+
+#myImg02 {
+  @include mobile{
+  max-width: none;
+  }
+}
+
 .site-name {
   margin: 0;
   color: $darkGray;
