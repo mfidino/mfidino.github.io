@@ -217,6 +217,7 @@ img {
   width:300%;
   max-width:300px;
   @include mobile {
+  width:auto;
   max-width: none;
   }
 }
@@ -226,6 +227,7 @@ img {
   max-width:300px;
   border:1px solid black;
   @include mobile{
+  width:auto;
   max-width: none;
   }
 }
