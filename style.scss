@@ -218,7 +218,7 @@ img {
   max-width:300px;
   @include mobile {
   width:auto;
-  max-width: none;
+  max-width: 400px;
   }
 }
 
@@ -228,7 +228,7 @@ img {
   border:1px solid black;
   @include mobile{
   width:auto;
-  max-width: none;
+  max-width: 400px;
   }
 }
 
