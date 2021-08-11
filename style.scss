@@ -215,7 +215,7 @@ img {
 
 #myImg01 {
   width:300%;
-  max-width:300px';
+  max-width:300px;
   @include mobile {
   max-width: none;
   }
