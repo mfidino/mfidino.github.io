@@ -216,9 +216,10 @@ img {
 #myImg01 {
   width:300%;
   max-width:300px;
+
   @include mobile {
   width:auto;
-  max-width: 400px;
+  max-width: 385px;
   }
 }
 
@@ -227,9 +228,10 @@ img {
   width:300%;
   max-width:300px;
   border:1px solid black;
+
   @include mobile{
   width:auto;
-  max-width: 400px;
+  max-width: 385px;
   }
 }
 
