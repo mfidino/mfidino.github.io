@@ -357,7 +357,7 @@ model{
 
 ```
 
-One important thing to note in this model is that the first `b` term in the spatial smoothing function is actually the model intercept. If you investigate the `X` matrix from `tmp_jags` via `head(tmp_jags$jags.data$X)` you'll see the first column is all 1's. Thus, that first `b` terms represents the overall spatial average while the remaining terms indicate how that spatial average varies through space, while controlling for the influence of other covariates in the model.
+One important thing to note in this model is that the first `b` term in the spatial smoothing function is actually the model intercept. If you investigate the `X` matrix from `tmp_jags` via `head(tmp_jags$jags.data$X)` you'll see the first column is all 1's. Thus, that first `b` term represents the overall spatial average while the remaining terms indicate how that spatial average varies through space, while controlling for the influence of other covariates in the model (and of course assuming that you have centered and scaled the other covariates in the model).
 
 ### Step 3. Fit the model
 
