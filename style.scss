@@ -207,6 +207,12 @@ img {
   }
 }
 
+#mason_pic {
+  @include mobile {
+  padding-bottom: 25px;
+  }
+}
+
 .site-name {
   margin: 0;
   color: $darkGray;
@@ -287,6 +293,8 @@ nav {
     font-size: 15px;
   }
 }
+
+
 
 .wrapper-footer {
   margin-top: 50px;
