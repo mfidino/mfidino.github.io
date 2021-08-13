@@ -4,41 +4,44 @@ title: So, you don't have enough data to fit a dynamic occupancy model? An intro
 category: blog
 ---
 
-Dynamic occupancy models can estimate local colonization (<span>$$\gamma$$</span>) and extinction (<span>$$\epsilon$$</span>) rates and are incredibly powerful, but data hungry, tools. For example, simulation studies [have suggested](https://wildlife.onlinelibrary.wiley.com/doi/abs/10.1002/jwmg.433) that a minimum of 120 unique sampling locations are necessary to accurately estimate both  <span>$$\gamma$$</span> and <span>$$\epsilon$$</span>! In my experience, most occupancy studies sample far fewer than 120 sites over time, and so there is generally some uncertainty in how to model these data. Generally speaking, it would not be a good idea to fit a static occupancy model to all of the data for a couple reasons. First, doing so is pseudoreplication, and the resulting standard errors for your parameter estiamtes will be too precise. Second, fitting a standard single season occupancy model to multiple years of data fails to account for any potential temporal dependence among years. For example, if Virginia opossum (*didelphis virginiana*) were present at one survey location in year 1, there may be a higher probability they are present in year 2. So, what do you do?
+Dynamic occupancy models can estimate local colonization (<span>$$\gamma$$</span>) and extinction (<span>$$\epsilon$$</span>) rates and are incredibly powerful, but data hungry tools. For example, simulation studies [have suggested](https://wildlife.onlinelibrary.wiley.com/doi/abs/10.1002/jwmg.433) that a minimum of 120 unique sampling locations are necessary to accurately estimate both  <span>$$\gamma$$</span> and <span>$$\epsilon$$</span>! In my experience, most occupancy studies sample far fewer than 120 sites over time, and so there is generally some uncertainty in how to model these data. Generally speaking, it would not be a good idea to fit a static occupancy model to all of the data for a couple reasons. First, doing so is pseudoreplication, and the resulting standard errors for your parameter estimates will be too precise. Second, fitting a standard single season occupancy model to multiple years of data fails to account for any potential temporal dependence among years. For example, if Virginia opossum (*Didelphis virginiana*) were present at one survey location in year 1, there may be a higher probability they are present in year 2. So, what do you do?
 
 Instead of fitting a dynamic occupancy model, [one common suggestion](https://kenkellner.com/ubms/articles/JAGS-comparison.html) is to use a 'stacked design' and fit a static occupancy model with a random site effect. This can be a very appropriate technique, however it may have some of the same issues as fitting a dynamic occupancy model, namely the introduction of a potentially large number of parameters to be estimated (one for each site sampled). An arguably simpler model is the auto-logistic formulation of an occupancy model, which includes a first-order autoregressive turn to account for any potential temporal dependence between years. This model has seen some attention in the literature ([1](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2016.1703), [2](https://conbio.onlinelibrary.wiley.com/doi/abs/10.1111/cobi.12137), [3](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2656.13515)), but not as much as I think it should. As such, I'll walk through what this model is, provide a simulated example, and fit the model in `JAGS`.
 
 ## The auto-logistic occupancy model
 
-Let <span>$$\Psi$$</span> be the probability of occupancy and *z* be Bernoulli random variable that equals 1 if a the species is present and 0 if it is absent. For *i* in 1,...,*I* sites and *t* in 1,...,*T* years, the probability of occupancy when *t* = 1 is:
+Let <span>$$\Psi$$</span> be the probability of occupancy and *z* be a Bernoulli random variable that equals 1 if a the species is present and 0 if it is absent. For *i* in 1,...,*I* sites and *t* in 1,...,*T* years, the probability of occupancy when *t* = 1 is:
 
 $$logit(\Psi_{i,t=1}) = \pmb{\beta}\pmb{x}_i$$
 
-$$z_{i,t=1} \sim Bernoulli(\Psi_{i,t=1})$$
+$$z_{i,t=1} \sim Bernoulli(\Psi_{i,t=1}), t = 1$$
 
 where <span>$$\pmb{\beta}\pmb{x}_i$$</span> represents a vector of regression coefficients (including the model intercept) and their associated covariates. This part of the model should look incredibly standard, because it is the latent state of a static occupancy model. For *t>1* however, we need to account for temporal dependence between years. To do so, we introduce <span>$$\theta$$</span> into the model, which is a first-order autoregressive term. Thus, for the remaining years of sampling, the logit-linear predictor is then:
 
-$$logit(\Psi_{i,t}) = \pmb{\beta}\pmb{x}_i + \theta \times z_{i,t-1}.$$
+$$logit(\Psi_{i,t}) = \pmb{\beta}\pmb{x}_i + \theta \times z_{i,t-1}$$
 
-Thus, the <span>$$\theta$$</span> term in this model here helps us determine if species presence in the previous time-step is associated to species presence in the current time step. And while the auto-logistic model does have this new <span>$$\theta$$</span> term in the latent state model, there is not much that changes with the data model. Let <span>$$\rho$$</span> be the conditional probability of detection,<span>$$y_{i,t}$$</span> be the number of secondary sampling occasions (hereafter days) the species was detected at site *i* and year *t*, and <span>$$J_{i,t}$$</span> be the total number of days sampled at site *i* and year *t* . This level of the model is then:
+$$z_{i,t} \sim Bernoulli(\Psi_{i,t}), t > 1.$$
+
+Thus, the <span>$$\theta$$</span> term in this model here helps us determine if species presence in the previous timestep is associated to species presence in the current time step. And while the auto-logistic model does have this new <span>$$\theta$$</span> term in the latent state model, there is not much that changes with the data model. Let <span>$$\rho$$</span> be the conditional probability of detection, <span>$$y_{i,t}$$</span> be the number of secondary sampling occasions (hereafter days) the species was detected at site *i* and year *t*, and <span>$$J_{i,t}$$</span> be the total number of days sampled at site *i* and year *t* . This level of the model is then:
 
 $$logit(\rho_{i,t}) = \pmb{\alpha}\pmb{x}_i$$
+
 $$y_{i,t} \sim Binomial(J_{i,t}, \rho_{i,t} \times z_{i,t})$$
 
 Like the latent state linear predictor, this level of the model also includes regression coefficients and their associated covariates (<span>$$\pmb{\alpha}\pmb{x}_i$$</span>), which may or may not be the same as what are included in the latent state model.  What is nice about this model is that it only includes one new parameter, <span>$$\theta$$</span>, and it does not have any random effects which makes it simpler to interpret.  From this model, the average occupancy probability is a little different than a standard static occupancy model. Assuming covariates are mean-centered, it can be derived as:
 
 $$\bar{\Psi} = expit(\beta_0)/(expit(\beta_0) + (1 - expit(\beta_0 + \theta)))$$
 
-where *expit* is the inverse logit function and  <span>$$\beta_0$$</span> is the occupancy intercept. Likewise, site-specific predictinos can also be derived by including the respective slope terms and covariates into the above equation.
+where *expit* is the inverse logit function and  <span>$$\beta_0$$</span> is the occupancy intercept. Likewise, site-specific predictions can also be derived by including the respective slope terms and covariates into the above equation.
 
 ## A simulated example
 
-For this simulation we are going to assume we have monitored 25 sites for 8 parimary sampling periods (e.g., years, seasons, etc.). This, of course, is way below the reccomendation for fitting a dynamic occupancy model, so let's see how the auto-logistic model performs. Let's also assume we are trying to fit three covariates on <span>$$\Psi$$</span> and <span>$$\rho$$</span>.
+For this simulation we are going to assume we have monitored 25 sites for 8 primary sampling periods (e.g., years, seasons, etc.). This, of course, is way below the recommendation for fitting a dynamic occupancy model, so let's see how the auto-logistic model performs (we could make this model fit really well if we did more sites, but that is not the motivation here). Let's also assume we are trying to fit three covariates on <span>$$\Psi$$</span> and <span>$$\rho$$</span>, which is about the maximum I would be comfortable with given this amount of data.
 
 ```R
 # Step 1. Simulate the data.
 
-# Genearal bookkeeping
+# General bookkeeping
 nsite <- 25
 nyear <- 8
 ncovar <- 3
@@ -212,7 +215,7 @@ my_sum <- summary(my_mod)
 
 ```
 
-Overall, the model converges nicely, and does an okay job returning the model coefficients. Certainly, with additional data (i.e., sites sampled per year) we would expect the precision of the estimates to improve. Plotting out the estimated values with the simulated values shows that they all fall within each parameters 95% credible interval.
+Overall, the model converges nicely, and does an okay job returning the model coefficients. Certainly, with additional data (i.e., sites sampled per year) we would expect the precision of the estimates to improve. Plotting out the estimated values (blue dots & lines) with the simulated values (yellow dots) shows that they all fall within each parameters 95% credible interval.
 
 ```R
 caterplot(
@@ -230,10 +233,12 @@ points(
 )
 
 ```
-![True values fall within simualted credible intervals]({{site.url}}/blog/images/alm01.jpeg#center)
+![True values fall within simulated credible intervals]({{site.url}}/blog/images/alm01.jpeg#center)
+
+And there you have it. An occupancy model that can account for temporal dependence between sampling periods with a single parameter! Definitely something to have in your modelers toolkit for when you may not have enough data for a dynamic occupancy model.
 
 ## How does this compare to a stacked model with a random effect?
 
-While I'm not going to walk through the formulation of the stacked design occupancy model with a site-level random effect. I did go ahead and fit it to the simulated data above to see how much the parameter estimates changed for the occupancy slope terms. Overall, they look about the same, though the site-level random effect model has slightly wider credible intervals, which may be a better reflection of these data. You can see the code for fitting the stacked model [here](https://github.com/mfidino/auto-logistic-occupancy).
+While I'm not going to walk through the formulation of the stacked design occupancy model with a site-level random effect, I did go ahead and fit it to the simulated data above to see how much the parameter estimates changed for the occupancy slope terms. Overall, they look about the same, though the site-level random effect model has slightly wider credible intervals, which may be a better reflection of these data. You can see the code for fitting the stacked model [here](https://github.com/mfidino/auto-logistic-occupancy).
 
 ![Comparison of auto-logistic model to stacked model with random effect. The stacked model has slightly larger 95% credible intervals.]({{site.url}}/blog/images/alm02.jpeg#center)
