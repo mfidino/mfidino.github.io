@@ -147,7 +147,7 @@ model{
 }
 
 ```
-which, on the [GitHub repository](https://github.com/mfidino/auto-logistic-occupancy) for this post can be found in `./jags/autologistic_model.R`.
+which, on the [GitHub repository](https://github.com/mfidino/auto-logistic-occupancy) for this post can be found at `./jags/autologistic_model.R`.
 
 ## Fitting the model
 
