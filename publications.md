@@ -17,6 +17,14 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### 2021
 
+[24] Magle<sup>\*</sup>, S., **Fidino<sup>\*</sup>, M.**, Sander, H., Rohnke, A. T., Larson, K. L., Gallo, T., Kay, C. A. M., Lehrer, E. W., Murray, M. H., Adalsteinsson, S. A., Ahlers, A. A.,
+Anthonysamy, W. J. B., Gramza, A. R., Green, A. M., Jordan, M. J., Lewis, J.,
+Long, R. A., MacDougall, B., Pendergast, M. E., Remine, K., Simon, K. C., Cassady
+St. Clair, C., Shier, C. J., Stankowich, T., , Stevenson, C. J., Zellmer, A. J., and Schell,
+C. J. (2021). Wealth and urbanization shape medium and large terrestrial mammal
+communites. *Global Change Biology.*
+
+
 [23] Murray<sup>\*</sup>, M. H., **Fidino<sup>\*</sup>, M.**, Lehrer, E. W., Simonis, J. L., and Magle, S. B. (2021).
 An multi-state occupancy model to non-invasively monitor visible signs of wildlife
 health with camera traps that accounts for image quality. *Journal of Animal Ecology.* [PDF](../public/Murray_2021.pdf)
