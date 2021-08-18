@@ -240,7 +240,7 @@ data_list <- list(
 )
 ```
 
-The occupancy model itself is very close standard occupancy model and can be found here. The only important difference is the nested indexing we used in the detection model.
+The occupancy model itself is very close to a standard occupancy model and can be [found here](https://github.com/mfidino/jags-ragged-array/blob/master/ragged_occupancy.R). The only important difference is the nested indexing we used in the detection model.
 ```R
 model{
   # priors
@@ -254,11 +254,83 @@ model{
     z[i] ~ dbern(psi[i])
   }
   # detection model, the important part
-  #  is just indexing what site the yth data point
-  #  is associated to!
+  #  is just indexing what site the jth data point
+  #  is associated to via z[site_id[j]].
   for(j in 1:nvisits){
     logit(rho[j]) <- inprod(B_det, X_det[j,])
     y[j] ~ dbern(rho[j] * z[site_id[j]])
   }
 }
 ```
+
+Here is the rest of the code to fit the model.
+
+```R
+# getting some initial values for z,
+#  equals 1 if we detected it, 
+#  otherwise it is 0.
+
+z_init <- rowSums(y_na, na.rm = TRUE)
+z_init[z_init > 1] <- 1
+
+my_inits <- function(chain){
+  gen_list <- function(chain = chain){
+    list(
+      z = z_init,
+      B_occ = rnorm(2),
+      B_det = rnorm(2),
+
+      .RNG.name = switch(chain,
+        "1" = "base::Wichmann-Hill",
+        "2" = "base::Wichmann-Hill",
+        "3" = "base::Super-Duper",
+        "4" = "base::Mersenne-Twister",
+        "5" = "base::Wichmann-Hill",
+        "6" = "base::Marsaglia-Multicarry",
+        "7" = "base::Super-Duper",
+        "8" = "base::Mersenne-Twister"
+      ),
+      .RNG.seed = sample(1:1e+06, 1)
+		)
+	}
+	return(switch(chain,
+		"1" = gen_list(chain),
+		"2" = gen_list(chain),
+		"3" = gen_list(chain),
+		"4" = gen_list(chain),
+		"5" = gen_list(chain),
+		"6" = gen_list(chain),
+		"7" = gen_list(chain),
+		"8" = gen_list(chain)
+	)
+	)
+}
+
+m1 <- run.jags(
+  model = "ragged_occupancy.R",
+  data = data_list,
+  n.chains = 3,
+  monitor = c("B_occ", "B_det"),
+  adapt = 1000,
+  burnin = 2000,
+  sample = 5000,
+  thin = 1,
+  inits = my_inits,
+ modules = "glm",
+ method = "parallel"
+)
+
+```
+
+And plotting out the results shows that the nested indexing approach still returns the correct parameter estimates. 
+
+![Comparison of model estimates to true values]({{site.url}}/blog/images/nind01.jpeg#center)
+
+In my experience, I deal with missing data often, especially when modeling data across the [Urban Wildlife Information Network (UWIN)](https://urbanwildlifeinfo.org/), and so knowing that this model is equivalent to a standard occupancy model is great. For example, I made heavy use of nested indexing for the analysis of this [paper here](https://onlinelibrary.wiley.com/doi/10.1111/gcb.15800?af=R), where we fit a [multi-region occupancy model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12536) to data from 20 UWIN partnering UWIN cities.
+
+## Linking sub-models to your occupancy model to address new ecological questions.
+
+This post is already long, so I'll keep this bit short, but one aspect of nested indexing that I have gotten really interested in over the last few years is to either use the same data source in different ways to your occupancy model, or combine difference data sources entirely. For example, a lot of my own research is done with camera trapping, and often enough we discretize the photo detections of species down to some secondary sampling period (e.g., days or weeks). However, the photos may also house more information than just what species is present. As just one example, in [this paper](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2656.13515) we modeled the distribution of coyote (*Canis latrans*) as well as the distribution of mangy coyote throughout Chicago, IL. To do so, I developed a multi-state occupancy model that accounts for by-site false absences of coyote and also by-image false absences of detecting mange on a photo of coyote. We found that it was far easier to detect mange on a coyote image if the photos was clear, during the daytime, and had atleast half of the coyote in the image. The paper (you can find  a pdf on my [publications page](https://masonfidino.com/publications/)) goes through the math behind this, and all of the results, so I am not going to cover it here. If you want a simualted example of the model, which most assuredly has some nested indexing, look no further than the [supplmental material](https://besjournals.onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2F1365-2656.13515&file=jane13515-sup-0003-AppendixS3.pdf).
+
+So, if you are collecting camera trap data, start thinking about how you can take advantange of nested indexing to answer different ecological questions! And while I didn't get to this here, in a future post I'll show how you can use nested indexing to map data to one another in an integrated occupancy model.
+
