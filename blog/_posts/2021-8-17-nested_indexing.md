@@ -31,7 +31,7 @@ model{
 }
 
 ```
-where `re_vec` equals <span>$$i[n]$$</span>, so it denotes the numeric category of the *nth* datapoint. Often times the categories you have in *R* are represented as factors, and making such a numeric vector is very simple.
+where `re_vec` equals <span>$$i[n]$$</span>, so it denotes the numeric category of the *nth* datapoint. Often times the categories you have in `R` are represented as factors, and making such a numeric vector is very simple.
 
 ```R
 # The gl function is just a way to generate a bunch of levels
