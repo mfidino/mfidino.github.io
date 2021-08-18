@@ -1,12 +1,12 @@
 ---
 layout: post
-title: Nested indexing, it's for more than just random effects. How to use this technique to speed up your Bayesian models and answer new ecological questions.
+title: Nested indexing is for more than just random effects. How to use nested indexing to speed up your Bayesian models and answer new ecological questions.
 category: blog
 ---
 
-There are a lot of different ways to algebraically write out a statistical model, and as such there are an equally large number of ways to write a model in `Nimble`, `JAGS`, or `Stan`. One technique that I see in introductory text books on Bayesian Modeling is nested indexing, which is a way to map one part of a model to another through a vector of values. The common way this is done is to show how to include a random effect term into a linear predictor. For example, for *n* in 1,...,*N* data points, and *i* in 1,...,*I* categories of a random effect term, the linear predictor of a random intercept model could be written as:
+There are a lot of different ways to algebraically write out a statistical model, and as such there are an equally large number of ways to write a model in `Nimble`, `JAGS`, or `Stan`. One technique that I see in introductory text books on Bayesian Modeling is nested indexing, which is a way to map one part of a model to another through a vector of values. The most common way nested indexing is used is to include a random effect term in the linear predictor of a model. For example, for *n* in 1,...,*N* data points, and *i* in 1,...,*I* categories of a random effect term, the linear predictor of a random intercept model could be written as:
 
-$$\beta_0 + \beta_{i[n]}$$
+$$\mu_n =  \beta_0 + \beta_{i[n]}$$
 
 $$\beta_0 \sim Normal(0, 100)$$
 
@@ -31,7 +31,7 @@ model{
 }
 
 ```
-where `re_vec` is that vector of length `N` that denotes the numeric category of *nth* datapoint. Often times the categories you have in *R* are represented as factors, so making such a vector is very simple.
+where `re_vec` = <span>$$i[n]$$</span>, so it denotes the numeric category of *nth* datapoint. Often times the categories you have in *R* are represented as factors, and making such a numeric vector is very simple.
 
 ```R
 # The gl function is just a way to generate a bunch of levels
@@ -41,11 +41,25 @@ example_data <- data.frame(
   categories = gl(10,10, labels = LETTERS[1:10])
 )
 
+example_data$categories
+  [1] A A A A A A A A A A B B B B B B B B B B C C C C C C C C C C D D
+ [33] D D D D D D D D E E E E E E E E E E F F F F F F F F F F G G G G
+ [65] G G G G G G H H H H H H H H H H I I I I I I I I I I J J J J J J
+ [97] J J J J
+Levels: A B C D E F G H I J
+
 ```
 Here, we have 10 categories, each represented with a letter (A through J). To make this numeric you simply convert your factor:
 
 ```R
 example_data$re_vec <- as.numeric(example_data$categories)
+
+example_data$re_vec
+  [1]  1  1  1  1  1  1  1  1  1  1  2  2  2  2  2  2  2  2  2  2  3
+ [22]  3  3  3  3  3  3  3  3  3  4  4  4  4  4  4  4  4  4  4  5  5
+ [43]  5  5  5  5  5  5  5  5  6  6  6  6  6  6  6  6  6  6  7  7  7
+ [64]  7  7  7  7  7  7  7  8  8  8  8  8  8  8  8  8  8  9  9  9  9
+ [85]  9  9  9  9  9  9 10 10 10 10 10 10 10 10 10 10
 
 ```
 Here, `re_vec` (random effect vector) is of length 100, the first 10 values are 1 because they belong to the first cateogory, the 11th through 20th values are 2 because they belong to the second category, etc. etc.
@@ -56,7 +70,7 @@ And that is generally where nested indexing is left. You can use it as a way to 
 
 For occupancy studies, often times sampling is not uniform across sites, such that the number of repeat visits varies. When there is not much missing data this may not be much of an issue, you simply fill the detection / non-detection matrix with `NA` values where you lack data. However, when working with very large data sets this can cause problems (e.g., lots of sites sampled, many repeat observations, or both). At best, the model compiles but takes much longer to run because of all the NA nodes it has to estimate. At worst, you may not have enough RAM to hold the model in your memory! 
 
-If you have a lot of missing data it may be simpler to model the detection non-detection data in long-format (or a ragged array). `JAGS` does not allow for ragged arrays, but you can mimic them with the use of nested indexing! So, let's simulate some data, throw some of it out, and demonstrate how to used nested indexing to skip over all of those pesky NA values you generally do not need to evaluate in an occupancy model. The next code block is a lot of the general data simulation, up to the point where we input a bunch of missing data into the detection / non-detection matrix.
+If you have a lot of missing data it may be simpler to model the detection non-detection data in long-format (or a ragged array). `JAGS` does not allow for ragged arrays, but you can mimic them with the use of nested indexing! So, let's simulate some data, throw some of it out, and demonstrate how to use nested indexing to skip over all of those pesky `NA` values you generally do not need to evaluate in an occupancy model. The next code block is a lot of the general data simulation, up to the point where we input a bunch of missing data into the detection / non-detection matrix.
 
 ```R
 # Load some libraries we'll need
@@ -170,7 +184,7 @@ sum(is.na(y_na))/length(y_na)
 
 ``` 
 
-So through this simulation, almost 40% of the detection/non-detection matrix we would supply to `JAGS` is full of NA values. In this case, that is nearly 4000 elements that JAGS would need to estimate during each step of an MCMC chain that is does not need to! So, now comes the complicated part. To use nested indexing, we need to go from wide format to long format with the detection / non-detection data. To do so, we use `which()` and set `arr.ind = TRUE`, which will can be used to identify where there are non `NA` values in the detection / non-detection matrix. 
+So through this simulation, almost 40% of the detection/non-detection matrix we would supply to `JAGS` is full of `NA` values. In this case, that is nearly 4000 elements that JAGS would need to estimate during each step of an MCMC chain that is does not need to! So, now comes the complicated part. To use nested indexing, we need to go from wide format to long format with the detection / non-detection data. To do so, we use `which()` and set `arr.ind = TRUE`, which can be used to identify where there are non `NA` values in the detection / non-detection matrix. 
 
 ```R
 # Step 4. Determine where we have data.
@@ -326,11 +340,11 @@ And plotting out the results shows that the nested indexing approach still retur
 
 ![Comparison of model estimates to true values]({{site.url}}/blog/images/nind01.jpeg#center)
 
-In my experience, I deal with missing data often, especially when modeling data across the [Urban Wildlife Information Network (UWIN)](https://urbanwildlifeinfo.org/), and so knowing that this model is equivalent to a standard occupancy model is great. For example, I made heavy use of nested indexing for the analysis of this [paper here](https://onlinelibrary.wiley.com/doi/10.1111/gcb.15800?af=R), where we fit a [multi-region occupancy model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12536) to data from 20 UWIN partnering UWIN cities.
+In my experience, I deal with missing data often, especially when modeling data across the [Urban Wildlife Information Network (UWIN)](https://urbanwildlifeinfo.org/), and so knowing that this model is equivalent to a standard occupancy model is great. For example, I made heavy use of nested indexing for the analysis of this [paper here](https://onlinelibrary.wiley.com/doi/10.1111/gcb.15800?af=R), where we fit a [multi-region occupancy model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12536) to data from 20 partnering UWIN cities.
 
-## Linking sub-models to your occupancy model to address new ecological questions.
+## Example 2: Linking different models to your occupancy model to address new ecological questions.
 
-This post is already long, so I'll keep this bit short, but one aspect of nested indexing that I have gotten really interested in over the last few years is to either use the same data source in different ways to your occupancy model, or combine difference data sources entirely. For example, a lot of my own research is done with camera trapping, and often enough we discretize the photo detections of species down to some secondary sampling period (e.g., days or weeks). However, the photos may also house more information than just what species is present. As just one example, in [this paper](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2656.13515) we modeled the distribution of coyote (*Canis latrans*) as well as the distribution of mangy coyote throughout Chicago, IL. To do so, I developed a multi-state occupancy model that accounts for by-site false absences of coyote and also by-image false absences of detecting mange on a photo of coyote. We found that it was far easier to detect mange on a coyote image if the photos was clear, during the daytime, and had atleast half of the coyote in the image. The paper (you can find  a pdf on my [publications page](https://masonfidino.com/publications/)) goes through the math behind this, and all of the results, so I am not going to cover it here. If you want a simualted example of the model, which most assuredly has some nested indexing, look no further than the [supplmental material](https://besjournals.onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2F1365-2656.13515&file=jane13515-sup-0003-AppendixS3.pdf).
+This post is already long, so I'll keep this bit short, but one aspect of nested indexing that I have gotten really interested in over the last few years is to either use the same data source in different ways within your occupancy model, or to combine difference data sources entirely. For example, a lot of my own research is done with camera trapping, and often enough we discretize the photo detections of species down to some secondary sampling period (e.g., days or weeks). However, the photos may also house more information than just what species is present. As just one example, in [this paper](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2656.13515) we modeled the distribution of coyote (*Canis latrans*) as well as the distribution of mangy coyote throughout Chicago, IL. To do so, we had to go back through all of our coyote images to identify which coyote had visible signs of mange. Following this, I developed a multi-state occupancy model that accounts for by-site false absences of coyote and also by-image false absences of detecting mange in a coyote photo. We found that it was far easier to detect mange on a coyote image if the photo was clear, during the daytime, and had atleast half of the coyote in the image. The paper (you can find  a pdf on my [publications page](https://masonfidino.com/publications/)) goes through the math behind this, and all of the results, so I am not going to cover it here. If you want a simualted example of the model, which most assuredly has some nested indexing, look no further than the [supplmental material](https://besjournals.onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2F1365-2656.13515&file=jane13515-sup-0003-AppendixS3.pdf).
 
 So, if you are collecting camera trap data, start thinking about how you can take advantange of nested indexing to answer different ecological questions! And while I didn't get to this here, in a future post I'll show how you can use nested indexing to map data to one another in an integrated occupancy model.
 
