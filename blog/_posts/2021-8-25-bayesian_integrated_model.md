@@ -34,7 +34,7 @@ therefore the abundance model across the whole study area is
 
 $$N(B) \sim \text{Poisson}(\mu(B))$$
 
-Some other important things to note here is that we can also model the number of individuals within any subregion of *B*, which also has a Poisson distribution. So, if you have a set of non-overlapping subregions where <span>$$r_1 \cup \cdots \cup r_k = B$$</span> (this means the union of all the subregions equals *B*) then <span>$$N(r_k) \sim \text{Poisson}(\mu(r_k))</span>. 
+Some other important things to note here is that we can also model the number of individuals within any subregion of *B*, which also has a Poisson distribution. So, if you have a set of non-overlapping subregions where <span>$$r_1 \cup \cdots \cup r_k = B$$</span> (this means the union of all the subregions equals *B*) then <span>$$N(r_k) \sim \text{Poisson}(\mu(r_k))$$</span>. 
 
 I bring up this subregion modeling for two reasons. First, when we write the model in `JAGS` we are going to have to discretize the landscape to approximate the integral in the latent state model. So, we may as well start thinking about what breaking up the region into little pieces looks like now. Second, creating subregions makes it more intuitive to think about modeling occupancy instead of abundance. Why? Because if we set out to study a species in an area, chances are we know a priori that the probability at least one individual occupies *B* is 1, but there may be variation in the different subregions. To model occupancy we need to convert<span>$$\mu(r_k)$$</span> into a probability, which can be done with the inverse complimentary log-log link (inverse cloglog)
 
@@ -66,7 +66,7 @@ The probability of being detected in the presence-only data, *b(s)*, can be made
 $$\text{logit}(b(s)) = \boldsymbol{c}\boldsymbol{h}(s)^\intercal = c_1 \times h(s)_1 + \cdots + c_G \times h(s)_G$$
 
 
-Where <span>$$\boldsymbol(c)$$</span> is a vector that contains the interecpt and slope terms  while <span>$$\boldsymbol(h)(s)$$</span> is a vector of G covariates, where the first element is 1 to account for the intercept  Before we move on there is one really important thing to bring up. For this model to be identifiable,  <span>$$\boldsymbol{x}(s)</span> must have one unique covariate that <span>$$\boldsymbol{h}(s)</span> does not have, and <span>$$\boldsymbol{h}(s)</span> must have one unique covariate <span>$$\boldsymbol{x}(s)</span> does not have. If you put the exact same covariates on the latent state and the presence-only data model, your model will not converge. Keep that in mind while you consider hypotheses for your own data!
+Where <span>$$\boldsymbol(c)$$</span> is a vector that contains the interecpt and slope terms  while <span>$$\boldsymbol(h)(s)$$</span> is a vector of G covariates, where the first element is 1 to account for the intercept  Before we move on there is one really important thing to bring up. For this model to be identifiable,  <span>$$\boldsymbol{x}$$(s)</span> must have one unique covariate that <span>$$\boldsymbol{h}(s)$$</span> does not have, and <span>$$\boldsymbol{h}(s)$$</span> must have one unique covariate <span>$$\boldsymbol{x}(s)$$</span> does not have. If you put the exact same covariates on the latent state and the presence-only data model, your model will not converge. Keep that in mind while you consider hypotheses for your own data!
 
 As this is a thinned Poisson process, the the expected number of presence only locations throughout *B* is the product of <span>$$\lambda(s)$$</span> and<span>$$b(s)$$</span>, assuming that the species was detected at *m* locations <span>$$s_1,\cdots,s_m$$</span> where m < n. In other words, we make the assumption that the number of individuals detected in the presence-only data is less than the total number of individuals of that species on the landscape. Thus,
 
@@ -103,13 +103,13 @@ exp(-log(2)) * 10
 
 ```
 
-If you look closely at that third example, its not too hard to recognize it as a simplified version of <span>$$\text{exp} \big(- \int_B\lambda(s)b(s)ds \big) \prod_{i=1}^m\lambda(s_i)b(s_i)$$</span>. So, because `exp(-x) * y == y/x`, the first term term in our likelihood that represents the thinned Poisson process over the region *B* is denominator of a fraction, while the second term in our likelihood that represents the thinned Poisson process over the *m* presence-only locations is the numerator. With that out of the way, we just need to figure out what the likelihood is doing with the regression coefficients from the latent state model (<span>$$\beta$$</span>) and the regression coefficients associated to the presence-only thinning probability (<span>$$\c$$</span>).
+If you look closely at that third example, its not too hard to recognize it as a simplified version of <span>$$\text{exp} \big(- \int_B\lambda(s)b(s)ds \big) \prod_{i=1}^m\lambda(s_i)b(s_i)$$</span>. So, because `exp(-x) * y == y/x`, the first term term in our likelihood that represents the thinned Poisson process over the region *B* is denominator of a fraction, while the second term in our likelihood that represents the thinned Poisson process over the *m* presence-only locations is the numerator. With that out of the way, we just need to figure out what the likelihood is doing with the regression coefficients from the latent state model (<span>$$\beta$$</span>) and the regression coefficients associated to the presence-only thinning probability (<span>$$\boldsymbol{c}$$</span>).
 
 For those familiar with logistic regression, you can hopefully notice that the likelihood
 
 $$\text{exp}\Big(-\int_B\frac{\text{exp}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal + \boldsymbol{c}\boldsymbol{h}(s)^\intercal )}{1 + \text{exp}(\boldsymbol{c}\boldsymbol{h}(s)^\intercal )}ds\Big) \prod_{i=1}^m\frac{\text{exp}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal + \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal )}{1 + \text{exp}(\boldsymbol{c}\boldsymbol{h}(s_i)^\intercal )}$$
 
-made a slight modification to the inverse logit link, <span>$$\text{logit}^{-1}(x) = \frac{\text{exp}(x)}{1 + \text{exp}(x)}$$</span>. The inverse logit link is important to know, especially if you do any amount of occupancy modeling, because it converts logit-scale coefficients back to the probability scale. It looks like this likelihood function added the log-scale coefficients from the latent state model (<span>$$\boldsymbol{\beta}$$</span>) into the numerator of the inverse logit link, while the logit-scale coefficients (<span>$$\boldsymbol{c}$$</span>) from the thinning process are in the numerator and the denominator. To see what this means, let's explore how this modified inverse logit link function works in `R`, assuming that <span>$$\lambda(s) = 20$$</span> and <span>$$\b(s) = 0.75$$</span>.
+made a slight modification to the inverse logit link, <span>$$\text{logit}^{-1}(x) = \frac{\text{exp}(x)}{1 + \text{exp}(x)}$$</span>. The inverse logit link is important to know, especially if you do any amount of occupancy modeling, because it converts logit-scale coefficients back to the probability scale. It looks like this likelihood function added the log-scale coefficients from the latent state model (<span>$$\boldsymbol{\beta}$$</span>) into the numerator of the inverse logit link, while the logit-scale coefficients (<span>$$\boldsymbol{c}$$</span>) from the thinning process are in the numerator and the denominator. To see what this means, let's explore how this modified inverse logit link function works in `R`, assuming that <span>$$\lambda(s) = 20$$</span> and <span>$$b(s) = 0.75$$</span>.
 
 ```R
 # The parameters
@@ -133,9 +133,9 @@ answer <- exp(log_lambda + logit_b) / (1 + exp(logit_b))
 c(answer, lambda * b)
 ```
 
-Therefore, this modified inverse logit is really just the inverse link function of the thinned Poisson process, <span>$$\lambda(s)b(s)</span>! Knowing that, we could take the presesence-only data likelihood and abstract it out a little further:
+Therefore, this modified inverse logit is the inverse link function for the regression coefficients associated to the thinned Poisson process <span>$$\lambda(s)b(s)$$</span>! Knowing that, we could take the presesence-only data likelihood and abstract it out a little further:
 
-$$L(\boldsymbol{\beta},\boldsymbol{c}) = \frac{\prod_{i=1}^m PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal, \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal)}{\text{exp}(\int_B PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal, \boldsymbol{c}\boldsymbol{h}(s)^\intercal))ds}$$
+$$L(\boldsymbol{\beta},\boldsymbol{c}) = \frac{\prod_{i=1}^m PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal, \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal)}{\text{exp}(\int_B PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal, \boldsymbol{c}\boldsymbol{h}(s)^\intercal ds))}$$
 
 where
 
