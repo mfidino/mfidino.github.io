@@ -154,11 +154,12 @@ With that out of the way, to code up this model in `JAGS` there are two things w
 1. Approximating the integrals in the model with a Riemann sum.
 2. Incorporating the non-standard likelihood of the presence-only data model.
 
-The first step is not difficult. For the region *B*, all we need to do is break it up into a "sufficiently fine grid" (*sensu* Dorazio 2014) and evaluate the model in each grid cell.   
-
+The first step is not difficult. For the region *B*, all we need to do is break it up into a "sufficiently fine grid" (*sensu* Dorazio 2014) and evaluate the model in each grid cell.
 ![A landscape with a grid of cells]({{site.url}}/blog/images/iocm01.jpeg#center)
 
-Discretizing the region, however, means all of the data input into the model needs to be aggregated to the scale of the grid (i.e., the covariates and species data). In our model, let `npixel` be the total number of grid cells on our landscape and `cell_area` be the log area of the gridded cell (we have to include a log offset term into the latent state linear predictor to account for the the gridding we did). The latent state model is then:
+ What is sufficiently fine? I've seen some suggestions that you need at least 10000, but in reality the number of cells is going to depend on the landscape heterogeneity you are trying to capture and your data. For example, a smaller study region roughly the size of a city may not need 10000 grid cells. For example, I've had success with this model splitting Chicago, IL, which is about 606 km<sup>2</sup>, into roughly 2500 500m<sup>2</sup> grid cells. So if you are trying to use this model on your own you may need to do some trial and error to determine what is an appropriate cell count is (i.e., fit the model with different grid cell sizes to see if it has an influence on the parameters in the latent state model). 
+
+Discretizing the region, however, means all of the data input into the model needs to be aggregated to the scale of the grid (i.e., the covariates and species data). I'll show you how to do that when I simulate some data. In our model, let `npixel` be the total number of grid cells on our landscape and `cell_area` be the log area of the gridded cell (we have to include a log offset term into the latent state linear predictor to account for the the gridding we did). The latent state model is then:
 
 ```R
 for(pixel in 1:npixel){
@@ -260,7 +261,7 @@ for(site in 1:nsite){
   )
 }
 ```
-Here is all of the model put together, plus some non-informative priors for all the model parameters
+Here is all of the model put together, some non-informative priors for all the model parameters, and a derived parameter to track how many cells the species occupies. You can find this model on [this repository here].
 ```R
 model{
 # Bayesian version of the Koshkina (2017) model.
@@ -329,17 +330,21 @@ for(site in 1:nsite){
   )
 }
 #
-# Priors
-for()
+# Priors for latent state model
+for(latent in 1:nlatent){
+  beta[latent] ~ dnorm(0, 0.01)
+}
+# Priors for presence-only data model
+for(po in 1:npar_po){
+  cc[po] ~ dlogis(0, 1)
+}
+# Priors for det/non-det data model
+for(pa in 1:npar_pa){
+  a[pa] ~ dlogis(0, 1)
+}
+# Derived parameter, the number of cells occupied
+zsum <- sum(z)
+}
 ```
 
-
-We are almost to the likelihood of the presence-only data model, and what I think was the trickiest part to unpack from this whole model.
-
-
-
-
-One issue, however, is that integral cannot easily be evaluated in closed form as so we most approximate it as a Riemann sum. To do so, we split region *B* into a grid of cells, like you made a raster of *B* where each cell in the raster represents a portion of the total study area. I have seen suggestions that you need to break up the landscape into at least 10,000 cells or so, but in reality the number of cells is going to depend on the landscape heterogeneity you are trying to capture and your data. By discretizing space here, we need to slightly modify our linear predictor by adding a log offset term that denotes that area of a cell. Thus, for *c* in 1,...,*C* cells of region *B*, our linear predictor is now:
-
-
- in our specific case, the likelihood of our model can most easily be evaluated by discretizing our reg
+## Simulating some data
