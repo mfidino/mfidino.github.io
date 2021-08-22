@@ -133,7 +133,16 @@ answer <- exp(log_lambda + logit_b) / (1 + exp(logit_b))
 c(answer, lambda * b)
 ```
 
-Therefore, this modified inverse logit is really just the inverse link function of the thinned Poisson process, <span>$$\lambda(s)b(s)</span>, which makes sense because this likelihood function is for the presence-only data! Knowing this makes it much easier to code into `JAGS` because now we know what we are after. Now, let's code this up in `JAGS`.
+Therefore, this modified inverse logit is just the inverse link function of the thinned Poisson process, <span>$$\lambda(s)b(s)</span>, which makes sense because this likelihood function is for the presence-only data! So if we wanted to abstract this likelihood out a little bit, we could write it out as:
+
+$$L(\boldsymbol{\beta},\boldsymbol{c}) = \frac{\prod_{i=1}^m PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal, \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal)}{\text{exp}(\int_B PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal, \boldsymbol{c}\boldsymbol{h}(s)^\intercal))ds}$$
+
+where
+
+$$PO^{-1}(x,y) = \frac{\text{exp}(x + y)}{1 + \text{exp}(y)}$$
+
+
+Knowing this makes it much easier to code into `JAGS` because now we know what we are after. Now, let's code this up in `JAGS`.
 
 
 ## How to code up the model in `JAGS`
