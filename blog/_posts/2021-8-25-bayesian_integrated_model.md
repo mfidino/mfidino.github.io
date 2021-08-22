@@ -17,9 +17,9 @@ So, in this post I am going to 1) walk through the model in Koshkina *et al.* (2
 
 ---
 
-The Koshkina *et al.* (2017) integrated SDM, which was based on the model in Dorazio (2014), uses an inhomogeneous Poisson process model for the latent state. A Poisson process is just a mathematical object (e.g., a square with an x and y axis) in which points are randomly located. In our case, however, this is an inhomogeneous Poisson process, which means the density of points on this object depends on your location on the object. What this means is that we have some landscape and abundance of a species varies across that landscape.
+The Koshkina *et al.* (2017) integrated SDM, which was based on the model in Dorazio (2014), uses an inhomogeneous Poisson process model for the latent state. A Poisson process is just a mathematical object (e.g., a square with an x and y axis) in which points are randomly located. An inhomogeneous Poisson process, however, means the density of points on this object depends on your location on the object. Ecologically, this means that there is some region in geographic space (e.g., the city of Chicago, Illinois) and the modeled species abundance in that region varies across space.
 
-So, for our study region, *B*, we have a set of locations that individuals of our species occupies <span>$$s_1,...,s_n$$</span> and those locations are assumed to be a inhomogenous Poisson process. Thus, the limiting expected density of our species (number of individuals per unit area) can be described by a non-negative intensity function <span>$$\lambda(s)$$</span>. Taking this one step further, the abundance of our species in region *B* is a Poisson random variable with mean:
+So, for our region, *B*, we have a set of locations that individuals of our species occupies <span>$$s_1,...,s_n$$</span> and those locations are assumed to be a inhomogenous Poisson process. Thus, the limiting expected density of our species (number of individuals per unit area) can be described by the non-negative intensity function <span>$$\lambda(s)$$</span>. Taking this one step further, the abundance of our species in region *B* is a Poisson random variable with mean:
 
 
 $$\mu(B) = \int_B \lambda(s)ds$$
@@ -30,13 +30,13 @@ which just means we take the integral across our landscape (i.e., slice up the l
 $$\text{log}(\lambda(s)) = \boldsymbol{\beta}\boldsymbol{x}(s)^\intercal = \beta_1 \times x(s)_1 +\cdots+ \beta_I x(s)_I$$
 
 
-and so our model of abundance across the whole study area is
+therefore the abundance model across the whole study area is
 
 $$N(B) \sim \text{Poisson}(\mu(B))$$
 
 Some other important things to note here is that we can also model the number of individuals within any subregion of *B*, which also has a Poisson distribution. So, if you have a set of non-overlapping subregions where <span>$$r_1 \cup \cdots \cup r_k = B$$</span> (this means the union of all the subregions equals *B*) then <span>$$N(r_k) \sim \text{Poisson}(\mu(r_k))</span>. 
 
-The reason I bring up the subregion modeling is for two reasons. First, when we write the model in `JAGS` we are going to have to discretize the landscape to approximate the integral in the latent state model. So, we may as well start thinking about what that looks like now. Second, creating subregions makes it more intuitive to think about modeling occupancy instead of abundance. Why? Because if we set out to study a species in an area, chances are we know a priori that the probability at least one individual occupies *B* is 1, but there may be variation in the different subregions. To model occupancy we need to convert<span>$$\mu(r_k)$$</span> into a probability, which can be done with the inverse complimentary log-log link (inverse cloglog)
+I bring up this subregion modeling for two reasons. First, when we write the model in `JAGS` we are going to have to discretize the landscape to approximate the integral in the latent state model. So, we may as well start thinking about what breaking up the region into little pieces looks like now. Second, creating subregions makes it more intuitive to think about modeling occupancy instead of abundance. Why? Because if we set out to study a species in an area, chances are we know a priori that the probability at least one individual occupies *B* is 1, but there may be variation in the different subregions. To model occupancy we need to convert<span>$$\mu(r_k)$$</span> into a probability, which can be done with the inverse complimentary log-log link (inverse cloglog)
 
 $$\psi_k = Pr(N(r_k) > 0)  = (1 - \text{exp}({-\mu(r_k)}))$$
 
@@ -48,27 +48,27 @@ And that is the latent state model! So far this should mostly remind you of Pois
 
 Because we are fitting a Bayesian model, we get to take a small departure from the way the data model is described in Koshkina *et al.* (2017). In their model explanation, they initially combined the presence-only data detectability and probability of detection from the detection/non-detection data into one term. We, however, will keep them seperate the whole time. The detection / non-detection data model is the easier of the two, because it's equivalent to the detection process of a standard occupancy model, so let's start there.
 
-Remember those <span>$$r_k$$</span> subregions of *B* that are non-overlapping parts of the study area? Assuming you do not sample every point in *B* and instead you sample some subset of the subregions. For *j* in 1,...,*J* subregions sampled (hereafter sites) let  <span>$$r_k[j]$$</span> represent the *jth* site sampled (<span>$$k[j]$$</span> means there is [nested indexing](https://masonfidino.com/nested_indexing/)). We then have for *w* in 1,..,*W* sampling occasions as these sites, which results in a *J* by *W* binary observation matrix <span>$$y_{j,w}$$</span>. If we detected the species at site *j* on sampling occasion *w*, <span>$$y_{j,w} = 1$$</span>, otherwise it is zero (assuming equal sampling at all sites). The probability of detecting the species given their presence <span>$$\rho_{j,w}$$</span> can then be estimated as:
+Remember those <span>$$r_k$$</span> subregions of *B* that are non-overlapping parts of the study area? Let's assume we do not sample every point in *B* and instead sample some subset of the subregions. For *j* in 1,...,*J* subregions sampled (hereafter sites) let  <span>$$r_k[j]$$</span> represent the *jth* site sampled (<span>$$k[j]$$</span> means there is [nested indexing](https://masonfidino.com/nested_indexing/)). We then have for *w* in 1,..,*W* sampling occasions at these sites, which results in a *J* by *W* binary observation matrix <span>$$y_{j,w}$$</span>. If we detected the species at site *j* on sampling occasion *w*, <span>$$y_{j,w} = 1$$</span>, otherwise it is zero (assuming equal sampling at all sites). The probability of detecting the species given their presence <span>$$\rho_{j,w}$$</span> can then be estimated as:
 
 $$y_{j,w}|z_{k[j]} \sim \text{Bernoulli}(\rho_{j,w} \times z_{k[j]})$$
 
-and <span>$$\rho_{j,w}$$</span> can be made a function of covariates using the logit link, which could vary across sites or sampling occasions. For *q* in 1,...,*Q* covariates this is then
+and <span>$$\rho_{j,w}$$</span> can be made a function of covariates using the logit link, which could vary across sites or sampling occasions. For *q* in 1,...,*Q* covariates this is the linear predictor of the detection / non-detection data model is
 
 $$\text{logit}(\rho_{j,w}) = \boldsymbol{a}\boldsymbol{v}_{j,w}^\intercal = a_1 \times v_{1,j,w} + \cdots + a_Q \times v_{Q,j,w} $$
 
 where *a* is a vector of regression coefficients (intercept and slope terms) and *V* is a *Q* by *J* by *W*  array where the first element of <span>$$\boldsymbol{v}_{j,w} = 1$$</span> to account for the model intercept.
 
 
-Moving onto modeling the opportunistic presence-only data. We model this as a thinned Poisson process. What that means is that we multiply <span>$$\lambda(s)</span> by a probability (i.e., the presence-only detectabilty), which "thins" it. This thinning is helpful because we expect that the opportunistic presence-only data has some bias in where it was collected becuase there may not be a rigorous sampling design. As such, some areas may be oversampled while other areas are undersampled.  
+Modeling the opportunistic presence-only data is a little more complex because we assume the presence-only data are a thinned Poisson process. What that means is that we multiply <span>$$\lambda(s)</span> by some estimated probability (i.e., the presence-only detectabilty), which "thins" it. This thinning is helpful because we expect that the opportunistic presence-only data has some bias in where it was collected becuase there may not be a rigorous sampling design. As such, some areas may be oversampled while other areas are undersampled and we do not want that to bias our species abundance estimate.  
 
 The probability of being detected in the presence-only data, *b(s)*, can be made a function of *g* in 1,..,*G* covariates such that
 
 $$\text{logit}(b(s)) = \boldsymbol{c}\boldsymbol{h}(s)^\intercal = c_1 \times h(s)_1 + \cdots + c_G \times h(s)_G$$
 
 
-Where <span>$$\boldsymbol(c)$$</span> is a vector that contains the interecpt and slope terms  while <span>$$\boldsymbol(h)(s)$$</span> is a vector of G covariates, where the first element is 1 to account for the intercept  Before we move on there is one really important thing to bring up. For this model to be identifiable,  <span>$$\boldsymbol{x}(s)</span> must have one unique covariate that <span>$$\boldsymbol{h}(s)</span> does not have, and <span>$$\boldsymbol{h}(s)</span> must have one unique covariate <span>$$\boldsymbol{x}(s)</span> does not have. If you put the exact same covariates on the latent state and the presence-only data model, your model will not converge.
+Where <span>$$\boldsymbol(c)$$</span> is a vector that contains the interecpt and slope terms  while <span>$$\boldsymbol(h)(s)$$</span> is a vector of G covariates, where the first element is 1 to account for the intercept  Before we move on there is one really important thing to bring up. For this model to be identifiable,  <span>$$\boldsymbol{x}(s)</span> must have one unique covariate that <span>$$\boldsymbol{h}(s)</span> does not have, and <span>$$\boldsymbol{h}(s)</span> must have one unique covariate <span>$$\boldsymbol{x}(s)</span> does not have. If you put the exact same covariates on the latent state and the presence-only data model, your model will not converge. Keep that in mind while you consider hypotheses for your own data!
 
-As this is a thinned Poisson process, the the expected number of presence only locations throughout *B* is just the product of <span>$$\lambda(s)$$</span> and<span>$$b(s)$$</span>, assuming that the species was detected at *m* locations <span>$$s_1,\cdots,s_m$$</span> where m < n (i.e., the number of individuals detected in the presence-only is less than the total number of individuals of that species on the landscape).
+As this is a thinned Poisson process, the the expected number of presence only locations throughout *B* is the product of <span>$$\lambda(s)$$</span> and<span>$$b(s)$$</span>, assuming that the species was detected at *m* locations <span>$$s_1,\cdots,s_m$$</span> where m < n. In other words, we make the assumption that the number of individuals detected in the presence-only data is less than the total number of individuals of that species on the landscape. Thus,
 
 $$\pi(B) = \int_B \lambda(s)b(s)ds$$
 
@@ -79,9 +79,9 @@ L(\boldsymbol{\beta},\boldsymbol{c}) &=& \text{exp} \big(- \int_B\lambda(s)b(s)d
 &=& \text{exp}\Big(-\int_B\frac{\text{exp}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal + \boldsymbol{c}\boldsymbol{h}(s)^\intercal )}{1 + \text{exp}(\boldsymbol{c}\boldsymbol{h}(s)^\intercal )}ds\Big) \prod_{i=1}^m\frac{\text{exp}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal + \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal )}{1 + \text{exp}(\boldsymbol{c}\boldsymbol{h}(s_i)^\intercal )}  \nonumber
 \end{eqnarray}$$
 
-And if I had to guess, this is where people can get lost with this model. It's not necisarilly intuitive so it makes it difficult to know how to code it in your Bayesian programming language of choice!
+And if I had to guess, this is where people can get lost with this model! This likelihood is not necisarilly that intuitive so it makes it difficult to know how to code it in your Bayesian programming language of choice. But if we go through it piece by piece, the math here is not all that scary.
 
-But let's go through this piece by piece. To let you know we are headed, this equation is dividing the thinned Poisson process at all of the presence only points by the thinned Poisson process over the entire region *B* (i.e., the integral). Yet, there is no fraction here, so how did I arrive at this conclusion? Whenever you see negative signs thrown around with exponentials or natural logarithms, this can indicate that some division is going on. For example, if you remember that `exp(log(x)) = x`, let me show you two different ways to write the equation <span>$$10 / 2 = 5$$</span>.
+To let you know we are headed, this equation is dividing the thinned Poisson process at all of the presence only data points by the thinned Poisson process over the entire region *B* (i.e., the integral). Yet, there is no fraction here, so how did I arrive at this conclusion? Whenever you see negative signs thrown around with exponentials or natural logarithms, there could be some "secret division". For example, if you remember that `exp(log(x)) = x`, let me show you two different ways to write the equation <span>$$10 / 2 = 5$$</span> using exponentials and natural logs.
 
 $$\begin{eqnarray}
 10 / 2 &=& 5 \nonumber \\
@@ -103,13 +103,13 @@ exp(-log(2)) * 10
 
 ```
 
-If you look closely at that third example, its not too hard to recognize it as a simplified version of <span>$$\text{exp} \big(- \int_B\lambda(s)b(s)ds \big) \prod_{i=1}^m\lambda(s_i)b(s_i)$$</span>. So, because `exp(-x) * y == y/x`, then that first term that represents the thinned Poisson process over the region *B* is denominator of a fraction, while the second term that represents the thinned Poisson process over the *m* presence-only locations is the numerator. Therefore, the rest of the equation must take the log and logit scale values from the model, transform them a bit, and calcuate the thinned Poisson process (and that is exactly what it does).
+If you look closely at that third example, its not too hard to recognize it as a simplified version of <span>$$\text{exp} \big(- \int_B\lambda(s)b(s)ds \big) \prod_{i=1}^m\lambda(s_i)b(s_i)$$</span>. So, because `exp(-x) * y == y/x`, the first term term in our likelihood that represents the thinned Poisson process over the region *B* is denominator of a fraction, while the second term in our likelihood that represents the thinned Poisson process over the *m* presence-only locations is the numerator. With that out of the way, we just need to figure out what the likelihood is doing with the regression coefficients from the latent state model (<span>$$\beta$$</span>) and the regression coefficients associated to the presence-only thinning probability (<span>$$\c$$</span>).
 
 For those familiar with logistic regression, you can hopefully notice that the likelihood
 
 $$\text{exp}\Big(-\int_B\frac{\text{exp}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal + \boldsymbol{c}\boldsymbol{h}(s)^\intercal )}{1 + \text{exp}(\boldsymbol{c}\boldsymbol{h}(s)^\intercal )}ds\Big) \prod_{i=1}^m\frac{\text{exp}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal + \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal )}{1 + \text{exp}(\boldsymbol{c}\boldsymbol{h}(s_i)^\intercal )}$$
 
-is doing something a little different with the inverse logit link, <span>$$\text{logit}^{-1}(x) = \frac{\text{exp}(x)}{1 + \text{exp}(x)}$$</span>, which used to convert logit-scale coefficients back to the probability scale. In fact, it looks like they added the log-scale coefficients from the latent state model (<span>$$\boldsymbol{\beta}$$</span>) into the numerator of the inverse logit link, while the logit-scale coefficients (<span>$$\boldsymbol{c}$$</span>) from the thinning process are in the numerator and the denominator. To see what this means, let's explore how this modified inverse logit link function works in `R`, assuming that <span>$$\lambda(s) = 20$$</span> and <span>$$\b(s) = 0.75$$</span>.
+made a slight modification to the inverse logit link, <span>$$\text{logit}^{-1}(x) = \frac{\text{exp}(x)}{1 + \text{exp}(x)}$$</span>. The inverse logit link is important to know, especially if you do any amount of occupancy modeling, because it converts logit-scale coefficients back to the probability scale. It looks like this likelihood function added the log-scale coefficients from the latent state model (<span>$$\boldsymbol{\beta}$$</span>) into the numerator of the inverse logit link, while the logit-scale coefficients (<span>$$\boldsymbol{c}$$</span>) from the thinning process are in the numerator and the denominator. To see what this means, let's explore how this modified inverse logit link function works in `R`, assuming that <span>$$\lambda(s) = 20$$</span> and <span>$$\b(s) = 0.75$$</span>.
 
 ```R
 # The parameters
@@ -133,7 +133,7 @@ answer <- exp(log_lambda + logit_b) / (1 + exp(logit_b))
 c(answer, lambda * b)
 ```
 
-Therefore, this modified inverse logit is just the inverse link function of the thinned Poisson process, <span>$$\lambda(s)b(s)</span>, which makes sense because this likelihood function is for the presence-only data! So if we wanted to abstract this likelihood out a little bit, we could write it out as:
+Therefore, this modified inverse logit is really just the inverse link function of the thinned Poisson process, <span>$$\lambda(s)b(s)</span>! Knowing that, we could take the presesence-only data likelihood and abstract it out a little further:
 
 $$L(\boldsymbol{\beta},\boldsymbol{c}) = \frac{\prod_{i=1}^m PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal, \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal)}{\text{exp}(\int_B PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal, \boldsymbol{c}\boldsymbol{h}(s)^\intercal))ds}$$
 
@@ -142,15 +142,196 @@ where
 $$PO^{-1}(x,y) = \frac{\text{exp}(x + y)}{1 + \text{exp}(y)}$$
 
 
-Knowing this makes it much easier to code into `JAGS` because now we know what we are after. Now, let's code this up in `JAGS`.
+And that is the breakdown of the likelihood of the presence-only data. Hopefully this additional explanation here makes the model a bit easier to understand. In summary, this model has three linear predictors. One for the latent state that is partially informed by the presence-only data and detection/non-detection data, one to account for the bias in the opportunistic presence-only data, and one to account for false absencses in the detection / non-detection data.
 
 
 ## How to code up the model in `JAGS`
 
+For this example I'm going to focus on modeling species occupancy instead of abundance, though the model can easily be modified to estimate abundance by changing the likelihood function of the latent state model.
+
+With that out of the way, to code up this model in `JAGS` there are two things we need to overcome.
+
+1. Approximating the integrals in the model with a Riemann sum.
+2. Incorporating the non-standard likelihood of the presence-only data model.
+
+The first step is not difficult. For the region *B*, all we need to do is break it up into a "sufficiently fine grid" (*sensu* Dorazio 2014) and evaluate the model in each grid cell.   
+
+![A landscape with a grid of cells]({{site.url}}/blog/images/iocm01.jpeg#center)
+
+Discretizing the region, however, means all of the data input into the model needs to be aggregated to the scale of the grid (i.e., the covariates and species data). In our model, let `npixel` be the total number of grid cells on our landscape and `cell_area` be the log area of the gridded cell (we have to include a log offset term into the latent state linear predictor to account for the the gridding we did). The latent state model is then:
+
+```R
+for(pixel in 1:npixel){
+	# latent state linear predictor
+	#
+	# x_s  = covariates for latent state
+	# beta = latent state regression coefficients
+	# cell_area = log area of grid cell 
+	#
+	log(lambda[pixel]) <-inprod(x_s[pixel,1:I], beta[1:I]) + cell_area
+	# Species presence in a gridcell as a Bernoulli trial
+	z[pixel] ~ dbern(1 - exp(-lambda[pixel]))
+}
+
+```
+
+Remember, however, that for the presence-only thinned Poisson process needs to be evaluated across the entire landscape as well (i.e., the integral in the denominator of the presence-only data model likelihood). Therefore, we may as well calcluate the thinning probability here as well (note that I'm calling these regression coeffcients `cc` instead of `c` like in the model above because `c()` is a function).
+
+```R
+for(pixel in 1:npixel){
+	# latent state linear predictor
+	#
+	# x_s  = covariates for latent state
+	# beta = latent state model regression coefficients
+	# cell_area = log area of grid cell 
+	#
+	log(lambda[pixel]) <-inprod(x_s[pixel,], beta) + cell_area
+	# Species presence in a gridcell as a Bernoulli trial
+	z[pixel] ~ dbern(1 - exp(-lambda[pixel]))
+	# presence only thinning prob linear predictor
+	#
+	# h_s = covariates for thinning probability
+	# cc  = presence-only data model regression coefficients
+	#
+	logit(b[pixel]) <-  inprod(h_s[pixel,] , cc)
+}
+
+```
+And now we can start coding up the likelihood of the presence-only data model. While you can easily create your own likelihood functions in `Nimble`, it's not quite as simple in `JAGS`. However, there are some workarounds, and my personal favorite is the [Bernoulli "ones trick"](https://stackoverflow.com/questions/45888970/specify-a-discrete-weibull-distribution-in-jags-or-bugs-for-r/45920885#45920885). 
 
 
+What is the Bernoulli "ones trick"? 
 
+Let's say we have some likelihood `p(data|parameters)` we want to evalulate and we know the mathematical formula for that likelihood. In a perfect world we could just add the line `data[i] ~ pdf(parameters)` to our code where `pdf` is the probability density function for our likelihood.
 
+The model above has some likelihood `p(data|parameters)` that `JAGS` does not have a probability density function for. If it was, we could include something like `y[i] ~ presence_only_pdf()`
+
+To do this for the presence-only data model there are a two steps. First, code up the likelihood for each of the `m` presence-only datapoints. Second, you input that likelihood for each data point into a Bernoulli trial and divide it by some large constant value to ensure the likelihood is between 0 and 1 such that `ones[i] ~ dbern(likelihood[i]/CONSTANT)`, where `ones` is a vector of ones the same length as `m`. This little trick will actually evaluate the likelihood of datapoint `i` given the current model parameters in the MCMC chain, which is exactly what we need. 
+
+Note, however, that the presence-only data model likelihood function is for ALL the datapoints, not just 1, so it needs to be modified. This can be done by removing the product (we are only looking at a single datapoint) from the numerator and dividing the denominator by `m` (i.e., the number of presence-only datapoints). If you recall that `exp(log(x) - log(y)) = x/y` we can write this in `JAGS` making use of some [nested indexing](https://masonfidino.com/nested_indexing/) to map the `m` datapoints back to their respective grid cell
+
+```R
+# The presence only data model.
+#
+# This part of the model just uses the
+#  what we have calculated above (lambda
+#  and b). The denominator of this likelihood
+#  is actually a scalar so we can calculate it
+#  outside of a for loop. Let's do that first.
+#
+# The presence_only data model denominator, which
+#  is the thinned poisson process across the
+#  whole region (divided by the total number of 
+#  data points because it has to be 
+#  evaluated for each data point).
+po_denominator <- inprod(lambda[1:npixel], b[1:npixel] ) / m
+#
+# Loop through each presence-only datapoint
+#  using Bernoulli one's trick. The numerator
+#  is just the thinned poisson process for
+#  the ith data point.
+for(i in 1:m){
+  ones[i] ~ dbern(
+  	exp(
+  	  log(lambda[po_pixel[i]]*b[po_pixel[i]]) -
+  	  log(po_denominator)
+	) / CONSTANT
+  )
+} 
+```
+Here, `po_pixel` that denotes the grid cell of the *ith* presence only datapoint. Remember that the likelihood function above compares the thinned Poisson process at the presence only locations to the thinned Poisson process of the whole region. If you look at the code above, that is exactly what we are doing.
+
+Finally, the detection/non-detection data model is basically what you'd see in a standard occupancy model, but again uses some nested indexing to map the sampled site to it's respective grid cell. I'm making the assumption here that the `W` sampling occasions are i.i.d. random variables and so will model them as a binomial process such that
+
+```R
+for(site in 1:nsite){
+  # detection/non-detection data model linear predictor
+  #
+  #  v = detection covariates for the entire region B
+  #  a = det/non-det data model regression coefficients
+  #
+  logit(rho[site]) <-inprod(v[pa_pixel[site], ],a)
+  # The number of detections for site is a binomial
+  #  process with Pr(rho[site]) | z = 1 with
+  #  W sampling occasions per site.
+  y[site] ~ dbin(
+    z[pa_pixel[site]] * rho[site],
+    W
+  )
+}
+```
+Here is all of the model put together, plus some non-informative priors for all the model parameters
+```R
+model{
+# Bayesian version of the Koshkina (2017) model.
+#
+# The latent-state model
+for(pixel in 1:npixel){
+	# latent state linear predictor
+	#
+	# x_s  = covariates for latent state
+	# beta = latent state model regression coefficients
+	# cell_area = log area of grid cell 
+	#
+	log(lambda[pixel]) <-inprod(x_s[pixel,], beta) + cell_area
+	# Species presence in a gridcell as a Bernoulli trial
+	z[pixel] ~ dbern(1 - exp(-lambda[pixel]))
+	# presence only thinning prob linear predictor
+	#
+	# h_s = covariates for thinning probability
+	# cc  = presence-only data model regression coefficients
+	#
+	logit(b[pixel]) <-  inprod(h_s[pixel,] , cc)
+}
+# The presence only data model.
+#
+# This part of the model just uses the
+#  what we have calculated above (lambda
+#  and b). The denominator of this likelihood
+#  is actually a scalar so we can calculate it
+#  outside of a for loop. Let's do that first.
+#
+# The presence_only data model denominator, which
+#  is the thinned poisson process across the
+#  whole region (divided by the total number of 
+#  data points because it has to be 
+#  evaluated for each data point).
+po_denominator <- inprod(lambda[1:npixel], b[1:npixel] ) / m
+#
+# Loop through each presence-only datapoint
+#  using Bernoulli one's trick. The numerator
+#  is just the thinned poisson process for
+#  the ith data point.
+for(i in 1:m){
+  ones[i] ~ dbern(
+  	exp(
+  	  log(lambda[po_pixel[i]]*b[po_pixel[i]]) -
+  	  log(po_denominator)
+	) / CONSTANT
+  )
+} 
+}
+#
+# Detection / non-detection data model
+for(site in 1:nsite){
+  # detection/non-detection data model linear predictor
+  #
+  #  v = detection covariates for the entire region B
+  #  a = det/non-det data model regression coefficients
+  #
+  logit(rho[site]) <-inprod(v[pa_pixel[site], ],a)
+  # The number of detections for site is a binomial
+  #  process with Pr(rho[site]) | z = 1 with
+  #  W sampling occasions per site.
+  y[site] ~ dbin(
+    z[pa_pixel[site]] * rho[site],
+    W
+  )
+}
+#
+# Priors
+for()
+```
 
 
 We are almost to the likelihood of the presence-only data model, and what I think was the trickiest part to unpack from this whole model.
