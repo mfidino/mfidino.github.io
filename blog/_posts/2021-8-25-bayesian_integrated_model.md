@@ -18,7 +18,7 @@ Here are some links to the other parts of the post in case you want to skip arou
 1. [The model](#markdown-header-the-model)
 2. [How to code up the model in `JAGS`](#markdown-header-how-to-code-up-the-model-in-jags)
 3. [Simulating some data](#simulating-some-data)
-4. [Making spatial predictions from the integrated model](#making-spatial-predictions-from-the-integrated-model)
+
 
 
 
@@ -356,7 +356,7 @@ zsum <- sum(z)
 
 ## Simulating some data
 
-To look at all the simulation code and try it for yourself, visit this [repository here](https://github.com/mfidino/integrated-occupancy-model). You just need to run through `simulate_poisson_process.R` to simulate the data and fit the models.
+I'm not going to share all of the simulation code here as it is hundreds of lines long. However, I do want to demonstrate that this model works, and works better than a standard occupancy model. To look at all the simulation code and try it for yourself, visit this [repository here](https://github.com/mfidino/integrated-occupancy-model). You just need to run through `simulate_poisson_process.R` to simulate the data and fit the models.
 
 If you are not interested in that code, here are the steps I took to simulate the data:
 
@@ -369,7 +369,7 @@ If you are not interested in that code, here are the steps I took to simulate th
 7. If the species is present at these sites, sample their presence with imperfect detection.
 
 
-Following this we fit our simulated data to two models. The first model had the same latent-state and detection/non-detection data model, but we have removed the presence-only data model so that it is a standard occupancy model using a cloglog link. The second model is the integrated model from above fit to all of the data.
+Following this I fit the simulated data to two models. The first model had the same latent-state and detection/non-detection data model, but we have removed the presence-only data model so that it is a standard occupancy model using a cloglog link. The second model is the integrated model from above fit to all of the data.
 
 For this simulation, I assumed there was a single covariate that influenced the latent state and one covariate that influenced the bias of the presence-only data. For simplicity, I also assumed that imperfect detection at sampling sites did not vary (i.e., the data model for detection/non-detection data was intercept only). Some other general bookkeeping for this simulation:
 
@@ -378,22 +378,66 @@ For this simulation, I assumed there was a single covariate that influenced the 
 3. The intercept and slope coefficients for the presence-only thinning probability were respectively `-0.75` and `1.5`.
 4. The by-survey probability fo detecting an individual given their presence at a sample site was 0.3 (about -0.85 on the logit scale). 
 
-When comparing the outputs of the latent state estimates from the standard occupancy model that only used detection / non-detection data to the integrated occupancy model that also used presence-only data, it is very clear that the accurary and precision of the coefficients estimates have improved.
+When comparing the outputs of the latent state estimates from the standard occupancy model that only used detection / non-detection data to the integrated occupancy model that also used presence-only data, it clear that the integrated model has greater accuracy and precision.
 
 ![The integrated model greatly outperformed the standard occupancy model]{{site.url}}/blog/images/iocm02.jpeg#center
 
-The plot above is for the full posterior distribution of the intercept (`6`) and slope (`1`) term for the latent state model. 
+The horizontal lines in the plot above are the true parameter values I used to simulate the data.. 
 
-Digging into the results from the rest of model, it's also clear to see that the integrated model did a great job retrieving the parameters from the other linear predictors.
-
-
+Digging into the results from the rest of model, it's also clear that the integrated model did a great job retrieving the parameters from the other linear predictors.
 
 ![All true parameter values are within the 95% credible interval for each linear predictor]{{site.url}}/blog/images/iocm03.jpeg#center
 
 In order, `beta` represents the latent state terms, `cc` are the presence-only data model terms, and `a` was the intercept term from the detection/non-detection data model.
 
 
-## Making spatial predictions from the integrated model
+One last thing before I wrap this up. If you use this model yourself, you **must** remember to include the log-offset term in order to make model predictions. For example, if I wanted to make predictions across the environmental covariate that was related to the species latent occupancy state, the code would look something like (assuming you are working with the model objects from `simulate_poisson_process.R`:
+
+```R
+# matrix for predictions.
+#  intercept and slope.
+for_pred <- cbind(1, seq(-2,2, 0.01))
+
+# The log-offset I supplied to JAGS
+my_log_offset <- my_data$cell_area
+
+# get mcmc samples for latent state terms
+#  intmm = integrated mcmc samples
+latent_parms <- intmm[,c("beta[1]", "beta[2]")] 
+
+# predictions on cloglog scale
+my_preds <- latent_parms %*% t(for_pred) + my_log_offset
+
+# inverse cloglog to convert to probability
+my_preds <- 1 - exp(-exp(my_preds))
+
+# get quantiles for plotting
+my_preds <- apply(
+  my_preds,
+  2,
+  quantile,
+  probs = c(0.025,0.5,0.975)
+)
+
+plot(
+  my_preds[2,] ~ for_pred[,2],
+  type = "l",
+  lwd = 3,
+  ylim = c(0,1),
+  xlab = "Environmental covariate",
+  ylab = "Pr(Occupancy)",
+  las = 1,
+  bty = "l"
+)
+lines(my_preds[1,] ~ for_pred[,2],lty =2, lwd = 2)
+lines(my_preds[3,] ~ for_pred[,2],lty =2, lwd = 2)
+
+legend("topleft", c("Median estimate", "95% CI"), lty = c(1,2), lwd = c(3,2),
+       bty = "n", cex = 1.3)
+
+```
+
+![The probability of occupancy goes up with this environmental covariate]{{site.url}}/blog/images/iocm04.jpeg#center
 
 
 <p><a href="#top" style>Back to top ⤒</a></p>
