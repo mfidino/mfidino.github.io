@@ -1,6 +1,6 @@
 ---
 layout: post
-title: A gentle introduction to fitting an integrated occupancy model that combines presence-only and detection/non-detection data.
+title: A gentle introduction to an integrated occupancy model that combines presence-only and detection/non-detection data, and how to fit it in `JAGS`
 category: blog
 ---
 
@@ -265,54 +265,53 @@ for(site in 1:nsite){
 Here is all of the model put together plus some non-informative priors for all the parameters and a derived parameter to track how many cells the species occupies. You can find this model on [this repository here].
 ```R
 model{
-# Bayesian version of the Koshkina (2017) model.
-#
-# The latent-state model
-for(pixel in 1:npixel){
-	# latent state linear predictor
-	#
-	# x_s  = covariates for latent state
-	# beta = latent state model regression coefficients
-	# cell_area = log area of grid cell 
-	#
-	log(lambda[pixel]) <-inprod(x_s[pixel,], beta) + cell_area
-	# Species presence in a gridcell as a Bernoulli trial
-	z[pixel] ~ dbern(1 - exp(-lambda[pixel]))
-	# presence only thinning prob linear predictor
-	#
-	# h_s = covariates for thinning probability
-	# cc  = presence-only data model regression coefficients
-	#
-	logit(b[pixel]) <-  inprod(h_s[pixel,] , cc)
-}
-# The presence only data model.
-#
-# This part of the model just uses the
-#  what we have calculated above (lambda
-#  and b). The denominator of this likelihood
-#  is actually a scalar so we can calculate it
-#  outside of a for loop. Let's do that first.
-#
-# The presence_only data model denominator, which
-#  is the thinned poisson process across the
-#  whole region (divided by the total number of 
-#  data points because it has to be 
-#  evaluated for each data point).
-po_denominator <- inprod(lambda[1:npixel], b[1:npixel] ) / m
-#
-# Loop through each presence-only datapoint
-#  using Bernoulli one's trick. The numerator
-#  is just the thinned poisson process for
-#  the ith data point.
-for(po in 1:m){
-  ones[po] ~ dbern(
-  	exp(
-  	  log(lambda[po_pixel[po]]*b[po_pixel[po]]) -
-  	  log(po_denominator)
-	) / CONSTANT
-  )
-} 
-}
+  # Bayesian version of the Koshkina (2017) model.
+  #
+  # The latent-state model
+  for(pixel in 1:npixel){
+    # latent state linear predictor
+    #
+    # x_s  = covariates for latent state
+    # beta = latent state model regression coefficients
+    # cell_area = log area of grid cell 
+    #
+    log(lambda[pixel]) <-inprod(x_s[pixel,], beta) + cell_area
+    # Species presence in a gridcell as a Bernoulli trial
+    z[pixel] ~ dbern(1 - exp(-lambda[pixel]))
+    # presence only thinning prob linear predictor
+    #
+    # h_s = covariates for thinning probability
+    # cc  = presence-only data model regression coefficients
+    #
+    logit(b[pixel]) <-  inprod(h_s[pixel,] , cc)
+  }
+  # The presence only data model.
+  #
+  # This part of the model just uses the
+  #  what we have calculated above (lambda
+  #  and b). The denominator of this likelihood
+  #  is actually a scalar so we can calculate it
+  #  outside of a for loop. Let's do that first.
+  #
+  # The presence_only data model denominator, which
+  #  is the thinned poisson process across the
+  #  whole region (divided by the total number of 
+  #  data points because it has to be 
+  #  evaluated for each data point).
+  po_denominator <- inprod(lambda[1:npixel], b[1:npixel] ) / m
+  #
+  # Loop through each presence-only datapoint
+  #  using Bernoulli one's trick. The numerator
+  #  is just the thinned poisson process for
+  #  the ith data point.
+  for(po in 1:m){
+    ones[po] ~ dbern(
+      exp(
+        log(lambda[po_pixel[po]]*b[po_pixel[po]]) -
+          log(po_denominator)
+      ) / CONSTANT
+    )
+  } 
 #
 # Detection / non-detection data model
 for(site in 1:nsite){
@@ -351,3 +350,29 @@ zsum <- sum(z)
 <p><a href="#top" style>Back to top ⤒</a></p>
 
 ## Simulating some data
+
+To look at all the simulation code and try it for yourself, visit this [repository here](https://github.com/mfidino/integrated-occupancy-model). You just need to run through `simulate_poisson_process.R` to simulate the data and fit the models.
+
+If you are not interested in that code, here are the steps I took to simulate the data:
+
+1. Create the study region and give it a spatially autocorrelated environmental covariate.
+2. Generate latent species abundance on the landscape, which is correlated to the environmental covariate from step 1.
+3. Create a secondary environmental covariate that is correlated to the bias in the presence-only data.
+4. Generate presence-only data, which samples from the latent species abundance in step 2 based on the environmental covariate in step 3 (i.e., some individuals are observed in the presence-only dataset).
+5. Aggregate covariates and species presence on the landscape down to a coarser resolution for modeling purposes.
+6. Place some sites to sample your detection / non-detection data across the landscape at the same scale as this new coarser resolution.
+7. If the species is present at these sites, sample their presence with imperfect detection.
+
+
+Following this we fit our simulated data to two models. The first model had the same latent-state and detection/non-detection data model, but we have removed the presence-only data model so that it is a standard occupancy model using a cloglog link. The second model is the integrated model from above fit to all of the data.
+
+For this simulation, I assumed there was a single covariate that influenced the latent state and one covariate that influenced the bias of the presence-only data. For simplicity, I also assumed that imperfect detection at sampling sites did not vary (i.e., the data model for detection/non-detection data was intercept only). Some other general bookkeeping for this simulation:
+
+1. One hundred sites were sampled for the detection / non-detection data.
+2. The intercept and slope coefficients for the latent state were respectively `6` and `1`.
+3. The intercept and slope coefficients for the presence-only thinning probability were respectively `-0.75` and `1.5`.
+4. The by-survey probability fo detecting an individual given their presence at a sample site was 0.3 (about -0.85 on the logit scale). 
+
+
+
+
