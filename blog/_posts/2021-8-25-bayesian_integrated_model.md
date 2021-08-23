@@ -10,14 +10,14 @@ SDMs are being regularly improved, and one class of model I am very excited abou
 
 In my opinion, the biggest hurdle that prevents the wide scale adoption of integrated SDMs is that the math associated to them can be complex and use non-standard likelihood functions that may need to be coded up from scratch. And to be honest, trying to understand that math is hard, especially as papers that introduce such models may need to skip some algebraic steps in the model formulation to save space! And while I am no expert in integrated SDMs, I wanted to take the time to dispel some of the confusion for one model I have been using in my own research, which is an integrated SDM that combines opportunistic presence-only data (e.g., data from public participatory science) with detection / non-detection data (e.g., data from camera traps, repeated bird counts, etc.). 
 
-In this post I am going to 1) walk through the model in [Koshkina *et al.* (2017)](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12738), 2) show how the model can be written out in `JAGS`, and 3) simulate some data and fit the model. To keep some of the coding parts short, I've compartmentalized a lot of the code into functions, all of which is stored on this GitHub repository.
+In this post I am going to 1) walk through the model in [Koshkina *et al.* (2017)](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12738), 2) show how the model can be written out in `JAGS`, and 3) simulate some data and fit the model to show that it works. This post is long, so I have not included any of the simulation code here. Instead, you can find all of it, including the JAGS implementation of the model, on [this GitHub repository](https://github.com/mfidino/integrated-occupancy-model).
 
-Here are some links to the other parts of the post in case you want to skip around.
+Here are some links to these three sections of the post in case you want to skip around.
 
 
 1. [The model](#markdown-header-the-model)
 2. [How to code up the model in `JAGS`](#markdown-header-how-to-code-up-the-model-in-jags)
-3. [Simulating some data](#simulating-some-data)
+3. [Share the results from simulated data fit to the model](#simulating-some-data)
 
 
 
@@ -27,7 +27,7 @@ Here are some links to the other parts of the post in case you want to skip arou
 
 ---
 
-The Koshkina *et al.* (2017) integrated SDM, which was based on the model in Dorazio (2014), uses an inhomogeneous Poisson process model for the latent state. A Poisson process is just a mathematical object (e.g., a square with an x and y axis) in which points are randomly located. An inhomogeneous Poisson process, however, means the density of points on this object depends on your location on the object. Ecologically, this means that there is some region in geographic space (e.g., the city of Chicago, Illinois) and the modeled species abundance in that region varies across space.
+The Koshkina *et al.* (2017) integrated SDM, which was based on the model in [Dorazio (2014)](https://onlinelibrary.wiley.com/doi/full/10.1111/geb.12216), uses an inhomogeneous Poisson process model for the latent state. A Poisson process is just a mathematical object (e.g., a square with an x and y axis) in which points are randomly located. An inhomogeneous Poisson process, however, means the density of points on this object depends on your location on the object. Ecologically, this means that there is some region in geographic space (e.g., the city of Chicago, Illinois) and the modeled species abundance in that region varies across space.
 
 So, for our region, *B*, we have a set of locations that individuals of our species occupies <span>$$s_1,...,s_n$$</span> and those locations are assumed to be a inhomogenous Poisson process. Thus, the limiting expected density of our species (number of individuals per unit area) can be described by the non-negative intensity function <span>$$\lambda(s)$$</span>. Taking this one step further, the abundance of our species in region *B* is a Poisson random variable with mean:
 
@@ -40,13 +40,13 @@ which just means we take the integral across our landscape (i.e., slice up the l
 $$\text{log}(\lambda(s)) = \boldsymbol{\beta}\boldsymbol{x}(s)^\intercal = \beta_1 \times x(s)_1 +\cdots+ \beta_I x(s)_I$$
 
 
-therefore the abundance model across the whole study area is
+The abundance model across the whole study area is then
 
 $$N(B) \sim \text{Poisson}(\mu(B))$$
 
 Some other important things to note here is that we can also model the number of individuals within any subregion of *B*, which also has a Poisson distribution. So, if you have a set of non-overlapping subregions where <span>$$r_1 \cup \cdots \cup r_k = B$$</span> (this means the union of all the subregions equals *B*) then <span>$$N(r_k) \sim \text{Poisson}(\mu(r_k))$$</span>. 
 
-I bring up this subregion modeling for two reasons. First, when we write the model in `JAGS` we are going to have to discretize the landscape to approximate the integral in the latent state model. So, we may as well start thinking about what breaking up the region into little pieces looks like now. Second, creating subregions makes it more intuitive to think about modeling occupancy instead of abundance. Why? Because if we set out to study a species in an area, chances are we know a priori that the probability at least one individual occupies *B* is 1, but there may be variation in the different subregions. To model occupancy we need to convert<span>$$\mu(r_k)$$</span> into a probability, which can be done with the inverse complimentary log-log link (inverse cloglog)
+I bring up this subregion modeling for two reasons. First, when we write the model in `JAGS` we are going to have to discretize the landscape to approximate the integral in the latent state model. So, we may as well start thinking about what breaking up the region into little pieces looks like now. Second, creating subregions makes it more intuitive to think about modeling occupancy instead of abundance. Why? Because if we set out to study a species in an area, chances are we know a priori that the probability at least one individual occupies *B* is 1, but there may be variation in the different subregions. To model occupancy we need to convert <span>$$\mu(r_k)$$</span> into a probability, which can be done with the inverse complimentary log-log link (inverse cloglog)
 
 $$\psi_k = Pr(N(r_k) > 0)  = (1 - \text{exp}({-\mu(r_k)}))$$
 
@@ -170,9 +170,9 @@ To code up this model in `JAGS` there are two things we need to overcome.
 The first step is not difficult. For the region *B*, all we need to do is break it up into a "sufficiently fine grid" (Dorazio 2014) and evaluate the model in each grid cell.
 ![A landscape with a grid of cells]({{site.url}}/blog/images/iocm01.jpeg#center)
 
- What is sufficiently fine? I've seen some suggestions that you [need at least 10000](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12352), but in reality the number of cells is going to depend on the landscape heterogeneity you are trying to capture and your data. For example, a small study region roughly the size of a city may not need 10000 grid cells. In my own research, I've had success splitting Chicago, IL, which is about 606 km<sup>2</sup>, into roughly 2500 500m<sup>2</sup> grid cells. So if you are trying to use this model on your own you may need to do some trial and error to determine what is an appropriate cell count is (i.e., fit the model with different grid cell sizes to see if it has an influence on the parameters in the latent state model). 
+ What is sufficiently fine? I've seen some suggestions that you [need at least 10000](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12352), but in reality the number of cells is going to depend on the landscape heterogeneity you are trying to capture and your data. For example, a small study region roughly the size of a city may not need 10000 grid cells. In my own research, I've had success splitting Chicago, IL, which is about 606 km<sup>2</sup>, into roughly 2500 500m<sup>2</sup> grid cells (and the simulation below has around 4500 grid cells). So if you are trying to use this model on your own you may need to do some trial and error to determine what is an appropriate cell count is (i.e., fit the model with different grid cell sizes to see if it has an influence on the parameters in the latent state model). 
 
-Perhaps the trickiest part related to discretizing the region, however, means all of the data input into the model needs to be aggregated to the scale of the grid (i.e., the covariates and species data). I'll show you how to do that when I simulate some data.
+Perhaps the trickiest part related to discretizing the region, however, means all of the data input into the model needs to be aggregated to the scale of the grid (i.e., the covariates and species data). In `R`, the `raster::aggregate` function will do most of that work for you. In the simulated example, I also created the function `agg_pres()` which aggregated species presence on the landscape to the appropriate grid size (which is in the script `./utilities/sim_utility.R` [here](https://github.com/mfidino/integrated-occupancy-model)).
 
 Now back to the model. Let `npixel` be the total number of grid cells on our landscape and `cell_area` be the log area of the gridded cell (we have to include a log offset term into the latent state linear predictor to account for the the gridding we did). The latent state model is then:
 
@@ -217,7 +217,7 @@ And now we can start coding up the likelihood of the presence-only data model. W
 
 To do this for the presence-only data model there are a two steps. First, code up the likelihood for each of the `m` presence-only data points. Second, input that likelihood for each data point into a Bernoulli trial and divide it by some large constant value to ensure the likelihood is between 0 and 1 such that `ones[i] ~ dbern(likelihood[i]/CONSTANT)`, where `ones` is a vector of ones the same length as `m`. This little trick evaluates the likelihood of data point `i` given the current model parameters in the MCMC chain, which is exactly what we need. 
 
-Note, however, that the presence-only data model likelihood function presented in Koshkina *et al.* (2017)is for ALL the data points, and we need to evaluate the likelihood of each data point on its own. To do this, all we need to do is the product from the numerator because we are only looking at a single data point from the numerator and divide the denominator by `m` (i.e., the number of presence-only data points). If you recall that `exp(log(x) - log(y)) = x/y` we can write the presence-only likelihood in `JAGS` using [nested indexing](https://masonfidino.com/nested_indexing/) to map the `m` datapoints back to their respective grid cell. If I wanted to I could have coded up the presence-only data model inverse link function and applied it to the regression coefficients & covariates for each cell. However, we have already calculated `lambda` and `b` in the model so we can use them instead.
+Note, however, that the presence-only data model likelihood function presented in Koshkina *et al.* (2017) is for ALL the data points, and we need to evaluate the likelihood of each data point on its own. To do this, all we need to do is remove the product from the numerator because we are only looking at a single data point from the numerator and divide the denominator by `m` (i.e., the number of presence-only data points). If you recall that `exp(log(x) - log(y)) = x/y` we can write the presence-only likelihood in `JAGS` using [nested indexing](https://masonfidino.com/nested_indexing/) to map the `m` datapoints back to their respective grid cell. If I wanted to I could have coded up the presence-only data model inverse link function and applied it to the regression coefficients & covariates for each cell. However, we have already calculated `lambda` and `b` in the model so we can use them instead.
 
 ```R
 # The presence only data model.
@@ -267,7 +267,7 @@ for(site in 1:nsite){
   )
 }
 ```
-Here is all of the model put together plus some non-informative priors for all the parameters and a derived parameter to track how many cells the species occupies. You can find this model on [this repository here].
+Here is all of the model put together plus some non-informative priors for all the parameters and a derived parameter to track how many cells the species occupies.
 ```R
 model{
   # Bayesian version of the Koshkina (2017) model.
@@ -369,7 +369,7 @@ If you are not interested in that code, here are the steps I took to simulate th
 7. If the species is present at these sites, sample their presence with imperfect detection.
 
 
-Following this I fit the simulated data to two models. The first model had the same latent-state and detection/non-detection data model, but we have removed the presence-only data model so that it is a standard occupancy model using a cloglog link. The second model is the integrated model from above fit to all of the data.
+Following this I fit the simulated data to two models. The first model had the same latent-state and detection/non-detection data model, but I removed the presence-only data model so that it is just a standard occupancy model with a cloglog link. The second model is the integrated model from above fit to all of the data.
 
 For this simulation, I assumed there was a single covariate that influenced the latent state and one covariate that influenced the bias of the presence-only data. For simplicity, I also assumed that imperfect detection at sampling sites did not vary (i.e., the data model for detection/non-detection data was intercept only). Some other general bookkeeping for this simulation:
 
@@ -380,13 +380,13 @@ For this simulation, I assumed there was a single covariate that influenced the 
 
 When comparing the outputs of the latent state estimates from the standard occupancy model that only used detection / non-detection data to the integrated occupancy model that also used presence-only data, it clear that the integrated model has greater accuracy and precision.
 
-![The integrated model greatly outperformed the standard occupancy model]{{site.url}}/blog/images/iocm02.jpeg#center
+![The integrated model greatly outperformed the standard occupancy model]({{site.url}}/blog/images/iocm02.jpeg#center)
 
 The horizontal lines in the plot above are the true parameter values I used to simulate the data.. 
 
 Digging into the results from the rest of model, it's also clear that the integrated model did a great job retrieving the parameters from the other linear predictors.
 
-![All true parameter values are within the 95% credible interval for each linear predictor]{{site.url}}/blog/images/iocm03.jpeg#center
+![All true parameter values are within the 95% credible interval for each linear predictor]({{site.url}}/blog/images/iocm03.jpeg#center)
 
 In order, `beta` represents the latent state terms, `cc` are the presence-only data model terms, and `a` was the intercept term from the detection/non-detection data model.
 
@@ -437,8 +437,9 @@ legend("topleft", c("Median estimate", "95% CI"), lty = c(1,2), lwd = c(3,2),
 
 ```
 
-![The probability of occupancy goes up with this environmental covariate]{{site.url}}/blog/images/iocm04.jpeg#center
+![The probability of occupancy goes up with this environmental covariate]({{site.url}}/blog/images/iocm04.jpeg#center)
 
+And there you have it, a JAGS implementation of the Koshkina et al. (2017) model.
 
 <p><a href="#top" style>Back to top ⤒</a></p>
 
