@@ -17,6 +17,7 @@ Here are some links to the other parts of the post in case you want to skip arou
 1. [The model](#markdown-header-the-model)
 2. [How to code up the model in `JAGS`](#markdown-header-how-to-code-up-the-model-in-jags)
 3. 
+4. [Making spatial predictions from the integrated model](#making-spatial-predictions-from-the-integrated-model)
 
 
 
@@ -373,6 +374,20 @@ For this simulation, I assumed there was a single covariate that influenced the 
 3. The intercept and slope coefficients for the presence-only thinning probability were respectively `-0.75` and `1.5`.
 4. The by-survey probability fo detecting an individual given their presence at a sample site was 0.3 (about -0.85 on the logit scale). 
 
+When comparing the outputs of the latent state estimates from the standard occupancy model that only used detection / non-detection data to the integrated occupancy model that also used presence-only data, it is very clear that the accurary and precision of the coefficients estimates have improved.
+
+![The integrated model greatly outperformed the standard occupancy model]{{site.url}}/blog/images/iocm02.jpeg#center
+
+The plot above is for the full posterior distribution of the intercept (`6`) and slope (`1`) term for the latent state model. 
+
+Digging into the results from the rest of model, it's also clear to see that the integrated model did a great job retrieving the parameters from the other linear predictors.
 
 
+
+![All true parameter values are within the 95% credible interval for each linear predictor]{{site.url}}/blog/images/iocm03.jpeg#center
+
+In order, `beta` represents the latent state terms, `cc` are the presence-only data model terms, and `a` was the intercept term from the detection/non-detection data model.
+
+
+## Making spatial predictions from the integrated model
 
