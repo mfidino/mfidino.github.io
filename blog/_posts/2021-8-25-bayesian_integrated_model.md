@@ -1,16 +1,23 @@
 ---
 layout: post
-title: So, you don't have enough data to fit a dynamic occupancy model? An introduction to auto-logistic occupancy models.
+title: A gentle introduction to fitting an integrated occupancy model that combines presence-only and detection/non-detection data.
 category: blog
 ---
 
 Species distribution models (SDM) are useful tools in ecology and conservation biology. As the name implies, SDMs are used to estimate species presence or abundance across geographic space and/or through time. At their core, SDMs are a way to correlate environmental covariates--be they spatial, temporal, or both--to known locations of a speices. Generally this is done through some form of regression analysis.
 
-SDMs are being regularly improved, and one class of model I am very excited about is integrated SDMs. These models were developed, in part, to take advantage of the ever growing data sources that ecologists have access to (e.g., data from public participitory science, museum collections, and wildlife surveys, among others). What is great about integrated SDMs is that they allow you to combine these different types of species location data within the same statistical model. And because of this, integrated SDMs usually (not always) improve your predictive accuracy and the precision of your model estimates. And while models that combine data sources are being used now more than ever, I would argue that they are still not seeing widespread use. So why is that?
+SDMs are being regularly improved, and one class of model I am very excited about is integrated SDMs. These models were developed, in part, to take advantage of the ever growing data sources that ecologists have access to (e.g., data from public participitory science, museum collections, and wildlife surveys, among others). What is great about integrated SDMs is that they allow you to combine these different types of species location data within the same statistical model. And because of this, integrated SDMs usually (not always) improve the predictive accuracy and precision of your model estimates. And while models that combine data sources are being used now more than ever, I would argue that they are still not seeing widespread use. So why is that?
 
-In my opinion, the biggest hurdle that prevents the widescale adoption of integrated SDMs is that the math associated to them can be complex and use non-standard likelihood functions that may need to be coded up by hand. And to be honest, trying to understand that math is hard, especially as papers may need to skip some algebraic steps in the model formulation to save space! And while I am no expert in integrated SDMs, I do have some experience with them, and so wanted to dispell some of the confusion for at least one model I have been using in my own research, which is an integrated SDM that can combine opportunistic presence-only data (e.g., data from public participatory science) with detection / non-detection data (e.g., data from camera traps, repeated bird counts, etc.). 
+In my opinion, the biggest hurdle that prevents the widescale adoption of integrated SDMs is that the math associated to them can be complex and use non-standard likelihood functions that may need to be coded up by hand. And to be honest, trying to understand that math is hard, especially as papers may need to skip some algebraic steps in the model formulation to save space! And while I am no expert in integrated SDMs, I want to take the time to dispel some of the confusion for one model I have been using in my own research, which is an integrated SDM that combine opportunistic presence-only data (e.g., data from public participatory science) with detection / non-detection data (e.g., data from camera traps, repeated bird counts, etc.). 
 
-So, in this post I am going to 1) walk through the model in Koshkina *et al.* (2017), 2) show how they can be written out in `JAGS`, and 3) simulate some data and show you that this model works. If you have not caught on by now from my other posts, simulating data is a sure fire way to ensure you've coded your model up correctly and therefore I do it whenever I'm trying to learn new statistical techniques. To keep some of the coding parts short, I've compartmentalized a lot of the code into functions, all of which is stored on this GitHub repository.
+In this post I am going to 1) walk through the model in [Koshkina *et al.* (2017)](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12738), 2) show how the model can be written out in `JAGS`, and 3) simulate some data and fit the model. To keep some of the coding parts short, I've compartmentalized a lot of the code into functions, all of which is stored on this GitHub repository.
+
+Here are some links to the other parts of the post in case you want to skip around.
+
+1. [The model](#markdown-header-the-model)
+2. [How to code up the model in `JAGS`](#markdown-header-how-to-code-up-the-model-in-jags)
+3. 
+
 
 
 ## The model
@@ -144,22 +151,25 @@ $$PO^{-1}(x,y) = \frac{\text{exp}(x + y)}{1 + \text{exp}(y)}$$
 
 And that is the breakdown of the likelihood of the presence-only data. Hopefully this additional explanation here makes the model a bit easier to understand. In summary, this model has three linear predictors. One for the latent state that is partially informed by the presence-only data and detection/non-detection data, one to account for the bias in the opportunistic presence-only data, and one to account for false absencses in the detection / non-detection data.
 
+<p><a href="#top" style>Back to top ⤒</a></p>
 
 ## How to code up the model in `JAGS`
 
 For this example I'm going to focus on modeling species occupancy instead of abundance, though the model can easily be modified to estimate abundance by changing the likelihood function of the latent state model.
 
-With that out of the way, to code up this model in `JAGS` there are two things we need to overcome.
+To code up this model in `JAGS` there are two things we need to overcome.
 
 1. Approximating the integrals in the model with a Riemann sum.
-2. Incorporating the non-standard likelihood of the presence-only data model.
+2. Incorporate the non-standard likelihood of the presence-only data model with the Bernoulli "ones trick".
 
-The first step is not difficult. For the region *B*, all we need to do is break it up into a "sufficiently fine grid" (*sensu* Dorazio 2014) and evaluate the model in each grid cell.
+The first step is not difficult. For the region *B*, all we need to do is break it up into a "sufficiently fine grid" (Dorazio 2014) and evaluate the model in each grid cell.
 ![A landscape with a grid of cells]({{site.url}}/blog/images/iocm01.jpeg#center)
 
- What is sufficiently fine? I've seen some suggestions that you need at least 10000, but in reality the number of cells is going to depend on the landscape heterogeneity you are trying to capture and your data. For example, a smaller study region roughly the size of a city may not need 10000 grid cells. For example, I've had success with this model splitting Chicago, IL, which is about 606 km<sup>2</sup>, into roughly 2500 500m<sup>2</sup> grid cells. So if you are trying to use this model on your own you may need to do some trial and error to determine what is an appropriate cell count is (i.e., fit the model with different grid cell sizes to see if it has an influence on the parameters in the latent state model). 
+ What is sufficiently fine? I've seen some suggestions that you [need at least 10000](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12352), but in reality the number of cells is going to depend on the landscape heterogeneity you are trying to capture and your data. For example, a small study region roughly the size of a city may not need 10000 grid cells. In my own research, I've had success splitting Chicago, IL, which is about 606 km<sup>2</sup>, into roughly 2500 500m<sup>2</sup> grid cells. So if you are trying to use this model on your own you may need to do some trial and error to determine what is an appropriate cell count is (i.e., fit the model with different grid cell sizes to see if it has an influence on the parameters in the latent state model). 
 
-Discretizing the region, however, means all of the data input into the model needs to be aggregated to the scale of the grid (i.e., the covariates and species data). I'll show you how to do that when I simulate some data. In our model, let `npixel` be the total number of grid cells on our landscape and `cell_area` be the log area of the gridded cell (we have to include a log offset term into the latent state linear predictor to account for the the gridding we did). The latent state model is then:
+Perhaps the trickiest part related to discretizing the region, however, means all of the data input into the model needs to be aggregated to the scale of the grid (i.e., the covariates and species data). I'll show you how to do that when I simulate some data.
+
+Now back to the model. Let `npixel` be the total number of grid cells on our landscape and `cell_area` be the log area of the gridded cell (we have to include a log offset term into the latent state linear predictor to account for the the gridding we did). The latent state model is then:
 
 ```R
 for(pixel in 1:npixel){
@@ -176,7 +186,7 @@ for(pixel in 1:npixel){
 
 ```
 
-Remember, however, that for the presence-only thinned Poisson process needs to be evaluated across the entire landscape as well (i.e., the integral in the denominator of the presence-only data model likelihood). Therefore, we may as well calcluate the thinning probability here as well (note that I'm calling these regression coeffcients `cc` instead of `c` like in the model above because `c()` is a function).
+Remember, however, that the presence-only data model needs to be evaluated across the entire landscape as well (i.e., the integral that is the denominator of the presence-only data model likelihood). Therefore, we should also calcluate the thinning probability for each cell here too.
 
 ```R
 for(pixel in 1:npixel){
@@ -200,49 +210,40 @@ for(pixel in 1:npixel){
 ```
 And now we can start coding up the likelihood of the presence-only data model. While you can easily create your own likelihood functions in `Nimble`, it's not quite as simple in `JAGS`. However, there are some workarounds, and my personal favorite is the [Bernoulli "ones trick"](https://stackoverflow.com/questions/45888970/specify-a-discrete-weibull-distribution-in-jags-or-bugs-for-r/45920885#45920885). 
 
+To do this for the presence-only data model there are a two steps. First, code up the likelihood for each of the `m` presence-only datapoints. Second, input that likelihood for each data point into a Bernoulli trial and divide it by some large constant value to ensure the likelihood is between 0 and 1 such that `ones[i] ~ dbern(likelihood[i]/CONSTANT)`, where `ones` is a vector of ones the same length as `m`. This little trick evaluates the likelihood of datapoint `i` given the current model parameters in the MCMC chain, which is exactly what we need. 
 
-What is the Bernoulli "ones trick"? 
-
-Let's say we have some likelihood `p(data|parameters)` we want to evalulate and we know the mathematical formula for that likelihood. In a perfect world we could just add the line `data[i] ~ pdf(parameters)` to our code where `pdf` is the probability density function for our likelihood.
-
-The model above has some likelihood `p(data|parameters)` that `JAGS` does not have a probability density function for. If it was, we could include something like `y[i] ~ presence_only_pdf()`
-
-To do this for the presence-only data model there are a two steps. First, code up the likelihood for each of the `m` presence-only datapoints. Second, you input that likelihood for each data point into a Bernoulli trial and divide it by some large constant value to ensure the likelihood is between 0 and 1 such that `ones[i] ~ dbern(likelihood[i]/CONSTANT)`, where `ones` is a vector of ones the same length as `m`. This little trick will actually evaluate the likelihood of datapoint `i` given the current model parameters in the MCMC chain, which is exactly what we need. 
-
-Note, however, that the presence-only data model likelihood function is for ALL the datapoints, not just 1, so it needs to be modified. This can be done by removing the product (we are only looking at a single datapoint) from the numerator and dividing the denominator by `m` (i.e., the number of presence-only datapoints). If you recall that `exp(log(x) - log(y)) = x/y` we can write this in `JAGS` making use of some [nested indexing](https://masonfidino.com/nested_indexing/) to map the `m` datapoints back to their respective grid cell
+Note, however, that the presence-only data model likelihood function presented in Koshkina *et al.* (2017)is for ALL the datapoints, and we need to evaluate the likelihood of each data point on its own. To do this, all we need to do is the product from the numerator bceause we are only looking at a single datapoint from the numerator and divide the denominator by `m` (i.e., the number of presence-only datapoints). If you recall that `exp(log(x) - log(y)) = x/y` we can write the presence-only likelihood in `JAGS` using [nested indexing](https://masonfidino.com/nested_indexing/) to map the `m` datapoints back to their respective grid cell. If I wanted to I could have coded up the presence-only data model inverse link function and applied it to the regression coefficients & covariates for each cell. However, we have already calculated `lambda` and `b` in the model so we can use them instead.
 
 ```R
 # The presence only data model.
 #
-# This part of the model just uses the
+# This part of the model uses
 #  what we have calculated above (lambda
 #  and b). The denominator of this likelihood
-#  is actually a scalar so we can calculate it
-#  outside of a for loop. Let's do that first.
+#  is a scalar so we can calculate it
+#  outside of a for loop. Let's do that first,
+#  which we are approximating as a Riemann sum.
 #
-# The presence_only data model denominator, which
-#  is the thinned poisson process across the
-#  whole region (divided by the total number of 
-#  data points because it has to be 
-#  evaluated for each data point).
 po_denominator <- inprod(lambda[1:npixel], b[1:npixel] ) / m
 #
 # Loop through each presence-only datapoint
 #  using Bernoulli one's trick. The numerator
 #  is just the thinned poisson process for
-#  the ith data point.
-for(i in 1:m){
-  ones[i] ~ dbern(
+#  the ith data point, and we use some
+#  nested indexing to map the data to 
+#  it's associated grid cell.
+for(po in 1:m){
+  ones[po] ~ dbern(
   	exp(
-  	  log(lambda[po_pixel[i]]*b[po_pixel[i]]) -
+  	  log(lambda[po_pixel[po]]*b[po_pixel[po]]) -
   	  log(po_denominator)
 	) / CONSTANT
   )
 } 
 ```
-Here, `po_pixel` that denotes the grid cell of the *ith* presence only datapoint. Remember that the likelihood function above compares the thinned Poisson process at the presence only locations to the thinned Poisson process of the whole region. If you look at the code above, that is exactly what we are doing.
+Here, `po_pixel` denotes the grid cell of the *ith* presence only datapoint.
 
-Finally, the detection/non-detection data model is basically what you'd see in a standard occupancy model, but again uses some nested indexing to map the sampled site to it's respective grid cell. I'm making the assumption here that the `W` sampling occasions are i.i.d. random variables and so will model them as a binomial process such that
+Finally, the detection/non-detection data model is basically what you'd see in a standard occupancy model, but again uses nested indexing to map the sampled site to it's respective grid cell. I'm making the assumption here that the `W` sampling occasions are i.i.d. random variables and so will model them as a binomial process such that
 
 ```R
 for(site in 1:nsite){
@@ -261,7 +262,7 @@ for(site in 1:nsite){
   )
 }
 ```
-Here is all of the model put together, some non-informative priors for all the model parameters, and a derived parameter to track how many cells the species occupies. You can find this model on [this repository here].
+Here is all of the model put together plus some non-informative priors for all the parameters and a derived parameter to track how many cells the species occupies. You can find this model on [this repository here].
 ```R
 model{
 # Bayesian version of the Koshkina (2017) model.
@@ -303,10 +304,10 @@ po_denominator <- inprod(lambda[1:npixel], b[1:npixel] ) / m
 #  using Bernoulli one's trick. The numerator
 #  is just the thinned poisson process for
 #  the ith data point.
-for(i in 1:m){
-  ones[i] ~ dbern(
+for(po in 1:m){
+  ones[po] ~ dbern(
   	exp(
-  	  log(lambda[po_pixel[i]]*b[po_pixel[i]]) -
+  	  log(lambda[po_pixel[po]]*b[po_pixel[po]]) -
   	  log(po_denominator)
 	) / CONSTANT
   )
@@ -346,5 +347,7 @@ for(pa in 1:npar_pa){
 zsum <- sum(z)
 }
 ```
+
+<p><a href="#top" style>Back to top ⤒</a></p>
 
 ## Simulating some data
