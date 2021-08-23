@@ -113,7 +113,7 @@ exp(-log(2)) * 10
 
 ```
 
-If you look closely at that third example, its not too hard to recognize it as a simplified version of <span>$$\text{exp} \big(- \int_B\lambda(s)b(s)ds \big) \prod_{i=1}^m\lambda(s_i)b(s_i)$$</span>. So, because `exp(-x) * y == y/x`, the first term term in our likelihood that represents the thinned Poisson process over the region *B* is denominator of a fraction, while the second term in our likelihood that represents the thinned Poisson process over the *m* presence-only locations is the numerator. With that out of the way, we just need to figure out what the likelihood is doing with the regression coefficients from the latent state model (<span>$$\beta$$</span>) and the regression coefficients associated to the presence-only thinning probability (<span>$$\boldsymbol{c}$$</span>).
+If you look closely at that third example, its not too hard to recognize it as a simplified version of <span>$$\text{exp} \big(- \int_B\lambda(s)b(s)ds \big) \prod_{i=1}^m\lambda(s_i)b(s_i)$$</span>. So, because `exp(-x) * y == y/x`, the first term term in our likelihood is the denominator and represents the thinned Poisson process over the region *B*, while the second term in our likelihood is the numerator that represents the thinned Poisson process over the *m* presence-only locations. With that out of the way, we just need to figure out what the likelihood is doing with the regression coefficients from the latent state model (<span>$$\beta$$</span>) and the regression coefficients associated to the presence-only thinning probability (<span>$$\boldsymbol{c}$$</span>).
 
 For those familiar with logistic regression, you can hopefully notice that the likelihood
 
