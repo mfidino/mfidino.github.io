@@ -4,19 +4,19 @@ title: A gentle introduction to an integrated occupancy model that combines pres
 category: blog
 ---
 
-Species distribution models (SDM) are useful tools in ecology and conservation biology. As the name implies, SDMs are used to estimate species presence or abundance across geographic space and/or through time. At their core, SDMs are a way to correlate environmental covariates--be they spatial, temporal, or both--to known locations of a speices. Generally this is done through some form of regression analysis.
+Species distribution models (SDM) are useful tools in ecology and conservation biology. As the name implies, SDMs are used to estimate species presence or abundance across geographic space and/or through time. At their core, SDMs are a way to correlate environmental covariates--be they spatial, temporal, or both--to known locations of a species. Generally this is done through some form of regression analysis.
 
-SDMs are being regularly improved, and one class of model I am very excited about is integrated SDMs. These models were developed, in part, to take advantage of the ever growing data sources that ecologists have access to (e.g., data from public participitory science, museum collections, and wildlife surveys, among others). What is great about integrated SDMs is that they allow you to combine these different types of species location data within the same statistical model. And because of this, integrated SDMs usually (not always) improve the predictive accuracy and precision of your model estimates. And while models that combine data sources are being used now more than ever, I would argue that they are still not seeing widespread use. So why is that?
+SDMs are being regularly improved, and one class of model I am very excited about is integrated SDMs. These models were developed, in part, to take advantage of the ever growing data sources that ecologists have access to (e.g., data from public participatory science, museum collections, and wildlife surveys, among others). What is great about integrated SDMs is that they allow you to combine these different types of species location data within the same statistical model. And because of this, integrated SDMs usually (not always) improve the predictive accuracy and precision of your model estimates. And while models that combine data sources are being used now more than ever, I would argue that they are still not seeing widespread use. So why is that?
 
-In my opinion, the biggest hurdle that prevents the widescale adoption of integrated SDMs is that the math associated to them can be complex and use non-standard likelihood functions that may need to be coded up by hand. And to be honest, trying to understand that math is hard, especially as papers may need to skip some algebraic steps in the model formulation to save space! And while I am no expert in integrated SDMs, I want to take the time to dispel some of the confusion for one model I have been using in my own research, which is an integrated SDM that combine opportunistic presence-only data (e.g., data from public participatory science) with detection / non-detection data (e.g., data from camera traps, repeated bird counts, etc.). 
+In my opinion, the biggest hurdle that prevents the wide scale adoption of integrated SDMs is that the math associated to them can be complex and use non-standard likelihood functions that may need to be coded up from scratch. And to be honest, trying to understand that math is hard, especially as papers that introduce such models may need to skip some algebraic steps in the model formulation to save space! And while I am no expert in integrated SDMs, I wanted to take the time to dispel some of the confusion for one model I have been using in my own research, which is an integrated SDM that combines opportunistic presence-only data (e.g., data from public participatory science) with detection / non-detection data (e.g., data from camera traps, repeated bird counts, etc.). 
 
 In this post I am going to 1) walk through the model in [Koshkina *et al.* (2017)](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12738), 2) show how the model can be written out in `JAGS`, and 3) simulate some data and fit the model. To keep some of the coding parts short, I've compartmentalized a lot of the code into functions, all of which is stored on this GitHub repository.
 
 Here are some links to the other parts of the post in case you want to skip around.
 
-1. [The model](#markdown-header-the-model)
-2. [How to code up the model in `JAGS`](#markdown-header-how-to-code-up-the-model-in-jags)
-3. 
+1. [The model](#the-model)
+2. [How to code up the model in `JAGS`](#how-to-code-up-the-model-in-jags)
+3. [Simulating some data](#simulating-some-data)
 
 
 
@@ -53,7 +53,7 @@ $$z_k \sim \text{Bernoulli}(\psi_k)$$
 
 And that is the latent state model! So far this should mostly remind you of Poisson regression (except for that little jaunt into occupancy modeling). The big exception, however, is that integral across space that we need to contend with in `JAGS`, and we'll get there soon enough.
 
-Because we are fitting a Bayesian model, we get to take a small departure from the way the data model is described in Koshkina *et al.* (2017). In their model explanation, they initially combined the presence-only data detectability and probability of detection from the detection/non-detection data into one term. We, however, will keep them seperate the whole time. The detection / non-detection data model is the easier of the two, because it's equivalent to the detection process of a standard occupancy model, so let's start there.
+Because we are fitting a Bayesian model, we get to take a small departure from the way the data model is described in Koshkina *et al.* (2017). In their model explanation, they initially combined the presence-only data detectability and probability of detection from the detection/non-detection data into one term. We, however, will keep them separate the whole time. The detection / non-detection data model is the easier of the two, because it's equivalent to the detection process of a standard occupancy model, so let's start there.
 
 Remember those <span>$$r_k$$</span> subregions of *B* that are non-overlapping parts of the study area? Let's assume we do not sample every point in *B* and instead sample some subset of the subregions. For *j* in 1,...,*J* subregions sampled (hereafter sites) let  <span>$$r_k[j]$$</span> represent the *jth* site sampled (<span>$$k[j]$$</span> means there is [nested indexing](https://masonfidino.com/nested_indexing/)). We then have for *w* in 1,..,*W* sampling occasions at these sites, which results in a *J* by *W* binary observation matrix <span>$$y_{j,w}$$</span>. If we detected the species at site *j* on sampling occasion *w*, <span>$$y_{j,w} = 1$$</span>, otherwise it is zero (assuming equal sampling at all sites). The probability of detecting the species given their presence <span>$$\rho_{j,w}$$</span> can then be estimated as:
 
@@ -73,7 +73,7 @@ The probability of being detected in the presence-only data, *b(s)*, can be made
 $$\text{logit}(b(s)) = \boldsymbol{c}\boldsymbol{h}(s)^\intercal = c_1 \times h(s)_1 + \cdots + c_G \times h(s)_G$$
 
 
-Where <span>$$\boldsymbol(c)$$</span> is a vector that contains the interecpt and slope terms  while <span>$$\boldsymbol(h)(s)$$</span> is a vector of G covariates, where the first element is 1 to account for the intercept  Before we move on there is one really important thing to bring up. For this model to be identifiable,  <span>$$\boldsymbol{x}$$(s)</span> must have one unique covariate that <span>$$\boldsymbol{h}(s)$$</span> does not have, and <span>$$\boldsymbol{h}(s)$$</span> must have one unique covariate <span>$$\boldsymbol{x}(s)$$</span> does not have. If you put the exact same covariates on the latent state and the presence-only data model, your model will not converge. Keep that in mind while you consider hypotheses for your own data!
+Where <span>$$\boldsymbol(c)$$</span> is a vector that contains the intercept and slope terms  while <span>$$\boldsymbol(h)(s)$$</span> is a vector of G covariates, where the first element is 1 to account for the intercept  Before we move on there is one really important thing to bring up. For this model to be identifiable,  <span>$$\boldsymbol{x}$$(s)</span> must have one unique covariate that <span>$$\boldsymbol{h}(s)$$</span> does not have, and <span>$$\boldsymbol{h}(s)$$</span> must have one unique covariate <span>$$\boldsymbol{x}(s)$$</span> does not have. If you put the exact same covariates on the latent state and the presence-only data model, your model will not converge. Keep that in mind while you consider hypotheses for your own data!
 
 As this is a thinned Poisson process, the the expected number of presence only locations throughout *B* is the product of <span>$$\lambda(s)$$</span> and<span>$$b(s)$$</span>, assuming that the species was detected at *m* locations <span>$$s_1,\cdots,s_m$$</span> where m < n. In other words, we make the assumption that the number of individuals detected in the presence-only data is less than the total number of individuals of that species on the landscape. Thus,
 
@@ -86,9 +86,9 @@ L(\boldsymbol{\beta},\boldsymbol{c}) &=& \text{exp} \big(- \int_B\lambda(s)b(s)d
 &=& \text{exp}\Big(-\int_B\frac{\text{exp}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal + \boldsymbol{c}\boldsymbol{h}(s)^\intercal )}{1 + \text{exp}(\boldsymbol{c}\boldsymbol{h}(s)^\intercal )}ds\Big) \prod_{i=1}^m\frac{\text{exp}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal + \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal )}{1 + \text{exp}(\boldsymbol{c}\boldsymbol{h}(s_i)^\intercal )}  \nonumber
 \end{eqnarray}$$
 
-And if I had to guess, this is where people can get lost with this model! This likelihood is not necisarilly that intuitive so it makes it difficult to know how to code it in your Bayesian programming language of choice. But if we go through it piece by piece, the math here is not all that scary.
+And if I had to guess, this is where people can get lost with this model! This likelihood is not necessarily that intuitive so it makes it difficult to know how to code it in your Bayesian programming language of choice. But if we go through it piece by piece, the math here is not all that scary.
 
-To let you know we are headed, this equation is dividing the thinned Poisson process at all of the presence only data points by the thinned Poisson process over the entire region *B* (i.e., the integral). Yet, there is no fraction here, so how did I arrive at this conclusion? Whenever you see negative signs thrown around with exponentials or natural logarithms, there could be some "secret division". For example, if you remember that `exp(log(x)) = x`, let me show you two different ways to write the equation <span>$$10 / 2 = 5$$</span> using exponentials and natural logs.
+To let you know we are headed, this equation is dividing the thinned Poisson process at all of the presence only data points by the thinned Poisson process over the entire region *B* (i.e., the integral). Yet, there is no fraction here, so how did I arrive at this conclusion? Whenever you see negative signs thrown around with exponential terms or natural logarithms, there could be some divison happening on the log scale. For example, if you remember that `exp(log(x)) = x`, here are two different ways to write the equation <span>$$10 / 2 = 5$$</span>
 
 $$\begin{eqnarray}
 10 / 2 &=& 5 \nonumber \\
@@ -140,7 +140,7 @@ answer <- exp(log_lambda + logit_b) / (1 + exp(logit_b))
 c(answer, lambda * b)
 ```
 
-Therefore, this modified inverse logit is the inverse link function for the regression coefficients associated to the thinned Poisson process <span>$$\lambda(s)b(s)$$</span>! Knowing that, we could take the presesence-only data likelihood and abstract it out a little further:
+Therefore, this modified inverse logit is the inverse link function for the regression coefficients associated to the thinned Poisson process <span>$$\lambda(s)b(s)$$</span>! Knowing that, we could take the presence-only data likelihood and abstract it out a little further:
 
 $$L(\boldsymbol{\beta},\boldsymbol{c}) = \frac{\prod_{i=1}^m PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s_i)^\intercal, \boldsymbol{c}\boldsymbol{h}(s_i)^\intercal)}{\text{exp}(\int_B PO^{-1}(\boldsymbol{\beta}\boldsymbol{x}(s)^\intercal, \boldsymbol{c}\boldsymbol{h}(s)^\intercal ds))}$$
 
@@ -149,11 +149,13 @@ where
 $$PO^{-1}(x,y) = \frac{\text{exp}(x + y)}{1 + \text{exp}(y)}$$
 
 
-And that is the breakdown of the likelihood of the presence-only data. Hopefully this additional explanation here makes the model a bit easier to understand. In summary, this model has three linear predictors. One for the latent state that is partially informed by the presence-only data and detection/non-detection data, one to account for the bias in the opportunistic presence-only data, and one to account for false absencses in the detection / non-detection data.
+And that is the breakdown of the likelihood of the presence-only data. Hopefully this additional explanation here makes the model a bit easier to understand. In summary, this model has three linear predictors. One for the latent state that is partially informed by the presence-only data and detection/non-detection data, one to account for the bias in the opportunistic presence-only data, and one to account for false absences in the detection / non-detection data.
 
 <p><a href="#top" style>Back to top ⤒</a></p>
 
 ## How to code up the model in `JAGS`
+
+---
 
 For this example I'm going to focus on modeling species occupancy instead of abundance, though the model can easily be modified to estimate abundance by changing the likelihood function of the latent state model.
 
@@ -186,7 +188,7 @@ for(pixel in 1:npixel){
 
 ```
 
-Remember, however, that the presence-only data model needs to be evaluated across the entire landscape as well (i.e., the integral that is the denominator of the presence-only data model likelihood). Therefore, we should also calcluate the thinning probability for each cell here too.
+Remember, however, that the presence-only data model needs to be evaluated across the entire landscape as well (i.e., the integral that is the denominator of the presence-only data model likelihood). Therefore, we should also calculate the thinning probability for each cell here too.
 
 ```R
 for(pixel in 1:npixel){
@@ -210,9 +212,9 @@ for(pixel in 1:npixel){
 ```
 And now we can start coding up the likelihood of the presence-only data model. While you can easily create your own likelihood functions in `Nimble`, it's not quite as simple in `JAGS`. However, there are some workarounds, and my personal favorite is the [Bernoulli "ones trick"](https://stackoverflow.com/questions/45888970/specify-a-discrete-weibull-distribution-in-jags-or-bugs-for-r/45920885#45920885). 
 
-To do this for the presence-only data model there are a two steps. First, code up the likelihood for each of the `m` presence-only datapoints. Second, input that likelihood for each data point into a Bernoulli trial and divide it by some large constant value to ensure the likelihood is between 0 and 1 such that `ones[i] ~ dbern(likelihood[i]/CONSTANT)`, where `ones` is a vector of ones the same length as `m`. This little trick evaluates the likelihood of datapoint `i` given the current model parameters in the MCMC chain, which is exactly what we need. 
+To do this for the presence-only data model there are a two steps. First, code up the likelihood for each of the `m` presence-only data points. Second, input that likelihood for each data point into a Bernoulli trial and divide it by some large constant value to ensure the likelihood is between 0 and 1 such that `ones[i] ~ dbern(likelihood[i]/CONSTANT)`, where `ones` is a vector of ones the same length as `m`. This little trick evaluates the likelihood of data point `i` given the current model parameters in the MCMC chain, which is exactly what we need. 
 
-Note, however, that the presence-only data model likelihood function presented in Koshkina *et al.* (2017)is for ALL the datapoints, and we need to evaluate the likelihood of each data point on its own. To do this, all we need to do is the product from the numerator bceause we are only looking at a single datapoint from the numerator and divide the denominator by `m` (i.e., the number of presence-only datapoints). If you recall that `exp(log(x) - log(y)) = x/y` we can write the presence-only likelihood in `JAGS` using [nested indexing](https://masonfidino.com/nested_indexing/) to map the `m` datapoints back to their respective grid cell. If I wanted to I could have coded up the presence-only data model inverse link function and applied it to the regression coefficients & covariates for each cell. However, we have already calculated `lambda` and `b` in the model so we can use them instead.
+Note, however, that the presence-only data model likelihood function presented in Koshkina *et al.* (2017)is for ALL the data points, and we need to evaluate the likelihood of each data point on its own. To do this, all we need to do is the product from the numerator because we are only looking at a single data point from the numerator and divide the denominator by `m` (i.e., the number of presence-only data points). If you recall that `exp(log(x) - log(y)) = x/y` we can write the presence-only likelihood in `JAGS` using [nested indexing](https://masonfidino.com/nested_indexing/) to map the `m` datapoints back to their respective grid cell. If I wanted to I could have coded up the presence-only data model inverse link function and applied it to the regression coefficients & covariates for each cell. However, we have already calculated `lambda` and `b` in the model so we can use them instead.
 
 ```R
 # The presence only data model.
@@ -241,7 +243,7 @@ for(po in 1:m){
   )
 } 
 ```
-Here, `po_pixel` denotes the grid cell of the *ith* presence only datapoint.
+Here, `po_pixel` denotes the grid cell of the *ith* presence only data point.
 
 Finally, the detection/non-detection data model is basically what you'd see in a standard occupancy model, but again uses nested indexing to map the sampled site to it's respective grid cell. I'm making the assumption here that the `W` sampling occasions are i.i.d. random variables and so will model them as a binomial process such that
 
@@ -374,5 +376,5 @@ For this simulation, I assumed there was a single covariate that influenced the 
 4. The by-survey probability fo detecting an individual given their presence at a sample site was 0.3 (about -0.85 on the logit scale). 
 
 
-
+<p><a href="#top" style>Back to top ⤒</a></p>
 
