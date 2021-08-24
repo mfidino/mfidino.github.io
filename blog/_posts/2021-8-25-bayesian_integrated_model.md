@@ -15,8 +15,8 @@ In this post I am going to 1) walk through the model in [Koshkina *et al.* (2017
 Here are some links to these three sections of the post in case you want to skip around.
 
 
-1. [The model](#markdown-header-the-model)
-2. [How to code up the model in `JAGS`](#markdown-header-how-to-code-up-the-model-in-jags)
+1. [The model](#the-model)
+2. [How to code up the model in `JAGS`](#how-to-code-up-the-model-in-jags)
 3. [Share the results from simulated data fit to the model](#simulating-some-data)
 
 
