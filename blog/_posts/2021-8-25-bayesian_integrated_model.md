@@ -4,7 +4,7 @@ title: A gentle introduction to an integrated occupancy model that combines pres
 category: blog
 ---
 
-Species distribution models (SDMs) are useful tools in ecology and conservation biology. As the name implies, SDMs are used to estimate species presence or abundance across geographic space and/or through time. At their core, SDMs are a way to correlate environmental covariates--be they spatial, temporal, or both--to known locations of a species. Generally this is done through some form of regression analysis.
+Species distribution models (SDMs) are useful tools in ecology and conservation biology. As the name implies, SDMs are used to estimate species presence or abundance across geographic space and through time. At their core, SDMs are a way to correlate environmental covariates--be they spatial, temporal, or both--to known locations of a species. Generally this is done through some form of regression analysis.
 
 SDMs are being regularly improved, and one class of model I am very excited about is integrated SDMs. These models were developed, in part, to take advantage of the ever growing data sources that ecologists have access to (e.g., data from public participatory science, museum collections, and wildlife surveys, among others). What is great about integrated SDMs is that they allow you to combine these different types of species location data within the same statistical model. And because of this, integrated SDMs usually (not always) improve the predictive accuracy and precision of your model estimates. And while models that combine data sources are being used now more than ever, I would argue that they are still not seeing widespread use. So why is that?
 
