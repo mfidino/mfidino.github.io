@@ -141,6 +141,7 @@ answer <- exp(log_lambda + logit_b) / (1 + exp(logit_b))
 # compare that to lambda * b
 #  both == 15
 c(answer, lambda * b)
+[1] 15 15
 ```
 
 Therefore, this modified inverse logit is the inverse link function for the regression coefficients associated to the thinned Poisson process <span>$$\lambda(s)b(s)$$</span>! Knowing that, we could take the presence-only data likelihood and abstract it out a little further:
