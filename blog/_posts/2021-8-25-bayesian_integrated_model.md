@@ -50,7 +50,7 @@ I bring up this subregion modeling for two reasons. First, when we write the mod
 
 $$\psi_k = Pr(N(r_k) > 0)  = (1 - \text{exp}({-\mu(r_k)}))$$
 
-where <span>$$\psi_k$$</span> is the probability of occupancy for subregion <span>$$r_k$$</span>. This could then me modeled as a Bernoulli trial where <span>$$z_k = 1$$</span> if the species occupies subregion <span>$$r_k$$</span>.
+where <span>$$\psi_k$$</span> is the probability of occupancy for subregion <span>$$r_k$$</span>. This could then be modeled as a Bernoulli trial where <span>$$z_k = 1$$</span> if the species occupies subregion <span>$$r_k$$</span>.
 
 $$z_k \sim \text{Bernoulli}(\psi_k)$$
 
@@ -69,7 +69,7 @@ $$\text{logit}(\rho_{j,w}) = \boldsymbol{a}\boldsymbol{v}_{j,w}^\intercal = a_1 
 where *a* is a vector of regression coefficients (intercept and slope terms) and *V* is a *Q* by *J* by *W*  array where the first element of <span>$$\boldsymbol{v}_{j,w} = 1$$</span> to account for the model intercept.
 
 
-Modeling the opportunistic presence-only data is a little more complex because we assume the presence-only data are a thinned Poisson process. What that means is that we multiply <span>$$\lambda(s)</span> by some estimated probability (i.e., the presence-only detectabilty), which "thins" it. This thinning is helpful because we expect that the opportunistic presence-only data has some bias in where it was collected becuase there may not be a rigorous sampling design. As such, some areas may be oversampled while other areas are undersampled and we do not want that to bias our species abundance estimate.  
+Modeling the opportunistic presence-only data is a little more complex because we assume the presence-only data are a thinned Poisson process. What that means is that we multiply <span>$$\lambda(s)$$</span> by some estimated probability (i.e., the presence-only detectabilty), which "thins" it. This thinning is helpful because we expect that the opportunistic presence-only data has some bias in where it was collected becuase there may not be a rigorous sampling design. As such, some areas may be oversampled while other areas are undersampled and we do not want that to bias our species abundance estimate.  
 
 The probability of being detected in the presence-only data, *b(s)*, can be made a function of *g* in 1,..,*G* covariates such that
 
