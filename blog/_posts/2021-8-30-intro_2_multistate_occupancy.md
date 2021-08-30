@@ -1,6 +1,6 @@
 ---
 layout: post
-title: So you want to estimate more than just species presence? An introduction to static multistate occupancy models.
+title: So you want to estimate more than just species presence? A static multistate occupancy model for one species.
 category: blog
 ---
 
@@ -18,7 +18,7 @@ Overall, I would say that multistate occupancy models can be described by three 
 3. The sum of the probabilities across all states must sum to unity (i.e., sum to 1).
 
 
-In this first of what will be multiple posts about multistate models, I am going to introduce how they work with the simplest multistate model there is: a static three-state occupancy model for a single species. I will also show how to include covariates in each of this model with the softmax function ([link to wikipedia](https://en.wikipedia.org/wiki/Softmax_function)). The softmax function is a generalization of the inverse logit link that can accommodate any number of categories (i.e., states), and so will be the way convert multiple linear predictors into a set of probabilities that fulfill the *central tenants of multistate models*. For all of the simulation code & `JAGS` implementations of these models, visit this [GitHub repository here](https://github.com/mfidino/multi-state-occupancy-models).
+In this first of what will be multiple posts about multistate models, I am going to introduce how they work with the simplest multistate model there is: a static three-state occupancy model for a single species. I will also show how to include covariates in each of this model with the softmax function ([link to wikipedia](https://en.wikipedia.org/wiki/Softmax_function)). The softmax function is a generalization of the inverse logit link that can accommodate any number of categories (i.e., states), and can convert multiple linear predictors into a set of probabilities that fulfill the *central tenants of multistate models*. For all of the simulation code & `JAGS` implementations of these models, visit this [GitHub repository here](https://github.com/mfidino/multi-state-occupancy-models).
 
 
 Links to the different sections of this post
