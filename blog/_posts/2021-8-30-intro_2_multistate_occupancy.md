@@ -4,20 +4,21 @@ title: So you want to estimate more than just species presence? An introduction 
 category: blog
 ---
 
-I've got a little bone to pick with the term *multistate occupancy model*. As the name implies, multi-state occupancy models estimate multiple states across space and sometimes through time (e.g., species absent, species present but not breeding, species present and breeding). But honestly, every single occupancy model that exists estimates multiple states. A static, single-season occupancy model, for example, estimates species **presence** with <span>$$Pr(\psi)$$</span> and **absence** with <span>$$1 - Pr(\psi)$$</span>. As long as <span>$$Pr(\psi)$$</span> is not 0 or 1, there will be locations where we expect the species to be or not to be, and therefore we have **multiple** states. 
+I've got a little bone to pick with the term *multistate occupancy model*. As the name implies, multistate occupancy models estimate multiple states across space and sometimes through time (e.g., species absent, species present but not breeding, species present and breeding). But honestly, every single occupancy model that exists estimates multiple states. A static single-season occupancy model, for example, estimates species **presence** with <span>$$Pr(\psi)$$</span> and **absence** with <span>$$1 - Pr(\psi)$$</span>. As long as <span>$$Pr(\psi)$$</span> is not 0 or 1, there will be locations where we expect the species to be or not to be, and therefore there are **multiple** states. 
 
-Is this issue semantical and not a big deal? Yes, absolutely. I'm not lobbying to call multistate occupancy models something else. You're also not going to impress colleagues by saying "Well actually, even a standard occupancy model is a multistate model." I brought up this issue for one reason, which helped me better understand this class of model. And that is "don't forget that species absence is a state." In my opinion, the role the "species absence" state plays makes it a unifying feature that connects standard occupancy models to multi-state occupancy models. And hopefully, by the end of this post, you'll agree with me on that point.
 
-What makes multistate occupancy models different is that they partition the probability of success (e.g., species presence) into multiple discrete states. Species absence, on the other hand, pretty much stays the same across models. Two common examples for single-species multistate models include splitting species presence into breeding & non-breeding ([Nichols *et al.* 2007](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/06-1474)) or healthy & not healthy states([Murray *et al.* 2021](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2656.13515)). For multi-species models, you can even estimate separate community states (e.g., species A only, species B only, species A&B together; [Fidino *et al.* 2018](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117)). Overall, multistate occupancy models can be described by three key features, which I am going to call the *central tenants of multistate occupancy models*:
+Semantics aside, what makes multistate occupancy models different from standard occupancy models is that they partition the probability of success (e.g., species presence) into multiple discrete states. Two common examples for single-species multistate models include splitting species presence into breeding & non-breeding states ([Nichols *et al.* 2007](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/06-1474)) or healthy & not healthy states ([Murray *et al.* 2021](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2656.13515)). For multi-species models, you can even estimate separate community states (e.g., species A only, species B only, species A&B together; [Fidino *et al.* 2018](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117)). This makes multistate models an incredibly versatile tool you can use to answer a variety of ecological questions. However, this versatility also makes it confusing to learn how multistate models work, especially because the models can be written up in multiple ways (statistically speaking).
+
+Overall, I would say that multistate occupancy models can be described by three key features, which we'll call the *central tenants of multistate occupancy models*:
 
 1. There are more than two states of interest you are trying to model (e.g., more than just species presence or absence).
 
-2. There is a seperate probability of 'success' for each state, including species absence.
+2. There is a separate probability of 'success' for each state, including species absence.
 
 3. The sum of the probabilities across all states must sum to unity (i.e., sum to 1).
 
 
-In this first of what will likely be many posts about multistate models, I am going to walk through a static single-species multistate occupancy models for 3 states. I'll also show how to include covariates in each of these models with the softmax function ([link to wikipedia](https://en.wikipedia.org/wiki/Softmax_function)). The softmax function is a generalization of the inverse logit link that can accomodate any number of categories (i.e., states). For all of the simulation code & `JAGS` implementations of these models, visit this [GitHub repository here](https://github.com/mfidino/multi-state-occupancy-models).
+In this first of what will be multiple posts about multistate models, I am going to introduce how they work with the simplest multistate model there is: a static three-state occupancy model for a single species. I will also show how to include covariates in each of this model with the softmax function ([link to wikipedia](https://en.wikipedia.org/wiki/Softmax_function)). The softmax function is a generalization of the inverse logit link that can accommodate any number of categories (i.e., states), and so will be the way convert multiple linear predictors into a set of probabilities that fulfill the *central tenants of multistate models*. For all of the simulation code & `JAGS` implementations of these models, visit this [GitHub repository here](https://github.com/mfidino/multi-state-occupancy-models).
 
 
 Links to the different sections of this post
@@ -25,26 +26,26 @@ Links to the different sections of this post
 1. [The static multistate occupancy model](#the-static-multistate-occupancy-model)
 2. [Including covariates with the softmax function](#including-covariates)
 3. [Fitting the multistate occupancy model in `JAGS`](#fitting-the-static-multistate-model-in-jags)
+4. [Plotting out the results from your model](#plotting-out-the-results-from-your-model)
 
 
-To add some ecological motivation to this, let's assume we have decided to study great horned owl (*Bubo virginianus*) and want to estimate their distribution and reproductive rate throughout Chicago, Illinois, USA.
-
-![ great horned owl that Mason drew]({{site.url}}/blog/images/great_horned_owl.png#center)
+Before I get started with the model formulation, lets add some ecological motivation to this example. So, let's assume we have decided to study great horned owl (*Bubo virginianus*) and want to estimate their distribution and reproductive rate throughout Chicago, Illinois, USA.
 
 
+<div align="center"><img width="300" height="auto" align="center" src="{{site.url}}/blog/images/great_horned_owl.png#" alt="great horned owl that Mason drew" /></div>
 ## The static multistate occupancy model
 
 ---
 
-For our owl study assume we have conducted *j* in 1,...,*J* surveys at *s* in 1,...,*S* sites throughout Chicago. During each of these surveys we can record 1 of 3 possible values:
+For our owl study assume we have conducted *j* in 1,...,*J* surveys at *s* in 1,...,*S* sites throughout Chicago, Illinois during the breeding season for great horned owls. During each of these surveys we can record 1 of 3 possible values:
 
 1. No detection of an owl
 2. Detection of an adult owl but no detection of a young owl
 3. Detection of a young owl (i.e., reproductive success)
 
-We store these observations in the *S* by *J* matrix <span>$$\boldsymbol{Y}</span> (this is in upper case and bold because it is a matrix). What this means is that we are interested in quantifying three seperate states: owls are not present (state = 1), owls are present but not breeding (state = 2), and owls are present and breeding (state = 3). Note that if the true state at a site is 1 (owls not present), then we could never observe owls there. Likewise, if the true state is 2 (owls present but not breeding), then it's possible for us to observe either state 1 because we failed to detect the owl or state 2 because we did. Finally, we have the opportunity to observe all three states if the true state at a site is 3 (owls present and breeding). 
+We store these observations in the *S* by *J* matrix <span>$$\boldsymbol{Y}$$</span> (this is in upper case and bold because it is a matrix). What this means is that we are interested in quantifying three separate states: owls are not present (state = 1), owls are present but not breeding (state = 2), and owls are present and breeding (state = 3). Note that if the true state at a site is 1 (owls not present), then we could never observe owls there. Likewise, if the true state is 2 (owls present but not breeding), then it's possible for us to observe either state 1 because we failed to detect the owl or state 2 because we did. Finally, we have the opportunity to observe all three states if the true state at a site is 3 (owls present and breeding). 
 
-To estimate the true state at a site, however, requires specifying a set of probabilities for each state. There are a couple of ways to do this.  One way would be:
+To estimate the true state at a site we must specify a probability for each state. There are a couple of ways to do this.  One way would be:
 
 $$\boldsymbol{\psi_s} =  \begin{bmatrix}(1-\omega_s) & \omega_s(1-\delta_s) & \omega_s\delta_s\end{bmatrix}$$
 
@@ -86,18 +87,18 @@ table(colSums(psi)) == nrow(all_combos)
 10201 
 ``` 
 
-The other way I have seen the latent states written out is:
+The other way I have seen the latent states probabilities written out is:
 
 $$\boldsymbol{\psi_s} =  \begin{bmatrix} \psi_s^1 & \psi_s^2 & \psi_s^3\end{bmatrix}$$
 
-where <span>$$\psi_s^1$$</span> is the probability owls do not occupancy the site, <span>$$\psi_s^2$$</span> is the probability owls are present but not breeding, and <span>$$\psi_s^3$$</span> is the probability owls are present and breeding. To make this vector fulfill the *central tenants of multistate models*, let <span>$$\psi_s^1 = 1 - \psi_s^2 - \psi_s^3$$ <span>. However, unlike the first representation <span>$$\psi_s^2$$</span> and <span>$$\psi_s^3$$</span> cannot be any number between 0 and 1 as there are combinations that would make sure that the <span>$$ \Sigma_{m=1}^3 \boldsymbol{\psi_s^m} > 1$$</span>. This is okay, we can ensure that whatever gets estimated sums to 1 within the model, so do not let this secondary notation scare you off because of this property. In fact, I'm going to use this second representation because it is a little more general and therefore easier to abstract out to more than three states (if that was something you are interested in doing). Another difference in this representation is that the marginal occupancy of owls (i.e., their distribution) is  <span>$$\psi_s^2 + \psi_s^3$$</span> (i.e., the probability a site has owls that are not breeding plus the probability a site has breeding owls).
+where <span>$$\psi_s^1$$</span> is the probability owls do not occupy site *s*, <span>$$\psi_s^2$$</span> is the probability owls are present but not breeding, and <span>$$\psi_s^3$$</span> is the probability owls are present and breeding. To make this vector fulfill the *central tenants of multistate models*, let <span>$$\psi_s^1 = 1 - \psi_s^2 - \psi_s^3$$ <span>. However, unlike the first representation <span>$$\psi_s^2$$</span> and <span>$$\psi_s^3$$</span> cannot be any number between 0 and 1 as there are combinations that would make sure that the <span>$$ \Sigma_{m=1}^3 \boldsymbol{\psi_s^m} \neq 1$$</span>. This is okay, as you will later see we can ensure that whatever gets estimated sums to 1 within the model. In this case, I'm going to use the second representation for this model presentation because it is a little more general and therefore easier to abstract out to more than three states (if that was something you wanted to do). Another difference with this representation is that the marginal occupancy of owls (i.e., their distribution) is  <span>$$\psi_s^2 + \psi_s^3$$</span> (i.e., the probability a site has owls that are not breeding plus the probability a site has breeding owls).
 
-Let <span>$$z_s$$</span> be the latent state of site *s*, which can either equal 1, 2, or 3. For Bayesian multistate models, we assume that <span>$$z_s$$</span> is a Categorical random variable. The Categorical distribution, which is a generalization of the Bernoulli distribution, is a discrete probability distribution thats describes the potential results of a random variable that can take of one of *m* categories (which sounds like exactly what we need). Therefore, we can write the latent state model as
+Let <span>$$z_s$$</span> be the latent state of site *s*, which can either equal 1, 2, or 3. For Bayesian multistate models, we assume that <span>$$z_s$$</span> is a Categorical random variable. The Categorical distribution, which is a generalization of the Bernoulli distribution, is a discrete probability distribution that describes the potential results of a random variable that can take of one of *m* categories, which is exactly what we need. Therefore, we can write the latent state model as
 
 $$z_s \sim \text{Categorical}(\boldsymbol{\psi_s})$$
 
 
-However, we observe <span>$$z_s$$</span> with error, and so need to account for that in the data model. As a reminder, state uncertainty changes depending on what state was observed. As a result, it's easiest to represent the varying detection probabilities within a matrix where each row denotes the true state  of <span>$$z_s$$</span> and each column denotes the probability of detecting each state given the true state. For this owl model, the detection matrix is:
+However, we observe <span>$$z_s$$</span> with error, and so need to account for that in the data model. As a reminder, state uncertainty changes depending on what state was observed, which is possibly the most confusing part of this model. In my opinion, the easiest way to represent the varying detection probabilities is to put them into a matrix where each row denotes the true state  of <span>$$z_s$$</span> and each column denotes the probability of detecting each state given the true state. For this owl model, the detection matrix is:
 
 $$\boldsymbol{\eta_s} = \begin{bmatrix}
  1 & 0 & 0 \\
@@ -105,16 +106,16 @@ $$\boldsymbol{\eta_s} = \begin{bmatrix}
  \rho_s^{1,3} & \rho_s^{2,3} & \rho_s^{3,3}
  \end{bmatrix} $$
 
-Where each row meets the *central tenants of multistate models*. To walk through this, if we are in state 1 (owls not present, the first row of <span>$$\boldsymbol{\eta_s} $$</span>), it is impossible to observe state 2 or 3 becuase owls are litterally not there. Therefore, the probability we observe state "owls not present" given the true state is "owls not present" must be 1. When the true state is state 2 (owls present but not breeding, the second row of <span>$$\boldsymbol{\eta_s} $$</span>), then we could possibly observe either state 1 or 2. As such, we detect state 1 with <span>$$Pr(1 - \rho_s^{2,2})$$</span> and state 2 with <span>$$Pr(\rho_s^{2,2})$$</span>. If the true state is 2, then we cannot observe state 3. Finally, if the true state is state 3 (owls present and breeding) it is possible to observe all three states. Just like with <span>$$\boldsymbol{\psi_s}$$</span>, let <span>$$\rho_s^{1,3} = 1 - \rho_s{2,3} -\rho_s{3,3} $$</span> (i.e., the probability we detect state 1 is 1 minus the probability of detecting either of the two other states). To finish this off we detect state 2 with <span>$$Pr(\rho_s^{2,3})$$</span> and state 3 with <span>$$Pr(\rho_s^{3,3})$$</span>.
+ For our three state model we end up with the 3 x 3 matrix <span>$$\boldsymbol{\eta_s}$$</span> where each row of meets the *central tenants of multistate models*. To walk through this, if we are in state 1 (owls not present, the first row of <span>$$\boldsymbol{\eta_s} $$</span>), it is impossible to observe state 2 or 3 because owls are literally not there. Therefore, the probability we observe state "owls not present" given the true state is "owls not present" must be 1. When the true state is state 2 (owls present but not breeding, the second row of <span>$$\boldsymbol{\eta_s} $$</span>), then we could possibly observe either state 1 or 2. As such, we detect state 1 with <span>$$Pr(1 - \rho_s^{2,2})$$</span> and state 2 with <span>$$Pr(\rho_s^{2,2})$$</span>. If the true state is 2, then we cannot observe state 3. Finally, if the true state is state 3 (owls present and breeding) it is possible to observe all three states. Just like with <span>$$\boldsymbol{\psi_s}$$</span>, let <span>$$\rho_s^{1,3} = 1 - \rho_s{2,3} -\rho_s{3,3} $$</span> (i.e., the probability we detect state 1 is 1 minus the probability of detecting either of the two other states). To finish this off we detect state 2 with <span>$$Pr(\rho_s^{2,3})$$</span> and state 3 with <span>$$Pr(\rho_s^{3,3})$$</span>.
 
 For the data model, we also make use of the Categorical distribution such that:
 
 $$y_{s,j} \sim \text{Categorical}(\boldsymbol{\eta}_{s,z[s]})$$
 
 
-where <span>$$z[s]$$</span> indexes the appropriate row of the detection array. 
+where <span>$$z[s]$$</span> indexes the appropriate row of the detection array. For example, if <span>$$z[s] = 2$$</span>, then we would index the second row of <span>$$\boldsymbol{\eta_s}$$</span>.
 
-For this static multistate model without covariates, the last thing we need to do is specify priors. To give vague priors to <span>$$\boldsymbol{\psi}$$</span> and the third row in <span>$$\boldsymbol{\eta_s}$$</span>, we can use a Dirichlet(1,1,1) prior. The Dirichlet distribution is a generalization of the Beta distribution for up to *m* categories, and in this case *m* = 3. The only other parameter in the model is  <span>$$\rho^{2,2}$$</span>, which we can give a vague Beta(1,1) prior.
+For a static multistate model without covariates, the last thing we need to do is specify priors. To give vague priors to <span>$$\boldsymbol{\psi}$$</span> and the third row in <span>$$\boldsymbol{\eta_s}$$</span>, we can use a Dirichlet(1,1,1) prior for each. The Dirichlet distribution is a generalization of the Beta distribution for up to *m* categories, and in this case *m* = 3. The only other parameter in the model is  <span>$$\rho^{2,2}$$</span>, which we can give a vague Beta(1,1) prior.
 
 <p><a href="#top" style>Back to top ⤒</a></p>
 
@@ -122,19 +123,19 @@ For this static multistate model without covariates, the last thing we need to d
 
 ---
 
-Just like how the Categorical distribution is a generalization of the Bernoulli distribution, the softmax function is a generalization of the inverse logit link.
+As I said at the beginning of this post the softmax function is a generalization of the inverse logit link, and we can use it to add covariates into our multistate model. The softmax function is:
 
-$$text{softmax(x)} = \frac{\text{exp}(x)}{\sum_{i=1}^m \text{exp}(x)}$$
+$$\text{softmax}(x) = \frac{\text{exp}(x)}{\sum_{i=1}^m \text{exp}(x)}$$
 
-Where x is a vector that contains the linear predictors for the m states. However, one important thing to remember is that if you have *m* states, you only need to specify *m-1* linear predictors, the *mth* state instead takes a value of 0. Why is that? You may not have thought about this, but it's exactly what the inverse logit link does for logistic regression as well. In logistic regression, we have 2 states (success and failure), yet we only have one linear predictor. And if you recall the 1 in the denominator of the inverse logit link
+Where x is a vector of length *m* that contains the linear predictors for the *m* states at site *s*. However, one very important aspect to know is that if you have *m* states you only specify *m-1* linear predictors. We must set one state as a reference category, and to do so we give that element in x a value of 0. Is this rule something new? Absolutely not, we also do this with logistic regression, which has 2 states (success and failure) and one linear predictor. In fact, if you look at the inverse logit link function you can see pretty quickly that the 'failure' reference category has been hard coded into it (it's the 1 in the denominator):
 
 $$\text{logit}^{-1}(x) = \frac{\text{exp}(x)}{1 + \text{exp}(x)}$$
 
-which simplifies to
+which could also be written as
 
 $$\text{logit}^{-1}(x) = \frac{\text{exp}(x)}{\text{exp}(0) + \text{exp}(x)}$$
 
-which, with a little bit more algebraic manipulation, the  inverse logit is just the softmax function for 2 states written in a way that we only need to input the one linear predictor. We could also, for example, just use softmax
+With a little bit more algebraic manipulation, you can hopefully see that the inverse logit is just the softmax function for 2 states written in a way that we only need to input the one linear predictor instead of a vector of length *m*. We could also, however, still use softmax for logistic regression if we wanted to:
 
 ```R
 # The softmax function. Convert any number of linear
@@ -142,12 +143,12 @@ which, with a little bit more algebraic manipulation, the  inverse logit is just
 #
 # arguments
 #
-# x = The log-linear predictors. One of these must be the
+# x = The linear predictors. One of these must be the
 #       the baseline category (which equals zero.)  
 #
 softmax <- function(x){
   if(sum(x == 0) == 0){
-    stop("No baseline category. One value in x must equal zero.")
+    stop("No reference category. One value in x must equal zero.")
   }
   exp(x) / sum(exp(x))
 }
@@ -176,7 +177,7 @@ sum(softmax(logit_multistate))
 [1] 1
 ```
 
-Thus, we can use softmax to generate linear predictors for two of our three states, and then the final state gets estimated as 1 minus the sum of the other two probabilties. So, for example, we can make the <span>$$\boldsymbol{\psi}$$</span> be a function of covariates with softmax, using seperate design matrices for the two linear predictors (<span>$$\boldsymbol{X}$$</span> for state 2,<span>$$\boldsymbol{U}$$</span> for state 3).
+Thus, we can use softmax to generate linear predictors for two of our three states, and then the final state gets estimated as 1 minus the sum of the other two probabilities. Additionally, the softmax function ensures our seperate probabilities sum to 1, which is exactly what we need to fulfill the *central tenants of multistate occupancy models*. In regards to a reference category in our model, the natural choice is the first state (owls absent). So, for example, we can make the <span>$$\boldsymbol{\psi_s}$$</span> be a function of covariates with softmax, using separate design matrices for the two linear predictors (<span>$$\boldsymbol{X}$$</span> for state 2, <span>$$\boldsymbol{U}$$</span> for state 3).
 
 $$
 \begin{eqnarray}
@@ -191,14 +192,14 @@ where
 $$
 \begin{eqnarray}
 \phi_s^1 &=& \text{exp}(0) = 1 \nonumber\\
-\phi_s^2 &=& \boldsymbol{\beta^2}\boldsymbol{x_s}  \nonumber\\
-\phi_s^3 &=& \boldsymbol{\beta^3}\boldsymbol{u_s}  \nonumber
+\phi_s^2 &=& \text{exp}(\boldsymbol{\beta^2}\boldsymbol{x_s})  \nonumber\\
+\phi_s^3 &=& \text{exp}(\boldsymbol{\beta^3}\boldsymbol{u_s})  \nonumber
 \end{eqnarray}
 $$
 
 Note that your design matrices can be identical if you want, and the first column of each should be a vector of 1's for the intercept. Softmax can also be applied to the data model as well. It's really only needed for the 2nd and 3rd row. One part to remember is that if an element in <span>$$\boldsymbol{\eta}$$</span> is 0, we do not apply softmax to it. For example, we'd only use softmax on the first two elements of the 2nd row of <span>$$\boldsymbol{\eta}$$</span> because it is impossible to observe state 3.
 
-Adding linear predictors means that our priors also need to change. Instead of using Dirichlet or Beta priors, you can specify any kind of  prior you normally would with logistic regression. I often use Logistic(0,1) priors, which are quite vague, but if you wanted to use something that is semi-informative then [Northrup and Gerber (2018)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0192819) have some solid suggestions for you.
+Adding linear predictors means that our priors also need to change. Instead of using Dirichlet or Beta priors, you can specify any kind of  prior you normally would with logistic regression. I often use Logistic(0,1) priors, which are quite vague on the probability scale, but if you wanted to use something that is semi-informative then [Northrup and Gerber (2018)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0192819) have some solid suggestions for you.
 
 <p><a href="#top" style>Back to top ⤒</a></p>
 
@@ -206,13 +207,13 @@ Adding linear predictors means that our priors also need to change. Instead of u
 
 ---
 
-You can find this model as `./JAGS/static_multistate.R` on this [GitHub repository](https://github.com/mfidino/multi-state-occupancy-models).
+You can find this model as `./JAGS/static_multistate.R` on this [GitHub repository](https://github.com/mfidino/multi-state-occupancy-models), but this is what it looks like. Note that we are completing the softmax function within the categorical distribution in `JAGS` (i.e., in `dcat()`).
 
 ```R
 model{
   for(site in 1:nsite){
     # latent state model linear predictors
-    psi[site,1] <- 1
+    psi[site,1] <- 1 # i.e., exp(0)
     psi[site,2] <- exp( inprod( beta2, x[site,] ) )
     psi[site,3] <- exp( inprod( beta3, u[site,] ) )
     # latent state model, dividing by sum of psi
@@ -267,18 +268,19 @@ model{
 }
 ```
 
-Now let's simulate some data and see if the model works. To simulate your own data for this model, all you need to do is run through `static_example.R`. 
+Now let's simulate some data and see if the model works. To simulate your own data for this model, all you need to do is run through `static_example.R` in the GitHub repo I previously linked.
 
 ```R
 # A simulated example of the static multistate occupancy model
 
 library(runjags)
 library(mcmcplots)
+library(scales)
 
 # Load all the functions we need to simulate the data
 sapply(
   list.files("./R/functions", full.names = TRUE),
-  source, verbose = FALSE
+  source
 )
 
 # General bookkeeping
@@ -385,8 +387,14 @@ And it looks like the model did a sufficient job estimating the parameter values
 
 ![comparison of true parameter values to estimated. All true values fall within the 95% credible interval of each estimte.]({{site.url}}/blog/images/msom01.jpeg#center)
 
+<p><a href="#top" style>Back to top ⤒</a></p>
 
-And here is one way you could make predictions with the model.
+
+## Plotting out the results from your model
+
+---
+
+It's a little more difficult to generate predictions with this model, as you need to do it for all of your linear predictors and then apply softmax to them. The code I have below here is not the fastest way to make these predictions, but I do think it's written in a way that makes it a little easier to understand what is going on.
 
 ```R
 # Plot out some of the results.
@@ -510,12 +518,12 @@ legend(
 ```
 ![The occupancy probability of owls that do not breed is highest at low levels of this environmental covariate while the occupancy probability of owls that do breed is highest at high levels of this environmental covariate.]({{site.url}}/blog/images/msom02.jpeg#center)
 
-In the code above we also calculated the marginal occupancy probability (<span>$$\psi_s^2 + \psi_s^3$$</span>) and the conditional probability that owls breed given their presence (<span>$$\frac{\psi_s^3}{\psi_s^2 + \psi_s^3}$$</span>). I think the conditional probability is especially useful to calculate. In this particular case, it tells us about where owls breed relative to their underlying distribution. 
+In the code above we also calculated the marginal occupancy probability (<span>$$\psi_s^2 + \psi_s^3$$</span>) and the conditional probability that owls breed given their presence (<span>$$\frac{\psi_s^3}{\psi_s^2 + \psi_s^3}$$</span>). I think the conditional probability is especially useful. In this particular case, it tells us about where owls breed relative to their underlying distribution. 
 
 ![The conditional probability owls breed given their presence, it's highest at positive values of the environmental covariate.]({{site.url}}/blog/images/msom03.jpeg#center)
 
 
-And that is how to fit a static multistate occupancy model in `JAGS`. In future posts, I'll cover autologistic and dynamic multistate models, and then probably move on to multistate models for multiple species (e.g., estimates statistical interactions among species).
+And that is how to fit a static multistate occupancy model in `JAGS`. In future posts, I'll cover autologistic and dynamic multistate models, and then probably move on to multistate models for multiple species (e.g., estimate statistical interactions among species).
 
 <p><a href="#top" style>Back to top ⤒</a></p>
 
