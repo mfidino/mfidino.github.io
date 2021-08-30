@@ -1,26 +1,26 @@
 ---
 layout: post
-title: So you want to estimate more than just species presence? A static multistate occupancy model for one species.
+title: An introduction to multistate occupancy models. A static three-state model for one species.
 category: blog
 ---
 
 I've got a little bone to pick with the term *multistate occupancy model*. 
 
-As the name implies, multistate occupancy models estimate multiple states across space and sometimes through time (e.g., species absent, species present but not breeding, species present and breeding). However, literally every single occupancy model that exists estimates multiple states. A static single-season occupancy model, for example, estimates species **presence** with <span>$$Pr(\psi)$$</span> and **absence** with <span>$$1 - Pr(\psi)$$</span>. As long as <span>$$Pr(\psi)$$</span> is not 0 or 1, there will be locations where we expect the species to be or not to be, and therefore there are **multiple** states. 
+As the name implies, multistate occupancy models estimate multiple states across space and sometimes through time (e.g., species absent, species present but not breeding, species present and breeding). However, every occupancy model estimates multiple states. A static single-season occupancy model, for example, estimates species **presence** with <span>$$Pr(\psi)$$</span> and **absence** with <span>$$1 - Pr(\psi)$$</span>. As long as <span>$$Pr(\psi)$$</span> is not 0 or 1, there will be locations where we expect the species to be or not to be, and therefore there are **multiple** states. 
 
 
-Do I think we should rename these models? Absolutely not. What makes multistate occupancy models different from standard occupancy models is that they partition the probability of success (e.g., species presence) into multiple discrete states, which is why they've earned their name. Two common examples for single-species multistate models include splitting species presence into breeding & non-breeding states ([Nichols *et al.* 2007](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/06-1474)) or healthy & not healthy states ([Murray *et al.* 2021](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2656.13515)). For multi-species models, you can even estimate separate community states (e.g., species A only, species B only, species A&B together; [Fidino *et al.* 2018](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117)). As a result, multistate models are an incredibly versatile tool you can use to answer a variety of ecological questions. However, this versatility can also makes it confusing to learn how multistate models work, especially because the models can be written up in multiple ways (statistically speaking).
+Should we rename these models? Absolutely not, but we could be more specific about what makes this class of model unique. Multistate models have earned their name because they partition the probability of success (e.g., species presence) into **multiple discrete states**. Standard occupancy models do not do that. Two common examples for single-species multistate models include splitting species presence into breeding & non-breeding states ([Nichols *et al.* 2007](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/06-1474)) or healthy & not healthy states ([Murray *et al.* 2021](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2656.13515)). For multi-species models, you can even estimate separate community states (e.g., species A only, species B only, species A&B together; [Fidino *et al.* 2018](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117)). Because of their wide ranging applications, multistate models are an incredibly versatile tool you can use to answer a variety of ecological questions. However, this versatility can also makes it confusing to learn how multistate models work and how to interpret their results, especially because the models can be written up in multiple ways (statistically speaking).
 
-Overall, I would say that multistate occupancy models can be described by three key features, which we'll call the *central tenants of multistate occupancy models*:
+Regardless of how a multistate model is written, I would say that they can be described by three key features, which I will call the *central tenants of multistate occupancy models*:
 
-1. There are more than two states of interest you are trying to model (e.g., more than just species presence or absence).
+1. There are at least three states being modeled, one of which is always "species absence." The interpretation of the remaining states depends on the model & data, but these states are always related to species presence in one form or another.
 
 2. There is a separate probability of 'success' for each state, including species absence.
 
 3. The sum of the probabilities across all states must sum to unity (i.e., sum to 1).
 
 
-In this first of what will be multiple posts about multistate models, I am going to introduce how they work with the simplest multistate model there is: a static three-state occupancy model for a single species. I will also show how to include covariates in each of this model with the softmax function ([link to wikipedia](https://en.wikipedia.org/wiki/Softmax_function)). The softmax function is a generalization of the inverse logit link that can accommodate any number of categories (i.e., states), and can convert multiple linear predictors into a set of probabilities that fulfill the *central tenants of multistate models*. For all of the simulation code & `JAGS` implementations of these models, visit this [GitHub repository here](https://github.com/mfidino/multi-state-occupancy-models).
+In this first of what will be multiple posts about multistate models, I am going to introduce the simplest multistate model there is: a static three-state occupancy model for a single species. I will also show how to include covariates in this model with the softmax function ([link to wikipedia](https://en.wikipedia.org/wiki/Softmax_function)). The softmax function is a generalization of the inverse logit link that can accommodate any number of categories (i.e., states), and can convert multiple linear predictors into a set of probabilities that fulfill the *central tenants of multistate models*. For all of the simulation code & `JAGS` implementations of these models, visit this [GitHub repository here](https://github.com/mfidino/multi-state-occupancy-models).
 
 
 Links to the different sections of this post
@@ -119,6 +119,7 @@ where <span>$$z[s]$$</span> indexes the appropriate row of the detection array. 
 
 For a static multistate model without covariates, the last thing we need to do is specify priors. To give vague priors to <span>$$\boldsymbol{\psi}$$</span> and the third row in <span>$$\boldsymbol{\eta_s}$$</span>, we can use a Dirichlet(1,1,1) prior for each. The Dirichlet distribution is a generalization of the Beta distribution for up to *m* categories, and in this case *m* = 3. The only other parameter in the model is  <span>$$\rho^{2,2}$$</span>, which we can give a vague Beta(1,1) prior.
 
+
 <p><a href="#top" style>Back to top ⤒</a></p>
 
 ## Including covariates
@@ -129,11 +130,11 @@ As I said at the beginning of this post the softmax function is a generalization
 
 $$\text{softmax}(x) = \frac{\text{exp}(x)}{\sum_{i=1}^m \text{exp}(x)}$$
 
-Where x is a vector of length *m* that contains the linear predictors for the *m* states at site *s*. However, one very important aspect to know is that if you have *m* states you only specify *m-1* linear predictors. We must set one state as a reference category, and to do so we give that element in x a value of 0. Is this rule something new? Absolutely not, we also do this with logistic regression, which has 2 states (success and failure) and one linear predictor. In fact, if you look at the inverse logit link function you can see pretty quickly that the 'failure' reference category has been hard coded into it (it's the 1 in the denominator):
+Where x is a vector of length *m* that contains the linear predictors for the *m* states at site *s*. However, one very important aspect to know is that if you have *m* states you only specify *m-1* linear predictors. We must set one state as a reference category, and to do so we give that element in x a value of 0. Is this rule something new? Absolutely not, we also do this whenever we use the logit link. In fact, if you look at the inverse logit link function you can see pretty quickly that the 'failure' reference category has been baked into it (it's the 1 in the denominator, remembering that exp(0) = 1). Thus, the inverse logit link:
 
 $$\text{logit}^{-1}(x) = \frac{\text{exp}(x)}{1 + \text{exp}(x)}$$
 
-which could also be written as
+could also be written as
 
 $$\text{logit}^{-1}(x) = \frac{\text{exp}(x)}{\text{exp}(0) + \text{exp}(x)}$$
 
@@ -179,7 +180,7 @@ sum(softmax(logit_multistate))
 [1] 1
 ```
 
-Thus, we can use softmax to generate linear predictors for two of our three states, and then the final state gets estimated as 1 minus the sum of the other two probabilities. Additionally, the softmax function ensures our seperate probabilities sum to 1, which is exactly what we need to fulfill the *central tenants of multistate occupancy models*. In regards to a reference category in our model, the natural choice is the first state (owls absent). So, for example, we can make the <span>$$\boldsymbol{\psi_s}$$</span> be a function of covariates with softmax, using separate design matrices for the two linear predictors (<span>$$\boldsymbol{X}$$</span> for state 2, <span>$$\boldsymbol{U}$$</span> for state 3).
+Thus, we can use softmax to generate linear predictors for two of our three states, and then the final state gets estimated as 1 minus the sum of the other two probabilities. Additionally, the softmax function ensures our separate probabilities sum to 1, which is exactly what we need to fulfill the *central tenants of multistate occupancy models*. In regards to a reference category in our model, the natural choice is the first state (owls absent). So, for example, we can make the <span>$$\boldsymbol{\psi_s}$$</span> be a function of covariates with softmax, using separate design matrices for the two linear predictors (<span>$$\boldsymbol{X}$$</span> for state 2, <span>$$\boldsymbol{U}$$</span> for state 3).
 
 $$
 \begin{eqnarray}
@@ -209,7 +210,7 @@ Adding linear predictors means that our priors also need to change. Instead of u
 
 ---
 
-You can find this model as `./JAGS/static_multistate.R` on this [GitHub repository](https://github.com/mfidino/multi-state-occupancy-models), but this is what it looks like. Note that we are completing the softmax function within the categorical distribution in `JAGS` (i.e., in `dcat()`).
+You can find this model as `./JAGS/static_multistate.R` on this [GitHub repository](https://github.com/mfidino/multi-state-occupancy-models). Note that we are completing the softmax function within the categorical distribution in `JAGS` (i.e., in `dcat()`). I've also used 1's in place of exp(0) when needed. Doing so is important for the detection matrix as the 0 values in there indicate that a given observed state cannot be observed given the true state.
 
 ```R
 model{
