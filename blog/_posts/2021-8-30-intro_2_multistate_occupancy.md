@@ -417,7 +417,8 @@ psi_preds <- list(
   state1 = matrix(NA, ncol = 3, nrow = nrow(for_pred)),
   state2 = matrix(NA, ncol = 3, nrow = nrow(for_pred)),
   state3 = matrix(NA, ncol = 3, nrow = nrow(for_pred)),
-  marginal_occupancy = matrix(NA, ncol = 3, nrow = nrow(for_pred))
+  marginal_occupancy = matrix(NA, ncol = 3, nrow = nrow(for_pred)),
+  cond_breeding = matrix(NA, ncol = 3, nrow = nrow(for_pred))
 )
 # could write in a way to do this faster,
 #  but this is easier to read.
@@ -433,6 +434,7 @@ for(i in 1:nrow(for_pred)){
   )
   # marginal occupancy
   marg_occ <- tmp_pred[,2] + tmp_pred[,3]
+  cond_occ <- tmp_pred[,3] / marg_occ
   # calculate quantiles of the 3 states
   tmp_pred <- apply(
     tmp_pred,
@@ -445,6 +447,10 @@ for(i in 1:nrow(for_pred)){
   psi_preds$state3[i,] <- tmp_pred[,3]
   psi_preds$marginal_occupancy[i,] <- quantile(
     marg_occ,
+    probs = c(0.025,0.5,0.975)
+  )
+  psi_preds$cond_breeding[i,] <- quantile(
+    cond_occ,
     probs = c(0.025,0.5,0.975)
   )
 }
@@ -515,10 +521,43 @@ legend(
   seg.len = 1.5,
   x.intersp = c(2.2,1,2.2,1)
 )
+
+
 ```
 ![The occupancy probability of owls that do not breed is highest at low levels of this environmental covariate while the occupancy probability of owls that do breed is highest at high levels of this environmental covariate.]({{site.url}}/blog/images/msom02.jpeg#center)
 
-In the code above we also calculated the marginal occupancy probability (<span>$$\psi_s^2 + \psi_s^3$$</span>) and the conditional probability that owls breed given their presence (<span>$$\frac{\psi_s^3}{\psi_s^2 + \psi_s^3}$$</span>). I think the conditional probability is especially useful. In this particular case, it tells us about where owls breed relative to their underlying distribution. 
+In the code above we also calculated the marginal occupancy probability (<span>$$\psi_s^2 + \psi_s^3$$</span>) and the conditional probability that owls breed given their presence (<span>$$\frac{\psi_s^3}{\psi_s^2 + \psi_s^3}$$</span>). I think the conditional probability is especially useful. In this particular case, it tells us about where owls breed relative to their underlying distribution. We can plot it out like so:
+
+```R
+# plot out conditional probability of breeding | presence.
+
+plot(
+  1~1, 
+  type = "n", 
+  xlim = c(-2,2),
+  ylim = c(0,1),
+  xlab = "Environmental covariate",
+  ylab = "Probability of breeding | owls present",
+  bty = "l",
+  las = 1,
+  cex.lab = 1.5
+)
+# 95% CI for state 2
+polygon(
+  x = c(for_pred[,2], rev(for_pred[,2])),
+  y = c(psi_preds$cond_breeding[,1], rev(psi_preds$cond_breeding[,3])),
+  col = scales::alpha("purple", 0.5),
+  border = NA
+)
+
+# add median prediction
+lines(
+  x = for_pred[,2],
+  y = psi_preds$cond_breeding[,2],
+  lwd = 3,
+  col = "purple"
+)
+```
 
 ![The conditional probability owls breed given their presence, it's highest at positive values of the environmental covariate.]({{site.url}}/blog/images/msom03.jpeg#center)
 
