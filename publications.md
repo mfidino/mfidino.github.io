@@ -17,6 +17,9 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### 2021
 
+[25] **Fidino, M.**, Bender, J., Limbrick, K., Gallo, T., and Magle, S. B. (2021). Strolling through a century: recreating historical bird surveys to explore 100 years of change in an urban bird community. *American Naturalist*.
+
+
 [24] Magle<sup>\*</sup>, S., **Fidino<sup>\*</sup>, M.**, Sander, H., Rohnke, A. T., Larson, K. L., Gallo, T., Kay, C. A. M., Lehrer, E. W., Murray, M. H., Adalsteinsson, S. A., Ahlers, A. A.,
 Anthonysamy, W. J. B., Gramza, A. R., Green, A. M., Jordan, M. J., Lewis, J.,
 Long, R. A., MacDougall, B., Pendergast, M. E., Remine, K., Simon, K. C., Cassady
