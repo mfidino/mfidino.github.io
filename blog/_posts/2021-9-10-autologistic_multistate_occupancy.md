@@ -1,0 +1,17 @@
+---
+layout: post
+title: Two ways to write autologistic multistate occupancy models in `JAGS`
+category: blog
+---
+
+This is the second post in a series I am writing on multistate occupancy models. I will be building off my previous example of a static multistate model, so if you've not read the first post be sure to check it out [here](https://masonfidino.com/intro_2_multistate_occupancy/). Likewise, if want more of an introduction to autologistic occupancy models, please see this post [here](https://masonfidino.com/autologistic_occupancy_model/).
+
+As a reminder, multistate occupancy models partition the probability of success (i.e., species presence) into multiple discrete states. In my previous example, we estimated the probability of three states:
+
+1. That owls were not present
+2. That owls were present but not breeding
+3. That owls were present and breeding.
+
+Autologistic occupancy models, on the other hand, are a simplified version of a dynamic occupancy model that estimates species occupancy instead of local colonization / extinction dynamics. They include an additional term in their logit-linear predictor to account for temporal dependence between primary sampling periods. Therefore, an autologistic multistate model can be used to estimate multiple discrete states across space and through time, and includes additional parameters to account for temporal dependence (e.g., a site where we found owls breeding at time *t* may be more likely to have owls that breed there at time *t+1*). This class of model has never recieved a formal write-up, and so it has rarely been used in the literature. Nevertheless, it is a veryu useful model to know when you are interested in applying a multistate model to data over time.
+
+I'm going to walk through two different ways to write a three state model for a single species. The first model is the simplest parameterization, and uses the logit-link to estimate the occupancy probability of multiple states. I like this model for two reasons. First, it uses a standard link function that people should be comfortable with, which makes it more approachable. Second, it is the absolute simplest parameterization of an autologistic multistate model, and so may be your best bet if you have a small sample size. In the second model, I use the softmax function to parameterize the model and include extra autologistic terms to estimate turnover among states over time. For example, if a site was in state 2 (owls present, not breeding) at time *t-1*, the probability it transitions to state 3 (owls present & breeding) at time *t* may be different than a site in state 3 that remains in state 3 from one time period to the next. This second model is useful for two reasons. First, the way this model is parameterized is very similar to multistate occupancy models for potentially interacting species. Therefore, understanding how this model works here will hopefully help you better understand how the [Rota *et al.* (2016)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12587) or [Fidino *et al.* (2018)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117) models work. Second, it demonstrates how you have multiple choices to make when you attempt to use such a model, and so it's important to critically think about what it is you are interested in estimating (and whether or not you may have the sample size to do so).
