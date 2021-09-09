@@ -19,7 +19,7 @@ text(x = -0.5, y = 0.1, labels = "The area here!", cex = 1.2)
 
 ![Two bell curves with some overlap]({{site.url}}/blog/images/curve01.jpeg#center)
 
-One way we can do this is with some numerical integration (assuming we have a sufficient number of points for both curves). Here, we are going to identify 1) the area under the two curves and 2) the total area under the two curves so that we can approximate the amount of overlap. To do so, we need to find the minimum and maximum y-axis values between the two curves for each value of x.
+One way we can do this is with some numerical integration (assuming we have a sufficient number of points for both curves). Here, we are going to identify 1) the area under the two curves and 2) the total area of the two curves so that we can approximate the amount of overlap. To do so, we need to find the minimum and maximum y-axis values between the two curves for each value of x.
 
 ```R
 # vectors to store the area under the curves and the total
