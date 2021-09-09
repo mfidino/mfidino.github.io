@@ -79,7 +79,7 @@ total_area <- area(cbind(x_area, total))
 auc_area / total_area
 ```
 
-So there is about 50% overlap between these two curves. However, let's double check our work. We can also pretty easily calculate the area between these two curves as that is the integral of the difference between them. The area between the two curves is this section here:
+So there is about 50% overlap between these two curves. However, let's double check our work. We can also pretty easily calculate the area between these two curves as that is the integral of the difference between them. The area between the two curves is this section of the plot here:
 
 ![The area between the two curves]({{site.url}}/blog/images/curve03.jpeg#center)
 
@@ -100,7 +100,8 @@ total_area
 # 1.201519
 ```
 
-And here is all the code together so you can copy it at once if you'd like.
+And here is all the code together so you can copy it at once if you'd like. I had some help from these two posts here ([the area function](https://stat.ethz.ch/pipermail/r-help/2004-December/063046.html), [the area between two curves integration](https://stat.ethz.ch/pipermail/r-help/2010-September/251756)).
+
 
 ```R
 # Calculate the amount of overlap between two distributions in R
