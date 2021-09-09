@@ -54,7 +54,7 @@ lines(x,y2, col = "green", lwd = 5)
 ```
 ![Two bell curves with some overlap, but now they are filled in to show we found the overlap]({{site.url}}/blog/images/curve02.jpeg#center)
 
-The next thing we do is put together a function to calculate the area of a polygon, assuming we have the x and y axis values for it (which we do), and calculate the areas of `auc` and `total`, and then divide them to find the proportion of overlap.
+The next thing we do is put together a function to calculate the area of the two polygons we identified with the code above from their respective x and y values. Once we do that, we can divide them to find the proportion of overlap.
 
 ```R
 # a function to calculate area from xy coords
@@ -79,7 +79,7 @@ total_area <- area(cbind(x_area, total))
 auc_area / total_area
 ```
 
-So there is about 50% overlap between these two curves. However, let's double check our work. We can also pretty easily calculate the area between these two curves because that is the integral of the difference between them.
+So there is about 50% overlap between these two curves. However, let's double check our work. We can also pretty easily calculate the area between these two curves as that is the integral of the difference between them. The area between the two curves is this section here:
 
 ```R
 # check work, calcualte area between the curves
@@ -93,7 +93,7 @@ b2c <- integrate(f2, -2, 2)
 b2c$value + auc_area
 # equals 1.201519
 
-# compare to total_area, they are the same
+# compare to total_area, they are the same!
 total_area
 # 1.201519
 ```
