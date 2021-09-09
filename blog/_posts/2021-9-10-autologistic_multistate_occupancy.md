@@ -19,7 +19,7 @@ I'm going to walk through two different ways to write a three state model for a 
 Links to different parts of this post
 
 1. [The transition probability matrix. What is how and how to use it.](#the-transition-probability-matrix-what-it-is-and-how-to-use-it)
-2. [An autologistic multistate occupancy model that uses the logit link]
+2. [An autologistic multistate occupancy model that uses the logit link](#an-autologistic-multistate-occupancy-model-that-uses-the-logit-link)
   1. [Fitting the model in JAGS]
   2. [Plotting out your results]
 3. [An autologistic multistate model occupancy that uses the softmax function]
@@ -58,19 +58,19 @@ $$TPM = \begin{bmatrix}
 0.1 & 0.5 & 0.4
 \end{bmatrix}$$
 
-It has three states, and the probability of transitioning from one state to another in a single time unit varies based on what state you are currently in. This matrix does not have any absorbing states (i.e., a state that, once entered, cannot be left). Because of this, this TPM is an irreducible stochastic matrix, which has some pretty unique properties. Perhaps the most useful in our case is that you can estimate a stationary probability vector, <span>$$\boldsymbol{\pi}$$</span>, which describes the distribution of the TPM after a "sufficently long time". In terms of autologistic multistate occupancy models, this stationary probability vector describes the expected occupancy of each of the three states!
+It has three states, and the probability of transitioning from one state to another in a single time unit varies based on what state you are currently in. Each row of this TPM sums to one. Another feature of this TPM is that it does not have any absorbing states (i.e., a state that, once entered, cannot be left). Because of this, this TPM is an *irreducible stochastic matrix*, which has some pretty unique properties. Perhaps the most useful in our case is that you can estimate a stationary probability vector, <span>$$\boldsymbol{\pi}$$</span>, which describes the long-term distribution of the TPM (i.e., the expected proportion of time each state should be visited). In terms of autologistic multistate occupancy models, this stationary probability vector describes the expected occupancy of each of the three states!
 
 How do you calculate <span>$$\boldsymbol{\pi}$$</span>? You need to solve this equation:
 
 $$\boldsymbol{\pi}TPM = \boldsymbol{\pi}$$
 
-This equation happens to have a lot of similarity to the equation for left eigenvectors:
+This equation, as it turns out, looks almost identical to the equation for left eigenvectors:
 
 $$x A = \lambda x$$
 
-where *x*, our left eigenvector, is a row vector that satisfies that above equation, *A* is a matrix (the TPM), and <span>$$\lambda$$</span> is an eigenvalue, which is a special scalar associated to a system of linear equations and tells you how variable the matrix *A* is around the eigenvector. Conceptually, eigenvectors have somewhat similar properties to the variance of your data around the best fit line of a linear regression, the an eigenvector is the more spread out the matrix is from the eigenvector.
+where *x*, our left eigenvector, is a non-zero row vector that satisfies the equation above, *A* is a *n* by *n* matrix (the TPM), and <span>$$\lambda$$</span> is an eigenvalue, which is a special scalar associated to a system of linear equations that ensures the equality above holds. 
 
-Now, this brings me to another unique property of TPMs, namely that the leading eigenvalue of a TPM is always 1. This means that to calculate the left eigenvectors for a TPM we don't need to worry about the eigenvalue <span>$$\lambda$$</span>, and can just solve the equation <span>$$$$\boldsymbol{\pi}TPM = \boldsymbol{\pi}$$</span>. Here is how we can do this in R:
+For an *n* by *n* matrix we have *n* eigenvectors and *n* eigenvalues. However, in our case we are pretty much only interested in the first of each. This brings me to another unique property of TPMs: the leading eigenvalue of a TPM is always 1. This means that to calculate the left eigenvectors for a TPM we don't need to worry about the eigenvalue <span>$$\lambda$$</span>, and can just solve the equation <span>$$$$\boldsymbol{\pi}TPM = \boldsymbol{\pi}$$</span>. Here is how we can do this in R:
 
 
 ```R
@@ -88,7 +88,10 @@ tpm <- matrix(
 #         to calculate their inverse to get the left
 #         eigenvectors.
 
-# Get the eigenvectors of the tpm. This is named list
+# base::eigen() gives right eigenvectors, which satisfy the equation
+#   A %*% x = lambda %*%x (which is not the equation we are trying 
+#   to solve). However, we can invert the right eigenvector matrix to
+#   get our left eigenvectors. The output of this function is a named list
 #  with (eigen)'values' and (eigen)'vectors'.
 right <- eigen(tpm)
 
@@ -101,11 +104,14 @@ round(right$values,2)
 #  to get the left eigenvectors
 left_vectors <- MASS::ginv(right$vectors)
 
-
 # Check really quickly that the decomposition of our
-#  matrix is correct, this should return the tpm
+#  matrix is correct, this should return the tpm (it does).
 right$vectors%*%diag(right$values)%*%left_vectors
 
+     [,1] [,2] [,3]
+[1,]  0.3  0.4  0.3
+[2,]  0.6  0.2  0.2
+[3,]  0.1  0.5  0.4
 
 # All we need to do is normalize the first row of
 #   the left eigenvectors (i.e., divide each value
@@ -159,13 +165,13 @@ stationary_distmc
 [1,] 0.3486239 0.3577982 0.293578
 ```
 
-There are two reasons I am walking you through TPMs. First, we are going to use TPMs in our autologistic occupancy model, and because of this we will want to derive the expected occupancy of each state based on the estimated TPM. Likewise, as we will include spatial covariates in this model, our TPM will also spatially vary. Therefore we need to derive the stationary distribution along whatever environmental gradient we include if we are interested to plotting out the expected occupancy of different states (which we probably want to do).
+There are two reasons I am took the time to introduce TPMs. First, we are going to use TPMs in our autologistic occupancy model, and because of this we will want to derive the expected occupancy of each state based on the estimated TPM. Likewise, as we will include spatial covariates in this model, our TPM will also spatially vary (i.e., we will calculate <span>$$\pi_s$$</span>, not <span>$$\pi$$</span>). Therefore we need to derive the stationary distribution along whatever environmental gradient we include if we are interested to plotting out the expected occupancy of different states (which we probably want to do).
 
-Second, you may not have known it. But you may have already used a similar approach while fitting dynamic occupancy models! Dynamic occupancy models estimates local colonization (<span>$$\gamma$$</span>) and extinction (<span>$$\epsilon$$</span>) rates, and you can use this equation to calculate the expected occupancy of your species
+Second, you may not have known it. But you may have already used a similar approach while fitting dynamic occupancy models. As a reminder, dynamic occupancy models estimate local colonization (<span>$$\gamma$$</span>) and extinction (<span>$$\epsilon$$</span>) rates, and you can use this equation to calculate the expected occupancy of your species:
 
 $$E(\psi) = \frac{\gamma}{\gamma + \epsilon}$$
 
-This equation provides the same solution as our approach above for a 2x2 TPM. Instead of using this equation, we could use the left eigenvector approach from above.
+This equation provides the same solution as our approach above for a 2x2 TPM. Instead of using this equation, we could still use the left eigenvector approach from above.
 
 ```R
 # colonization
@@ -222,13 +228,49 @@ ex_occ
 
 While it's relatively simple to derive the expected occupancy from a 2x2 TPM (i.e., a dynamic occupancy model), you will need to use the left eigenvector approach when dealing with larger TPMs (which autologistic multistate occupancy models have). As such, this is really helpful to know! Let's move on to our models now.
 
+<p><a href="#top" style>Back to top ⤒</a></p>
+
+## An autologistic multistate occupancy model that uses the logit link
+
+All autologistic multistate models are require two components:
+
+1. A TPM for the latent state model
+2. A detection probability matrix for the data model
+
+However, like I demonstrated in the last post on multistate models, there are different ways you can specify the probabilities for the latent state. What I did not tell you however, is that the way you write the latent state probabilities actually has an influence on what link function you will use to convert linear predictors to probabilities. For this model, let's assume there is no temporal variation in occupancy (i.e., no temporal covariates), and let the latent state TPM, <span>$$\boldsymbol{\psi_{s}}$$</span>, be:
+
+$$
+\boldsymbol{\psi_{s}} = 
+\begin{bmatrix}
+1 - \omega_{s} & \omega_{s} (1 - \delta_{s}) & \omega_{s} \delta_{s})  \\
+1 - \omega_s^{2,3|2,3} & \omega_s^{2,3|2,3} (1 - \delta_{s}) & \omega_s^{2,3|2,3} \delta_{s} \\
+1 - \omega_s^{2,3|2,3} & \omega_s^{2,3|2,3} (1 - \delta_{s}^{3|3}) & \omega_s^{2,3|2,3} \delta_{s}^{3|3}
+\end{bmatrix}
+ $$
 
 
+The probabilities in <span>$$\boldsymbol{\psi_{s}}$$</span> can be defined as:
+
+1. <span>$$\omega_{s}</span>: The probability of occupancy regardless of breeding status.
+2. <span>$$\delta_s$$</span>: The conditional probability of breeding given presence.
+3. <span>$$\omega_s^{2,3|2,3}$$</span>: The conditional probability of occupancy regardless of breeding status given that the species was present in the last time step.
+4. <span>$$\delta_{s}^{3|3}$$</span>: The conditional probability of breeding given the species was present and breeding in the last time step.
 
 
+For the first time step, we have no knowledge of species presence or breeding status. Therefore, we use the first row of <span>$$\boldsymbol{\psi_{s}}$$</span> to estimate the distribution of each state such that:
+
+$$z_{s,t=1} \sim \text{Categorical}(\boldsymbol{\psi_{s,1}})$$
+
+Where *z* is a Categorical random variable that can take a value of either 1, 2, or 3 depending on what state a site is in. Going through the rest of this equation, it's important to remember that <span>$$\boldsymbol{\psi_{s}}$$</span> is actually an *S* x 3 x 3 array, so that additional indexing of 1 in <span>$$\boldsymbol{\psi_{s,1}}$$</span> indicates that we selected the first row of the that site-specific TPM, which would be:
+
+$$\boldsymbol{\psi_{s,1}} =  \begin{bmatrix}(1-\omega_s) & \omega_s(1-\delta_s) & \omega_s\delta_s\end{bmatrix}$$
 
 
+After we estimate occupancy at *t=1*, we can use the latent state at <span>$$z_{s,t-1}$$</span> to index the appropriate row of <span>$$\boldsymbol{\psi_{s}}$$</span> for next time step. Thus for *t>1* the model is:
 
+$$z_{s,t} \sim \text{Categorical}(\boldsymbol{\psi_{s,z_{s,t-1}}}), t>1$$
 
+So, for example, if <span>$$z_{s,t-1} = 2$$</span>, we grab the 2nd row of our TPM. 
 
-So, after we estimate occupancy at *t=1* (we'll get to that in a second), we can use the latent state at <span>$$z_{s,t-1}$$</span> to index the appropriate row of <span>$$\boldsymbol{\psi_{s,t}}$$</span> while modeling <span>$$z_{s,t}$$</span>. Hopefully, if you read my previous post on multistate models, you can recall that we used the latent state *z* to index the appropriate row of the data model detection probability matrix. We are just using similar logic here for the latent state model as well!
+Now, this specification of our TPM is a little unique. We have written the probability of most states as a product (e.g., <span>$$\omega_{s} (1 - \delta_{s})$$</span>). In my last post, I showed that this means <span>$$\omega_{s}$$</span> and <span>$$\delta_{s}$$</span> can take any value between 0 and 1, and the row will still sum to 1. Because of this quality, we can use the logit link instead of the softmax function to specify the linear predictors for each probability. Why can we do that? Because the logit link maps a linear predictor back to a probability between 0 and 1. We just need to specify our logit-linear predictors, convert them back to probabilities, and fill in our TPM.
+
