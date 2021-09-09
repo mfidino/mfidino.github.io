@@ -81,6 +81,8 @@ auc_area / total_area
 
 So there is about 50% overlap between these two curves. However, let's double check our work. We can also pretty easily calculate the area between these two curves as that is the integral of the difference between them. The area between the two curves is this section here:
 
+![The area between the two curves]({{site.url}}/blog/images/curve03.jpeg#center)
+
 ```R
 # check work, calcualte area between the curves
 f1 <- approxfun(x, y1-y2)     
@@ -162,6 +164,12 @@ total_area <- area(cbind(x_area, total))
 
 # proportion overlap, about 50%
 auc_area / total_area
+
+# Area between the two curves plot
+plot(x,y1, type = "l", bty = "l", lwd = 5, las = 1, ylab = "y")
+lines(x,y2, col = "green", lwd = 5)
+text(x = -1.45, y = 0.25, labels = "The area here!", cex = 1.2,srt = 45)
+text(x =0.45, y = 0.25, labels = "And here too!", cex = 1.2, srt = -45 )
 
 # check work, calcualte area between the curves
 f1 <- approxfun(x, y1-y2)     
