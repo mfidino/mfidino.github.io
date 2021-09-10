@@ -21,10 +21,10 @@ Links to different parts of this post
 1. [The transition probability matrix. What is how and how to use it.](#the-transition-probability-matrix-what-it-is-and-how-to-use-it)
 2. [An autologistic multistate occupancy model that uses the logit link](#an-autologistic-multistate-occupancy-model-that-uses-the-logit-link)
   1. [Fitting the model in JAGS]
-  2. [Plotting out your results]
+  2. [Plotting out the results]
 3. [An autologistic multistate model occupancy that uses the softmax function]
   1. [Fitting the model in JAGS]
-  2. [Plotting our your results]
+  2. [Plotting our the results]
 
 
 Again, we are going to continue with the example of modeling the distribution of great horned owls and their breeding territory, except we now have data over time as well. Therefore, assume we have conducted *j* in 1,...,*J* surveys at *s* in 1,...,*S* sites throughout Chicago, Illinois during *t* in *1,...,T* great horned owl breeding seasons. During each of these surveys we can record 1 of 3 possible values:
@@ -232,12 +232,12 @@ While it's relatively simple to derive the expected occupancy from a 2x2 TPM (i.
 
 ## An autologistic multistate occupancy model that uses the logit link
 
-All autologistic multistate models are require two components:
+All autologistic multistate occupancy models require two components:
 
 1. A TPM for the latent state model
 2. A detection probability matrix for the data model
 
-However, like I demonstrated in the last post on multistate models, there are different ways you can specify the probabilities for the latent state. What I did not tell you however, is that the way you write the latent state probabilities actually has an influence on what link function you will use to convert linear predictors to probabilities. For this model, let's assume there is no temporal variation in occupancy (i.e., no temporal covariates), and let the latent state TPM, <span>$$\boldsymbol{\psi_{s}}$$</span>, be:
+However, like I demonstrated in the last post on multistate models, there are different ways you can specify the probabilities for each row vector of the latent state TPM. What I did not tell you however, is that the way you write the latent state probabilities has an influence on what link function you will use to convert your linear predictors to probabilities. For this model, let's assume there is no temporal variation in occupancy (i.e., no temporal covariates), and let the latent state TPM, <span>$$\boldsymbol{\psi_{s}}$$</span>, be:
 
 $$
 \boldsymbol{\psi_{s}} = 
@@ -256,21 +256,50 @@ The probabilities in <span>$$\boldsymbol{\psi_{s}}$$</span> can be defined as:
 3. <span>$$\omega_s^{2,3|2,3}$$</span>: The conditional probability of occupancy regardless of breeding status given that the species was present in the last time step.
 4. <span>$$\delta_{s}^{3|3}$$</span>: The conditional probability of breeding given the species was present and breeding in the last time step.
 
-
-For the first time step, we have no knowledge of species presence or breeding status. Therefore, we use the first row of <span>$$\boldsymbol{\psi_{s}}$$</span> to estimate the distribution of each state such that:
+For the first time step, we have no knowledge of species presence or breeding status. Because of this, all we need to do is use the first row of <span>$$\boldsymbol{\psi_{s}}$$</span> to estimate the distribution of each state at *t=1* such that:
 
 $$z_{s,t=1} \sim \text{Categorical}(\boldsymbol{\psi_{s,1}})$$
 
-Where *z* is a Categorical random variable that can take a value of either 1, 2, or 3 depending on what state a site is in. Going through the rest of this equation, it's important to remember that <span>$$\boldsymbol{\psi_{s}}$$</span> is actually an *S* x 3 x 3 array, so that additional indexing of 1 in <span>$$\boldsymbol{\psi_{s,1}}$$</span> indicates that we selected the first row of the that site-specific TPM, which would be:
+Where <span>$$z_{s,t}$$</span> is a Categorical random variable that can take a value of either 1, 2, or 3 depending on what state site *s* is in at time *t*. Going through the rest of this equation, it's important to remember that <span>$$\boldsymbol{\psi_{s}}$$</span> is a *S* x 3 x 3 array. Therefore, that additional indexing of 1 in <span>$$\boldsymbol{\psi_{s,1}}$$</span> indicates that we selected the first row of the that site-specific TPM, which would be:
 
 $$\boldsymbol{\psi_{s,1}} =  \begin{bmatrix}(1-\omega_s) & \omega_s(1-\delta_s) & \omega_s\delta_s\end{bmatrix}$$
 
 
-After we estimate occupancy at *t=1*, we can use the latent state at <span>$$z_{s,t-1}$$</span> to index the appropriate row of <span>$$\boldsymbol{\psi_{s}}$$</span> for next time step. Thus for *t>1* the model is:
+After we estimate occupancy at *t=1*, we can use the latent state at <span>$$z_{s,t-1}$$</span> to index the appropriate row of <span>$$\boldsymbol{\psi_{s}}$$</span> for time *t*. Thus for *t>1* the model is:
 
 $$z_{s,t} \sim \text{Categorical}(\boldsymbol{\psi_{s,z_{s,t-1}}}), t>1$$
 
-So, for example, if <span>$$z_{s,t-1} = 2$$</span>, we grab the 2nd row of our TPM. 
+So, for example, if <span>$$z_{s,t-1} = 2$$</span>, we grab the 2nd row of our TPM for site *s*. 
 
-Now, this specification of our TPM is a little unique. We have written the probability of most states as a product (e.g., <span>$$\omega_{s} (1 - \delta_{s})$$</span>). In my last post, I showed that this means <span>$$\omega_{s}$$</span> and <span>$$\delta_{s}$$</span> can take any value between 0 and 1, and the row will still sum to 1. Because of this quality, we can use the logit link instead of the softmax function to specify the linear predictors for each probability. Why can we do that? Because the logit link maps a linear predictor back to a probability between 0 and 1. We just need to specify our logit-linear predictors, convert them back to probabilities, and fill in our TPM.
+Now, the way I wrote out the TPM is a little unique. We have written the probability of the species presence states (i.e., 2 or 3) as a product of two probabilities (e.g., <span>$$\omega_{s} (1 - \delta_{s})$$</span>). In my last post on multistate models, I showed that all of the probabilities in this TPM can take any value between 0 and 1, and each row will still sum to 1. Because of this quality, we can use the logit link instead of the softmax function to specify the linear predictors for each probability. Why can we do that? Because the logit link maps a linear predictor back to a probability between 0 and 1. We just need to specify our logit-linear predictors, convert them back to probabilities, and fill in our TPM. So, for *n* in 1,...,*N* covariates in the *S* by *N* matrix *X* for <span>$$\omega$$</span> and *r* in 1,...,*R*  covariates in the *S* by *R* matrix *U* for <span>$$\delta$$</span>, the logit-linear predictors of the four unique probabilities in this TPM are
+
+$$
+\begin{eqnarray}
+\text{logit}(\omega_s) &=& \boldsymbol{\beta}^{2,3} \boldsymbol{x}_s  &=& \beta_1^{2,3} \times x_{s,1} + \cdots + \beta_N^{2,3} \times x_{s,N}  \nonumber\\
+\text{logit}(\omega_s^{2,3|2,3}) &=& \boldsymbol{\beta}^{2,3} \boldsymbol{x}_s + \theta_1  &=& \beta_1^{2,3} \times x_{s,1} + \cdots + \beta_N^{2,3} \times x_{s,N} + \theta_1 \nonumber \\
+\text{logit}(\delta_s) &=& \boldsymbol{\beta}^3 \boldsymbol{u}_s &=& \beta_1^{3} \times u_{s,1} + \cdots + \beta_R^3 \times u_{s,R}  \nonumber \\
+\text{logit}(\delta_s^{3|3}) &=& \boldsymbol{\beta}^3 \boldsymbol{u}_s + \theta_2 &=& \beta_1^{3} \times u_{s,1} + \cdots + \beta_R^3 \times u_{s,R} + \theta_2 \nonumber 
+\end{eqnarray}
+$$
+
+Where the first column of both *X* and *U* is a vector of 1's to accomodate the model intercepts. I've indexed each of the regression coefficients by the states they apply to. For example, <span>$$\boldsymbol{\beta}^{2,3}$$</span> are regression coefficients associated to the probability of presences ignoring breeding status (i.e., states 2 or 3). Conversely, <span>$$\boldsymbol{\beta}^3$$</span> are regression coefficients associated to the conditional probability of breeding given species presence (i.e,. state 3). Looking at the equations above, the only thing that differs between the linear predictors in <span>$$\omega_s$$</span> and <span>$$\omega_s^{2,3|2,3}$$</span> is the latter linear predictor has the autologistic term <span>$$\theta_1$$</span>. Likewise, the only thing that differs between the linear predictors in <span>$$\delta_s$$</span> and <span>$$\delta_s^{3|3}$$</span> is the autologistic term <span>$$\theta_2</span>. Thus, this specification of an autologistic multistate occupancy model only adds two parameters to the model in order to account temporal dependence in species presence or breeding status from one time period to the next.
+
+The data model for an autologistic multistate occupancy model is almost identical to a static multistate occupancy model, except it is indexed by sites (*s* in 1,..,*S*), surveys (*j* in 1,...,*J*), and time periods (*t* in 1,...,*T*). Again, we are going to assume there is no temporal variability in this level of the model (i.e, across *t*), but adding that in is not hard to do. Thus, let the detection matrix of the data model be:
+
+$$
+\boldsymbol{\eta}_{s,j} = \begin{bmatrix}
+ 1 & 0 & 0 \\
+ (1 - \rho_{s,j}^{\omega}) & \rho_{s,j}^{\omega} & 0 \\
+ (1 - \rho_{s,j}^{\omega}) & \rho_{s,j}^{\omega} (1 - \rho_{s,j}^\delta) & \rho_{s,j}^{\omega} \rho_{s,j}^\delta
+ \end{bmatrix} 
+ $$
+
+and the two detection probabilities in this matrix can be defined as:
+
+1. <span>$$\rho_{s,j}^{\omega}$$</span>: The probability of detecting the species regardless of breeding status.
+2. <span>$$\rho_{s,j}^{\delta}$$</span>: The conditional probability of detecting breeding given the species is present.
+
+Again, the rows sum to 1 in this matrix, the rows correspond to the state site *s* is in at time *t* and the columns correspond to the probability of detecting each state given the row. For example, the only state that can be detected if a site is in state 1 (species absence) is state 1. 
+
+
 
