@@ -6,13 +6,15 @@ category: blog
 
 This is the second post in a series I am writing on multistate occupancy models. I will be building off my previous example of a static multistate model, so if you've not read the first post be sure to check it out [here](https://masonfidino.com/intro_2_multistate_occupancy/). Likewise, if want more of an introduction to autologistic occupancy models, please see this post [here](https://masonfidino.com/autologistic_occupancy_model/).
 
-As a reminder, multistate occupancy models partition the probability of success (i.e., species presence) into multiple discrete states. In my previous example, we estimated the probability of three states:
+As a reminder, I will give a brief explanation of what multistate and autologistic occupancy models are.  Multistate occupancy models partition the probability of success (i.e., species presence) into multiple discrete states. In my previous example, we estimated the probability of three states:
 
 1. That owls were not present
 2. That owls were present but not breeding
 3. That owls were present and breeding.
 
-Autologistic occupancy models, on the other hand, are a simplified version of a dynamic occupancy model that estimates species occupancy instead of local colonization / extinction dynamics. They include an additional term in their logit-linear predictor to account for temporal dependence between primary sampling periods. Therefore, an autologistic multistate model can be used to estimate multiple discrete states across space and through time, and includes additional parameters to account for temporal dependence (e.g., a site where we found owls breeding at time *t* may be more likely to have owls that breed there at time *t+1*). This class of model has never received a formal write-up, and so it has rarely been used in the literature. Nevertheless, it is a very useful model to know when you are interested in applying a multistate model to data over time.
+Autologistic occupancy models, on the other hand, are a simplified version of a dynamic occupancy model that estimates species occupancy instead of local colonization / extinction dynamics. They include an additional term in their logit-linear predictor to account for temporal dependence between primary sampling periods. 
+
+If we combine these two styles of models, an autologistic multistate model estimates multiple discrete states across space and through time, and includes additional parameters to account for temporal dependence (e.g., a site where we found owls breeding at time *t-1* may be more likely to have owls that breed there at time *t*). To my knowledge, this class of model has never received a formal write-up, and so it has rarely been used in the literature. Nevertheless, it is a very useful model to know when you are interested in applying a multistate model to data over time!
 
 I'm going to walk through two different ways to write a three state model for a single species. The first model is the simplest parameterization, and uses the logit-link to estimate the occupancy probability of multiple states. I like this model for two reasons. First, it uses a standard link function that people should be familiar with, which makes it more approachable. Second, it is the absolute simplest parameterization of an autologistic multistate model, and so may be your best bet if you have a small sample size. In the second model, I use the softmax function to parameterize the model and include extra autologistic terms to estimate turnover among states over time. For example, if a site was in state 2 (owls present, not breeding) at time *t-1*, the probability it transitions to state 3 (owls present & breeding) at time *t* may be different than a site in state 3 that remains in state 3 from one time period to the next. This second model is useful for two reasons. First, the way this model is parameterized is very similar to multistate occupancy models for potentially interacting species. Therefore, understanding how this model works here will hopefully help you better understand how the [Rota *et al.* (2016)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12587) or [Fidino *et al.* (2018)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117) models work. Second, it demonstrates that you have multiple choices to make when you attempt to use such a model, and so it's important to critically think about what it is you are interested in estimating (and whether or not you may have the sample size to do so).
 
@@ -44,9 +46,9 @@ $$
 \end{bmatrix}
  $$
 
-One important aspect to remember about TPMs is that one dimension of the matrix represents "from this state" and the other dimension represents "to that state". In our case, the rows are the former and the columns are the latter. Because of this, each row of our TPM sums to 1. For example, the probability of transitioning from state 3 to state 2 means we need to look for the element in row 3 ("from" state 3) and column 2 ("to" state 2), which is <span>$$\psi_{s,t}^{2|3}$$</span>. I've added the conditional probabilities (e.g,. 2|3) on the 2nd and 3rd rows to remind you that we are including autologistic terms to help account for temporal dependence between time units.
+One important aspect to remember about TPMs is that one dimension of the matrix represents "from this state" and the other dimension represents "to that state". In our case, the rows are the former and the columns are the latter. Because of this, each row of our TPM sums to 1. For example, the probability of transitioning from state 3 to state 2 means we need to look for the element in row 3 ("from" state 3) and column 2 ("to" state 2), which is <span>$$\psi_{s,t}^{2|3}$$</span>. I've added the conditional probabilities (e.g,. 2\|3) on the 2nd and 3rd rows to remind you that we are including autologistic terms to help account for temporal dependence between time units.
 
-Before I break down how TPMs apply to autologistic occupancy models, however, I want to acknowledge that interpretting TPMs can be difficult! As such, I'm going to work through a simple example of a TPM, explain some important qualities that they may have, and introduce you to the `markovchain` package in `R`, which has some useful functions for dealing with TPMs.
+Before I break down how TPMs apply to autologistic occupancy models, however, I want to acknowledge that interpreting TPMs can be difficult! As such, I'm going to work through a simple example of a TPM, explain some important qualities that they have, and introduce you to the `markovchain` package in `R`, which has some useful functions for dealing with TPMs.
 
 ## The transition probability matrix. What it is and how to use it.
 
@@ -72,7 +74,18 @@ $$x A = \lambda x$$
 
 where *x*, our left eigenvector, is a non-zero row vector that satisfies the equation above, *A* is a *n* by *n* matrix (the TPM), and <span>$$\lambda$$</span> is an eigenvalue, which is a special scalar associated to a system of linear equations that ensures the equality above holds. 
 
-For an *n* by *n* matrix we have *n* eigenvectors and *n* eigenvalues. However, in our case we are pretty much only interested in the first of each. This brings me to another unique property of TPMs: the leading eigenvalue of a TPM is always 1. This means that to calculate the left eigenvectors for a TPM we don't need to worry about the eigenvalue <span>$$\lambda$$</span>, and can just solve the equation <span>$$$$\boldsymbol{\pi}TPM = \boldsymbol{\pi}$$</span>. Here is how we can do this in R:
+For an *n* by *n* matrix we have *n* eigenvectors and *n* eigenvalues. However, in our case we are pretty much only interested in the first of each. This brings me to another unique property of TPMs: the leading eigenvalue of a TPM is always 1. This means that to calculate the left eigenvectors for a TPM we don't need to worry about the eigenvalue <span>$$\lambda$$</span>. Therefore,
+
+
+$$
+\begin{eqnarray}
+x A &=& \lambda x \nonumber \\
+x A &=& x\nonumber \\
+\boldsymbol{\pi}TPM &=& \boldsymbol{\pi}
+\end{eqnarray}
+$$
+
+Here is how we can do this in R:
 
 
 ```R
@@ -85,10 +98,6 @@ tpm <- matrix(
   nrow = 3,
   byrow = TRUE
 )
-
-# Note: base::eigen() gives right eigenvectors, so we need
-#         to calculate their inverse to get the left
-#         eigenvectors.
 
 # base::eigen() gives right eigenvectors, which satisfy the equation
 #   A %*% x = lambda %*%x (which is not the equation we are trying 
@@ -167,7 +176,7 @@ stationary_distmc
 [1,] 0.3486239 0.3577982 0.293578
 ```
 
-There are two reasons I am took the time to introduce TPMs. First, we are going to use TPMs in our autologistic occupancy model, and because of this we will want to derive the expected occupancy of each state based on the estimated TPM. Likewise, as we will include spatial covariates in this model, our TPM will also spatially vary (i.e., we will calculate <span>$$\pi_s$$</span>, not <span>$$\pi$$</span>). Therefore we need to derive the stationary distribution along whatever environmental gradient we include if we are interested to plotting out the expected occupancy of different states (which we probably want to do).
+There are two reasons I took the time to introduce TPMs. First, we are going to use TPMs in our autologistic occupancy model, and because of this we will want to derive the expected occupancy of each state based on the estimated TPM. Likewise, as we will include spatial covariates in this model, our TPM will also spatially vary (i.e., we will calculate <span>$$\pi_s$$</span>, not <span>$$\pi$$</span>). Therefore we need to derive the stationary distribution along whatever environmental gradient we include if we are interested to plotting out the expected occupancy of different states (which we probably want to do).
 
 Second, you may not have known it. But you may have already used a similar approach while fitting dynamic occupancy models. As a reminder, dynamic occupancy models estimate local colonization (<span>$$\gamma$$</span>) and extinction (<span>$$\epsilon$$</span>) rates, and you can use this equation to calculate the expected occupancy of your species:
 
@@ -246,7 +255,7 @@ However, like I demonstrated in the last post on multistate models, there are di
 $$
 \boldsymbol{\psi_{s}} = 
 \begin{bmatrix}
-1 - \omega_{s} & \omega_{s} (1 - \delta_{s}) & \omega_{s} \delta_{s})  \\
+1 - \omega_{s} & \omega_{s} (1 - \delta_{s}) & \omega_{s} \delta_{s}  \\
 1 - \omega_s^{2,3|2,3} & \omega_s^{2,3|2,3} (1 - \delta_{s}) & \omega_s^{2,3|2,3} \delta_{s} \\
 1 - \omega_s^{2,3|2,3} & \omega_s^{2,3|2,3} (1 - \delta_{s}^{3|3}) & \omega_s^{2,3|2,3} \delta_{s}^{3|3}
 \end{bmatrix}
@@ -255,7 +264,7 @@ $$
 
 The probabilities in <span>$$\boldsymbol{\psi_{s}}$$</span> can be defined as:
 
-1. <span>$$\omega_{s}</span>: The probability of occupancy regardless of breeding status.
+1. <span>$$\omega_{s}$$</span>: The probability of occupancy regardless of breeding status.
 2. <span>$$\delta_s$$</span>: The conditional probability of breeding given presence.
 3. <span>$$\omega_s^{2,3|2,3}$$</span>: The conditional probability of occupancy regardless of breeding status given that the species was present in the last time step.
 4. <span>$$\delta_{s}^{3|3}$$</span>: The conditional probability of breeding given the species was present and breeding in the last time step.
@@ -275,7 +284,7 @@ $$z_{s,t} \sim \text{Categorical}(\boldsymbol{\psi_{s,z_{s,t-1}}}), t>1$$
 
 So, for example, if <span>$$z_{s,t-1} = 2$$</span>, we grab the 2nd row of our TPM for site *s*. 
 
-Now, the way I wrote out the TPM is a little unique. We have written the probability of the species presence states (i.e., 2 or 3) as a product of two probabilities (e.g., <span>$$\omega_{s} (1 - \delta_{s})$$</span>). In my last post on multistate models, I showed that all of the probabilities in this TPM can take any value between 0 and 1, and each row will still sum to 1. Because of this quality, we can use the logit link instead of the softmax function to specify the linear predictors for each probability. Why can we do that? Because the logit link maps a linear predictor back to a probability between 0 and 1. We just need to specify our logit-linear predictors, convert them back to probabilities, and fill in our TPM. So, for *n* in 1,...,*N* covariates in the *S* by *N* matrix *X* for <span>$$\omega$$</span> and *r* in 1,...,*R*  covariates in the *S* by *R* matrix *U* for <span>$$\delta$$</span>, the logit-linear predictors of the four unique probabilities in this TPM are
+Now, the way I wrote out the TPM is a little unique. The probability of the two species presence states (i.e., 2 or 3) are the product of two probabilities (e.g., <span>$$\omega_{s} (1 - \delta_{s})$$</span>). This allows each of these probabilities to take any value between 0 and 1, and each row will still sum to 1. Because of this quality, we can use the logit link instead of the softmax function to specify the linear predictors for each probability. Why can we do that? Because the logit link maps a linear predictor back to a probability between 0 and 1. We just need to specify our logit-linear predictors, convert them back to probabilities, and fill in our TPM. So, for *n* in 1,...,*N* covariates in the *S* by *N* matrix *X* and *r* in 1,...,*R*  covariates in the *S* by *R* matrix *U*, the logit-linear predictors of the four unique probabilities in this TPM are
 
 $$
 \begin{eqnarray}
@@ -286,7 +295,7 @@ $$
 \end{eqnarray}
 $$
 
-Where the first column of both *X* and *U* is a vector of 1's to accomodate the model intercepts. I've indexed each of the regression coefficients by the states they apply to. For example, <span>$$\boldsymbol{\beta}^{2,3}$$</span> are regression coefficients associated to the probability of presences ignoring breeding status (i.e., states 2 or 3). Conversely, <span>$$\boldsymbol{\beta}^3$$</span> are regression coefficients associated to the conditional probability of breeding given species presence (i.e,. state 3). Looking at the equations above, the only thing that differs between the linear predictors in <span>$$\omega_s$$</span> and <span>$$\omega_s^{2,3|2,3}$$</span> is the latter linear predictor has the autologistic term <span>$$\theta_1$$</span>. Likewise, the only thing that differs between the linear predictors in <span>$$\delta_s$$</span> and <span>$$\delta_s^{3|3}$$</span> is the autologistic term <span>$$\theta_2</span>. Thus, this specification of an autologistic multistate occupancy model only adds two parameters to the model in order to account temporal dependence in species presence or breeding status from one time period to the next.
+Where the first column of both *X* and *U* is a vector of 1's to accomodate the model intercepts. I've indexed each of the regression coefficients by the states they apply to. For example, <span>$$\boldsymbol{\beta}^{2,3}$$</span> are regression coefficients associated to the probability of presences ignoring breeding status (i.e., states 2 or 3). Conversely, <span>$$\boldsymbol{\beta}^3$$</span> are regression coefficients associated to the conditional probability of breeding given species presence (i.e,. state 3). Looking at the equations above, the only thing that differs between the linear predictors in <span>$$\omega_s$$</span> and <span>$$\omega_s^{2,3|2,3}$$</span> is the latter linear predictor has the autologistic term <span>$$\theta_1$$</span>. Likewise, the only thing that differs between the linear predictors in <span>$$\delta_s$$</span> and <span>$$\delta_s^{3|3}$$</span> is the autologistic term <span>$$\theta_2$$</span>. Thus, this specification of an autologistic multistate occupancy model adds two parameters to the model in order to account temporal dependence in species presence or breeding status from one time period to the next.
 
 The data model for an autologistic multistate occupancy model is almost identical to a static multistate occupancy model, except it is indexed by sites (*s* in 1,..,*S*), surveys (*j* in 1,...,*J*), and time periods (*t* in 1,...,*T*). Again, we are going to assume there is no temporal variability in this level of the model (i.e, across *t*), but adding that in is not hard to do. Thus, let the detection matrix of the data model be:
 
@@ -300,12 +309,12 @@ $$
 
 and the two detection probabilities in this matrix can be defined as:
 
-1. <span>$$\rho_{s,j}^{\omega}$$</span>: The probability of detecting the species regardless of breeding status.
-2. <span>$$\rho_{s,j}^{\delta}$$</span>: The probability of detecting breeding.
+1. <span>$$\rho_{s,j}^{\omega}$$</span>: The probability of detecting the species regardless of breeding status given species presence.
+2. <span>$$\rho_{s,j}^{\delta}$$</span>: The probability of detecting breeding given breeding occurs.
 
-Again, the rows sum to 1 in this matrix, the rows correspond to the state site *s* is in at time *t* and the columns correspond to the probability of detecting each state given the row. For example, the only state that can be detected if a site is in state 1 (species absence) is state 1. Thus, we can assume our observed data (<span>$$y_{s,j,t}$$</span>) are also a Categorical random variable such that
+Again, the rows sum to 1 in this matrix. Likewise, the rows correspond to the state site *s* is in at time *t* and the columns correspond to the probability of detecting each state given the row. For example, the only state that can be detected if a site is in state 1 (species absence) is state 1. Thus, we can assume our observed data (<span>$$y_{s,j,t}$$</span>) are also a Categorical random variable such that
 
-$$y_{s,j,t} \sim \text{Categorical}(\boldsymbol{\eta}_{s,z[s]})$$
+$$y_{s,j,t} \sim \text{Categorical}(\boldsymbol{\eta}_{s,j,z[s]})$$
 
 where the latent state *z* at time *t* indexes the appropriate row of the detection probability matrix. And just like with the latent state model, we can use the logit link for the two unique probabilities for *v* in 1,...,*V* covariates that vary by site and survey:
 
@@ -582,15 +591,15 @@ saveRDS(m1, "autologistic_logit_mcmc.rds")
 
 Now that we have fit the model, let's check to see how well it recovered the true parameter values.
 
-![comparison of true parameter values to estimated. All true values fall within the 95% credible interval of each estimte.]({{site.url}}/blog/images/alm_logit_mcmc.jpeg#center)
+![comparison of true parameter values to estimated. All true values fall within the 95% credible interval of each estimate.]({{site.url}}/blog/images/alm_logit_mcmc.jpeg#center)
 
-The model did a sufficient job retrieving the parameter estimates, the horizontal lines are 95% credible intevals and the true values fall within them. Note that we are less certain in our estimates for the two autologistic terms, and that the autologistic term that only applies to state 3 (`theta3`) has the widest credible intervals). As the autologistic parameters depend on a state occuring in the previous timestep, there is less data available to them in the model. As a result, there is more parameter uncertainty associated to them. 
+The model did a sufficient job retrieving the parameter estimates, the horizontal lines are 95% credible intervals and the true values fall within them. Note that we are less certain in our estimates for the two autologistic terms, and that the autologistic term that only applies to state 3 (`theta3`) has the widest credible intervals. As the autologistic parameters depend on a state occurring in the previous time step, there is less data available to them in the model. As a result, there is more parameter uncertainty associated to them. 
 
 The next thing that I like to plot out is the expected occupancy from the TPM. I like doing this before plotting out the TPM as it helps you see the overall pattern, which helps me interpret the TPM results. 
 
 ![The expected occupancy of the three states from our autologistic multistate occupancy model. At negative values of our gradient the "absent" category is the most likely. As the gradient becomes more positive "absent" gets replaced by "present but not breeding" and then later by "present and breeding"]({{site.url}}/blog/images/alm_logit_states.jpeg#center)
 
-From this figure we can see that there is a portion of the landscape that each state is the most likely to occur. If we were going to write up the results from this model, how can we interpret our regression coefcients relative to this pattern? Understanding state 1 is simple, as it is <span>$$(1 - \omega)$$</span>. Because <span>$$\omega$$</span> had a positive slope term (`0.5`) species absence, or <span>$$(1 - \omega)$$</span>, should increase when the environmental gradient is negative. Interpretting the expected occupancy for states 2 and 3 is a little more difficult, because those states are associated to both <span>$$\omega$$</span> and <span>$$\delta$$</span>. From our simulation, the slope term associated to <span>$$\delta$$</span> was `1.0`, which means it was positive and of greater magnitude than the slope term for <span>$$\omega$$</span> (`0.5`). As such, both <span>$$\omega$$</span> and <span>$$\delta$$</span> should increase as the environmental covariate becomes more positive. Likewsie, <span>$$(1 - \delta)$$</span> should increase when as the environmental covariate is negative. Because state 2 is <span>$$\omega \times (1 - \delta)$$</span>, we are multiplying two  probabilities that are highest at the opposite ends of the environmental gradient. Therefore, state 2 should be highest somewhere in the middle of the gradient. And Because state 3 is <span>$$\omega \times \delta$$</span>, we are multiplying two probabilities that are highest at the positive end of the environmental gradient, which means it should be highest there. 
+From this figure we can see that there is a portion of the landscape that each state is the most likely to occur. If we were going to write up the results from this model, how can we interpret our regression coefcients relative to this pattern? Understanding state 1 is simple, as it is <span>$$(1 - \omega)$$</span>. Because <span>$$\omega$$</span> had a positive slope term (`0.5`) that means species absence <span>$$(1 - \omega)$$</span> should increase when the environmental gradient is negative. Interpretting the expected occupancy for states 2 and 3 is a little more difficult, because those states are associated to both <span>$$\omega$$</span> and <span>$$\delta$$</span>. From our simulation, the slope term associated to <span>$$\delta$$</span> was `1.0`, which means it was positive and of greater magnitude than the slope term for <span>$$\omega$$</span> (`0.5`). As such, both <span>$$\omega$$</span> and <span>$$\delta$$</span> should increase as the environmental covariate becomes more positive. Likewsie, <span>$$(1 - \delta)$$</span> should increase when as the environmental covariate is negative. Because state 2 is <span>$$\omega \times (1 - \delta)$$</span>, we are multiplying two  probabilities that are highest at the opposite ends of the environmental gradient. Therefore, state 2 should be highest somewhere in the middle of the gradient. And Because state 3 is <span>$$\omega \times \delta$$</span>, we are multiplying two probabilities that are highest at the positive end of the environmental gradient, which means it should be highest there. 
 
 Finally, we can plot out the TPM along our environmental gradient. Note that I've transposed the TPM so that columns are the "from this state" and the rows are the "to this state" of this 3x3 figure. One thing that is important to note about this class of model is that the autologistic terms do not change the direction of an effect, they only modify the intercept value of a given element of the TPM if they are present. Because I used relatively small theta values to simulate these data, we do not see much variation among the three states (i.e., comparing rows of the plot below). 
 
@@ -620,7 +629,7 @@ $$
 
 Where each row sums to one. The seperate probabilities in our TPM can be defined as:
 
-1. <span>$$\psi_{s,t}^1$$</span>: The probability the species is absent at *s* at time *t* given the species was not present at *t-1* (or if *t=1*).
+1. <span>$$\psi_{s,t}^1$$</span>: The probability the species is absent at site *s* at time *t* given the species was not present at *t-1* (or if *t=1*).
 2. <span>$$\psi_{s,t}^2$$</span>: The probability the species is present but not breeding  at site *s* at time *t* given the species was not present at *t-1* (or if *t=1*).
 3. <span>$$\psi_{s,t}^3$$</span>: The probability the species is present and breeding at site *s* at time *t* given the species was not present at *t-1* (or if *t=1*).
 4. <span>$$\psi_{s,t}^{1|2}$$</span>: The probability the species is absent at site *s* at time *t* given the state was 2 at *t-1*.
@@ -650,7 +659,7 @@ $$
 
 where <span>$$\rho_{s,j}^{1|3} = 1 - \rho_{s,j}^{2|3} - \rho_{s,j}^{3|3}$$</span>. Here we assume that detecting state 2 when the true state is 3 (<span>$$\rho_{s,j}^{2|3}$$</span>) is not the same as detecting state 2 when the true state is 2 (<span>$$\rho_{s,j}^{2|2}$$</span>). This could be because the behavior of our species is different when it is and is not breeding such that their detection probability differs. Using this matrix, the data model is
 
-$$y_{s,j,t} \sim \text{Categorical}(\boldsymbol{\eta}_{s,z[s]})$$
+$$y_{s,j,t} \sim \text{Categorical}(\boldsymbol{\eta}_{s,j,z[s]})$$
 
 where the latent state *z* at time *t* indexes the appropriate row of the detection probability matrix.
 
@@ -665,7 +674,7 @@ $$
 \end{bmatrix}
 $$
 
-<p><a href="#top" style>Back to top ⤒</a></p>
+
 
 Where we have four autologistic terms in the bottom two rows, and one design matrix for states 2 and 3 (respectively *X* and *U*, both of which have a vector of 1's in the first column to account for the model intercept). To create our TPM from this matrix of linear predictors all we need to do is divide each element in a given row by the summation of that row.
 
@@ -679,7 +688,7 @@ $$
 \end{bmatrix} 
 $$
 
-Where <span>$$\boldsymbol{\alpha}$$</span> is a vector of parameters and *k* is the detection design matrix. Remember that we cannot detect state 3 when the true state is 2, so we place a zero in that part of the matrix. To create our detection probability matrix from this matrix of detection linear predictors all we need to do is divide each element in a given row by the summation of that row.
+Where <span>$$\boldsymbol{\alpha}$$</span> is a vector of parameters and *k* is the detection design matrix. Remember that we cannot detect state 3 when the true state is 2, so we place a zero in that part of the matrix. To create our detection probability matrix from this detection linear predictor matrix all we need to do is divide each element in a given row by the summation of that row.
 
 Finally, for the parameter model (the priors) we can give every parameter vague Logistic(0,1) priors.
 
@@ -931,23 +940,25 @@ saveRDS(m1, "autologistic_softmax_mcmc.rds")
 
 Just like with the logit-link model, our softmax parameterization with four autologistic terms did a good job estimating the true parameters (though I added an extra two years of sampling and 25 sites to do so).
 
-![comparison of true parameter values to estimated from softmax model. All true values fall within the 95% credible interval of each estimte.]({{site.url}}/blog/images/alm_softmax_mcmc.jpeg#center)
+![comparison of true parameter values to estimated from softmax model. All true values fall within the 95% credible interval of each estimate.]({{site.url}}/blog/images/alm_softmax_mcmc.jpeg#center)
 
 
-Just like the last model, let's plot out the expected occupancy of each state first.  
+Just like the last model, let's plot out the expected occupancy of each state first.  We have much more data here, so our credible intervals have gotten much smaller.
 
 ![The expected occupancy of the three states from our autologistic multistate occupancy model. At negative values of our gradient the "absent" category is the most likely. As the gradient becomes more positive "absent" gets replaced by "present and breeding"]({{site.url}}/blog/images/alm_softmax_states.jpeg#center)
 
 Unlike the previous simulation, the two most likely states along our gradient are either "species absence" or "present and breeding". However, there is still a portion of the landscape (at negative values of our gradient), where this species occurs with a relatively low probability and does not breed.
 
-How are the parameters we used to simulate these data causing this pattern? It's mostly the difference in magnitude between the two positive slope terms for state 2 (`0.5`) and state 3 (`2`). As a reminder, the softmax function divides each linear predictor in a row of the TPM by the row sum. Ignoring intercept values and autologistic terms, 2 / (0.5 + 2) > 0.5 / (0.5 + 2). Therefore, when the environmental gradient is positive state 3 is most likely. Likewise, when the environmental gradient is negative state 2 becomes more likely than state 3. However, state 1 is the overall most likely when the environmental gradient is negative because the slope terms for state 2 and 3 are positive.
+How are the parameters we used to simulate these data causing this pattern? It's mostly the difference in magnitude between the two positive slope terms for state 2 (`0.5`) and state 3 (`2`). As a reminder, the softmax function divides each linear predictor in a row of the TPM by the row sum. Ignoring intercept values and autologistic terms, 2 / (0.5 + 2) > 0.5 / (0.5 + 2). Therefore, when the environmental gradient is positive state 3 is most likely. Likewise, when the environmental gradient is negative state 2 becomes more likely than state 3. However, state 1 is most likely to occur when the environmental gradient is negative because the slope terms for state 2 and 3 are positive.
 
 
 Finally, we can plot out the TPM along our environmental gradient. Note that I've transposed the TPM so that columns are the "from this state" and the rows are the "to this state" of this 3x3 figure. One thing that is important to note about this class of model is that the autologistic terms do not change the direction of an effect, they only modify the intercept value of a given element of the TPM if they are present. 
 
 ![The plotted results of the TPM for the softmax model. They vary little from the expected occupancy plots."]({{site.url}}/blog/images/alm_softmax_transitions.jpeg#center)
 
-We see a little more variation in this model across rows than we did with the logit-link model, but that is only because I used larger autologistic terms. However, there is not that much variation. And that is how you fit two different styles of autologistic multistate occupancy models!
+We see a little more variation in this model across rows than we did with the logit-link model, but that is only because I used larger autologistic terms. However, there is not that much variation. And that is how you fit two different styles of autologistic multistate occupancy models! 
+
+All code for this multistate modeling series is located [here](https://github.com/mfidino/multi-state-occupancy-models).
 
 
 <p><a href="#top" style>Back to top ⤒</a></p>
