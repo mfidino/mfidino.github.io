@@ -6,7 +6,7 @@ category: blog
 
 This is the second post in a series I am writing on multistate occupancy models. I will be building off my previous example of a static multistate model, so if you've not read the first post be sure to check it out [here](https://masonfidino.com/intro_2_multistate_occupancy/). Likewise, if want more of an introduction to autologistic occupancy models, please see this post [here](https://masonfidino.com/autologistic_occupancy_model/).
 
-As a reminder, I will give a brief explanation of what multistate and autologistic occupancy models are.  Multistate occupancy models partition the probability of success (i.e., species presence) into multiple discrete states. In my previous example, we estimated the probability of three states:
+Before I jump into things, let me remind you what multistate and autologistic occupancy models are.  Multistate occupancy models partition the probability of success (i.e., species presence) into multiple discrete states. In my previous example, we estimated the probability of three states:
 
 1. That owls were not present
 2. That owls were present but not breeding
@@ -14,19 +14,9 @@ As a reminder, I will give a brief explanation of what multistate and autologist
 
 Autologistic occupancy models, on the other hand, are a simplified version of a dynamic occupancy model that estimates species occupancy instead of local colonization / extinction dynamics. They include an additional term in their logit-linear predictor to account for temporal dependence between primary sampling periods. 
 
-If we combine these two styles of models, an autologistic multistate model estimates multiple discrete states across space and through time, and includes additional parameters to account for temporal dependence (e.g., a site where we found owls breeding at time *t-1* may be more likely to have owls that breed there at time *t*). To my knowledge, this class of model has never received a formal write-up, and so it has rarely been used in the literature. Nevertheless, it is a very useful model to know when you are interested in applying a multistate model to data over time!
+Therefore, an autologistic multistate model estimates multiple discrete states across space and through time, and includes additional parameters to account for temporal dependence (e.g., a site where we found owls breeding at time *t-1* may be more likely to have owls that breed there at time *t*). To my knowledge, this class of model has never received a formal write-up, and so it has rarely been used in the literature. Nevertheless, it is a very useful model to know if you are interested in applying a multistate model to data over time.
 
-I'm going to walk through two different ways to write a three state model for a single species. The first model is the simplest parameterization, and uses the logit-link to estimate the occupancy probability of multiple states. I like this model for two reasons. First, it uses a standard link function that people should be familiar with, which makes it more approachable. Second, it is the absolute simplest parameterization of an autologistic multistate model, and so may be your best bet if you have a small sample size. In the second model, I use the softmax function to parameterize the model and include extra autologistic terms to estimate turnover among states over time. For example, if a site was in state 2 (owls present, not breeding) at time *t-1*, the probability it transitions to state 3 (owls present & breeding) at time *t* may be different than a site in state 3 that remains in state 3 from one time period to the next. This second model is useful for two reasons. First, the way this model is parameterized is very similar to multistate occupancy models for potentially interacting species. Therefore, understanding how this model works here will hopefully help you better understand how the [Rota *et al.* (2016)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12587) or [Fidino *et al.* (2018)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117) models work. Second, it demonstrates that you have multiple choices to make when you attempt to use such a model, and so it's important to critically think about what it is you are interested in estimating (and whether or not you may have the sample size to do so).
-
-Links to different parts of this post
-
-1. [The transition probability matrix. What is how and how to use it.](#the-transition-probability-matrix-what-it-is-and-how-to-use-it)
-2. [An autologistic multistate occupancy model that uses the logit link](#an-autologistic-multistate-occupancy-model-that-uses-the-logit-link)
-  1. [The logit-link model written in JAGS](#the-logit-link-model-written-in-jags)
-  2. [Simulating some data and plotting the results from the logit-link model](#simulating-some-data-and-plotting-the-results-from-the-logit-link-model)
-3. [An autologistic multistate model occupancy that uses the softmax function](#an-autologistic-multistate-model-occupancy-that-uses-the-softmax-function)
-  1. [The softmax model written in JAGS](#the-softmax-model-written-in-jags)
-  2. [Simulating some data and plotting the results from the softmax model](#simulating-some-data-and-plotting-the-results-from-the-softmax-model)
+In this post I will explain two different ways to write a three state model for a single species. The first model is the simplest parameterization, and uses the logit-link to estimate the occupancy probability of multiple states. I like this model for two reasons. First, it uses a standard link function that people should be familiar with, which makes it more approachable. Second, it is the absolute simplest parameterization of an autologistic multistate model, and so may be your best bet if you have a small sample size. In the second formulation, I use the softmax function to parameterize the model and include extra autologistic terms to estimate turnover among states over time. For example, if a site was in state 2 (owls present, not breeding) at time *t-1*, the probability it transitions to state 3 (owls present & breeding) at time *t* may be different than a site in state 3 that remains in state 3 from one time period to the next. This second model is useful for two reasons. First, the way this model is parameterized is very similar to multistate occupancy models for potentially interacting species. Therefore, understanding how this model works here will hopefully help you better understand how the [Rota *et al.* (2016)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12587) or [Fidino *et al.* (2018)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117) models work. Second, it demonstrates that you have multiple choices to make when you attempt to use such a model, and so it's important to critically think about what it is you are interested in estimating (and whether or not you may have the sample size to do so). 
 
 
 Again, we are going to continue with the example of modeling the distribution of great horned owls and their breeding territory, except we now have data over time as well. Therefore, assume we have conducted *j* in 1,...,*J* surveys at *s* in 1,...,*S* sites throughout Chicago, Illinois during *t* in *1,...,T* great horned owl breeding seasons. During each of these surveys we can record 1 of 3 possible values:
@@ -35,7 +25,7 @@ Again, we are going to continue with the example of modeling the distribution of
 2. Detection of an adult owl but no detection of a young owl
 3. Detection of a young owl (i.e., reproductive success)
 
-We store these observations in the *S* by *J* by *T* array <span>$$\boldsymbol{Y}$$</span>. Again, this lets us estimate three separate states: owls are not present (state = 1), owls are present but not breeding (state = 2), and owls are present and breeding (state = 3). However, the probability of occupancy of the different states at site *s* and time *t* is going to depend on the the state at time *t-1*. Therefore, instead of having a vector of occupancy probabilties, we actually place them in a transition probability matrix (TPM), which stores the probability of transitioning from one state to another in a single time unit:
+We store these observations in a *S* by *J* by *T* array <span>$$\boldsymbol{Y}$$</span>. This lets us estimate three separate states: owls are not present (state = 1), owls are present but not breeding (state = 2), and owls are present and breeding (state = 3). However, the probability of occupancy of the different states at site *s* and time *t* is going to depend on the the state at time *t-1*. Therefore, instead of having a vector of occupancy probabilties, we place them in a transition probability matrix (TPM), which stores the probability of transitioning from one state to another in a single time unit:
 
 $$
 \boldsymbol{\psi_{s,t}} = 
@@ -46,9 +36,20 @@ $$
 \end{bmatrix}
  $$
 
-One important aspect to remember about TPMs is that one dimension of the matrix represents "from this state" and the other dimension represents "to that state". In our case, the rows are the former and the columns are the latter. Because of this, each row of our TPM sums to 1. For example, the probability of transitioning from state 3 to state 2 means we need to look for the element in row 3 ("from" state 3) and column 2 ("to" state 2), which is <span>$$\psi_{s,t}^{2|3}$$</span>. I've added the conditional probabilities (e.g,. 2\|3) on the 2nd and 3rd rows to remind you that we are including autologistic terms to help account for temporal dependence between time units.
+One important aspect to remember about TPMs is that one dimension of the matrix represents "from this state" and the other dimension represents "to that state". In our case, the rows are the former and the columns are the latter. Because of this, each row of our TPM sums to 1. For example, to locate the transition probability from state 3 to state 2, we need to look for the element in row 3 ("from" state 3) and column 2 ("to" state 2), which is <span>$$\psi_{s,t}^{2|3}$$</span>. I've added the conditional probabilities (e.g,. 2\|3) on the 2nd and 3rd rows to remind you that we are including autologistic terms to help account for temporal dependence between time units.
 
-Before I break down how TPMs apply to autologistic occupancy models, however, I want to acknowledge that interpreting TPMs can be difficult! As such, I'm going to work through a simple example of a TPM, explain some important qualities that they have, and introduce you to the `markovchain` package in `R`, which has some useful functions for dealing with TPMs.
+Before I break down how TPMs apply to autologistic occupancy models, however, I want to acknowledge that interpreting TPMs can be difficult, and this may be the first time you have heard about them. As such, I'm going to work through a simple example of a TPM, explain some important qualities that they have, and introduce you to the `markovchain` package in `R`, which has some useful functions for dealing with TPMs.
+
+
+#### Links to different parts of this post
+
+1. [The transition probability matrix. What is how and how to use it.](#the-transition-probability-matrix-what-it-is-and-how-to-use-it)
+2. [An autologistic multistate occupancy model that uses the logit link](#an-autologistic-multistate-occupancy-model-that-uses-the-logit-link)
+  1. [The logit-link model written in JAGS](#the-logit-link-model-written-in-jags)
+  2. [Simulating some data and plotting the results from the logit-link model](#simulating-some-data-and-plotting-the-results-from-the-logit-link-model)
+3. [An autologistic multistate model occupancy that uses the softmax function](#an-autologistic-multistate-model-occupancy-that-uses-the-softmax-function)
+  1. [The softmax model written in JAGS](#the-softmax-model-written-in-jags)
+  2. [Simulating some data and plotting the results from the softmax model](#simulating-some-data-and-plotting-the-results-from-the-softmax-model)
 
 ## The transition probability matrix. What it is and how to use it.
 
@@ -74,7 +75,7 @@ $$x A = \lambda x$$
 
 where *x*, our left eigenvector, is a non-zero row vector that satisfies the equation above, *A* is a *n* by *n* matrix (the TPM), and <span>$$\lambda$$</span> is an eigenvalue, which is a special scalar associated to a system of linear equations that ensures the equality above holds. 
 
-A *n* by *n* matrix has *n* eigenvectors and *n* eigenvalues. However, in our purposes we only need the first of each, which brings me to another unique property of TPMs, the leading eigenvalue of a TPM is always 1. This means that to calculate the left eigenvectors for a TPM we don't need to worry about the eigenvalue <span>$$\lambda$$</span>. Therefore,
+A *n* by *n* matrix has *n* eigenvectors and *n* eigenvalues. However, for our purposes we only need the first of each, which brings me to another unique property of TPMs, the leading eigenvalue of a TPM is always 1. This means that to calculate the left eigenvectors for a TPM we don't need to worry about the eigenvalue <span>$$\lambda$$</span>. Therefore,
 
 
 $$
