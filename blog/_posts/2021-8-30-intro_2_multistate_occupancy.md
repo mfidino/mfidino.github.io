@@ -271,7 +271,7 @@ model{
 }
 ```
 
-Now let's simulate some data and see if the model works. To simulate your own data for this model, all you need to do is run through `static_example.R` in the GitHub repo I previously linked.
+Now let's simulate some data and see if the model works. To simulate your own data for this model, all you need to do is run through `./R/examples/static_example.R` in the GitHub repo I previously linked.
 
 ```R
 # A simulated example of the static multistate occupancy model
