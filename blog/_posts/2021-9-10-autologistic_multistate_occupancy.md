@@ -75,7 +75,7 @@ $$x A = \lambda x$$
 
 where *x*, our left eigenvector, is a non-zero row vector that satisfies the equation above, *A* is a *n* by *n* matrix (the TPM), and <span>$$\lambda$$</span> is an eigenvalue, which is a special scalar associated to a system of linear equations that ensures the equality above holds. 
 
-A *n* by *n* matrix has *n* eigenvectors and *n* eigenvalues. However, for our purposes we only need the first of each, which brings me to another unique property of TPMs, the leading eigenvalue of a TPM is always 1. This means that to calculate the left eigenvectors for a TPM we don't need to worry about the eigenvalue <span>$$\lambda$$</span>. Therefore,
+A *n* by *n* matrix has *n* eigenvectors and *n* eigenvalues. However, for our purposes we only need the first of each, which brings me to another unique property of TPMs, the leading eigenvalue of a TPM is always 1. This means that to calculate the left eigenvectors for a TPM we don't need to worry about the eigenvalue <span>$$\lambda$$</span>. Therefore, we can simplify the equation for left eigenvectors so that it is equivalent the first equation I shared in this section (just with different symbols).
 
 
 $$
