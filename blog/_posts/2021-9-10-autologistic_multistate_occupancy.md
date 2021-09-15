@@ -829,7 +829,7 @@ sapply(
 )
 
 # -------------------------------------------
-# Autologistic model that uses the logit link
+# Autologistic model that uses softmax
 # -------------------------------------------
 
 # General bookkeeping
