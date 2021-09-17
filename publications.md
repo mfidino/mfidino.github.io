@@ -94,7 +94,7 @@ and Evolution*, 7:384. [Link](https://www.frontiersin.org/articles/10.3389/fevo.
 #### 2018
 
 [11] **Fidino, M.**, Herr, S. W., and Magle, S. B. (2018). Assessing online opinions of
-wildlife through social media. *Human Dimensions of Wildlife*, 23(5):482–490. [PDF](../public/Hopper_2019.pdf)
+wildlife through social media. *Human Dimensions of Wildlife*, 23(5):482–490. [PDF](../public/Fidino_2018.pdf)
 
 [10] Gallo, T. and **Fidino, M.** (2018). Biodiversity: Making wildlife welcome in urban
 areas. *eLife*, 7:e41348. [Link](https://elifesciences.org/articles/41348)
