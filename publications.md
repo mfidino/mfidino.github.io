@@ -17,6 +17,8 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### 2021
 
+[26] Kay, C. A. M., Rohnke, A. T., Sander, H. A., Stankowich, T., **Fidino, M.**, Murray, M. H., Lewis, J. S., Taves, I., Lehrer, E. W., Zellmer, A. J., Schell, C. J., and Magle, S. B. (*in press*). Barriers to building wildlife-inclusive cities: Insights from a joint summit of urban ecologists, urban planners, and landscape designers. *People and Nature*.
+
 [25] **Fidino, M.**,  Limbrick, K., Bender, J., Gallo, T., and Magle, S. B. (2021). Strolling through a century: recreating historical bird surveys to explore 100 years of change in an urban bird community. *American Naturalist*.
 
 
@@ -25,12 +27,12 @@ Anthonysamy, W. J. B., Gramza, A. R., Green, A. M., Jordan, M. J., Lewis, J.,
 Long, R. A., MacDougall, B., Pendergast, M. E., Remine, K., Simon, K. C., Cassady
 St. Clair, C., Shier, C. J., Stankowich, T., , Stevenson, C. J., Zellmer, A. J., and Schell,
 C. J. (2021). Wealth and urbanization shape medium and large terrestrial mammal
-communities. *Global Change Biology.*
+communities. *Global Change Biology*, 27(21):5446-5459. [PDF](../public/Magle_2021.pdf)
 
 
 [23] Murray<sup>\*</sup>, M. H., **Fidino<sup>\*</sup>, M.**, Lehrer, E. W., Simonis, J. L., and Magle, S. B. (2021).
 An multi-state occupancy model to non-invasively monitor visible signs of wildlife
-health with camera traps that accounts for image quality. *Journal of Animal Ecology.* [PDF](../public/Murray_2021.pdf)
+health with camera traps that accounts for image quality. *Journal of Animal Ecology*, 90(8):1973-1984. [PDF](../public/Murray_2021.pdf)
 
 [22] **Fidino, M.**, Gallo, T., Lehrer, E. W., Murray, M. H., Kay, C., Sander, H. A.,
 MacDougall, B., Salsbury, C. M., Ryan, T. J., Angstmann, J. L., Belaire, J. A.,
