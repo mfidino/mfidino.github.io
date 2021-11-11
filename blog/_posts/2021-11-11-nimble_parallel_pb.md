@@ -163,7 +163,7 @@ if(
   file.remove(my_outfile)
 }
 
-# Send the model to the console which will fit it,
+# Send the model to the command line which will fit it,
 #  and save the output.
 shell(
   "Rscript ./R/msom_mcmc.R",
