@@ -17,7 +17,7 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### 2021
 
-[26] Kay, C. A. M., Rohnke, A. T., Sander, H. A., Stankowich, T., **Fidino, M.**, Murray, M. H., Lewis, J. S., Taves, I., Lehrer, E. W., Zellmer, A. J., Schell, C. J., and Magle, S. B. (*in press*). Barriers to building wildlife-inclusive cities: Insights from a joint summit of urban ecologists, urban planners, and landscape designers. *People and Nature*.
+[26] Kay, C. A. M., Rohnke, A. T., Sander, H. A., Stankowich, T., **Fidino, M.**, Murray, M. H., Lewis, J. S., Taves, I., Lehrer, E. W., Zellmer, A. J., Schell, C. J., and Magle, S. B. (2021). Barriers to building wildlife-inclusive cities: Insights from a joint summit of urban ecologists, urban planners, and landscape designers. *People and Nature*. [Link](https://besjournals.onlinelibrary.wiley.com/doi/10.1002/pan3.10283)
 
 [25] **Fidino, M.**,  Limbrick, K., Bender, J., Gallo, T., and Magle, S. B. (2021). Strolling through a century: recreating historical bird surveys to explore 100 years of change in an urban bird community. *American Naturalist*.
 
