@@ -14,12 +14,21 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
+#### *in press*
+
+[27] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (*in press*). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*.
+
+
+#### 2022
+
+[26] **Fidino, M.**,  Limbrick, K., Bender, J., Gallo, T., and Magle, S. B. (2021). Strolling through a century: recreating historical bird surveys to explore 100 years of change in an urban bird community. *American Naturalist*. [PDF](../public/Fidino_amnat_2022.pdf)
+
 
 #### 2021
 
-[26] Kay, C. A. M., Rohnke, A. T., Sander, H. A., Stankowich, T., **Fidino, M.**, Murray, M. H., Lewis, J. S., Taves, I., Lehrer, E. W., Zellmer, A. J., Schell, C. J., and Magle, S. B. (2021). Barriers to building wildlife-inclusive cities: Insights from a joint summit of urban ecologists, urban planners, and landscape designers. *People and Nature*. [Link](https://besjournals.onlinelibrary.wiley.com/doi/10.1002/pan3.10283)
+[25] Kay, C. A. M., Rohnke, A. T., Sander, H. A., Stankowich, T., **Fidino, M.**, Murray, M. H., Lewis, J. S., Taves, I., Lehrer, E. W., Zellmer, A. J., Schell, C. J., and Magle, S. B. (2021). Barriers to building wildlife-inclusive cities: Insights from a joint summit of urban ecologists, urban planners, and landscape designers. *People and Nature*. [Link](https://besjournals.onlinelibrary.wiley.com/doi/10.1002/pan3.10283)
 
-[25] **Fidino, M.**,  Limbrick, K., Bender, J., Gallo, T., and Magle, S. B. (2021). Strolling through a century: recreating historical bird surveys to explore 100 years of change in an urban bird community. *American Naturalist*.[PDF](../public/Fidino_amnat_2022.pdf)
+
 
 
 [24] Magle<sup>\*</sup>, S., **Fidino<sup>\*</sup>, M.**, Sander, H., Rohnke, A. T., Larson, K. L., Gallo, T., Kay, C. A. M., Lehrer, E. W., Murray, M. H., Adalsteinsson, S. A., Ahlers, A. A.,
