@@ -44,7 +44,7 @@ hist(
 abline(v = occ_prob, lty = 2, lwd = 3)
 ```
 
-![Histogram of 1000 simulations of 100 Bernoulli(0.75) trails]({{site.url}}/blog/images/stocc01.JPEG#center)
+![Histogram of 1000 simulations of 100 Bernoulli(0.75) trails]({{site.url}}/blog/images/stocc01.jpeg#center)
 
 If ecologists had the power of a Disney princess and all the animals of the forest would line up and say hello, we would perfectly observe the occupancy status of our species of interest at each site. It would be great, and modeling could simply be done with logistic regression. However, ecologists are fallible. We make mistakes, and species can be present at a location and go undetected. To continue our example, lets assume we only have a 0.35 probability of detecting a species if it is present. If we only visit each site one time, the observed occupancy we find at the end of our study is going to be substantially lower then the true occupancy on the landscape based on the way we set up this example.
 
@@ -79,7 +79,7 @@ abline(v = occ_prob * det_prob, lty = 2, lwd = 3)
 
 ```
 
-![Histogram of 1000 simulations of 100 Bernoulli(0.75 * 0.35) trails]({{site.url}}/blog/images/stocc02.JPEG#center)
+![Histogram of 1000 simulations of 100 Bernoulli(0.75 * 0.35) trails]({{site.url}}/blog/images/stocc02.jpeg#center)
 
 In reality, occupancy is 0.75, but our observed data suggests it is much lower! Of course, the example I used here is meant to show a large difference. If you do not detect species perfectly on the landscape, then going out to a site only once can add more false-absences, or zeroes, in your data then you'd expect based on a species distribution. 
 
@@ -535,7 +535,7 @@ legend(
 )
 ```
 
-![Comparison of estimated parameter values to the ones that simulated the data from a static occupancy model that uses covariates and an independent Bernoulli parameterization for the observation model. All true values are estimated well. ]({{site.url}}/blog/images/stocc03.JPEG#center)
+![Comparison of estimated parameter values to the ones that simulated the data from a static occupancy model that uses covariates and an independent Bernoulli parameterization for the observation model. All true values are estimated well. ]({{site.url}}/blog/images/stocc03.jpeg#center)
 
 
 ## Model 4: a static occupancy model with covariates an Binomial at the observation level
@@ -712,4 +712,4 @@ legend(
 ```
 
 
-![Comparison of estimated parameter values to the ones that simulated the data from a static occupancy model that uses covariates a Binomial parameterization for the observation model. All true values are estimated well. ]({{site.url}}/blog/images/stocc04.JPEG#center)
+![Comparison of estimated parameter values to the ones that simulated the data from a static occupancy model that uses covariates a Binomial parameterization for the observation model. All true values are estimated well. ]({{site.url}}/blog/images/stocc04.jpeg#center)
