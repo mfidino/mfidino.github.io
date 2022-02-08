@@ -4,15 +4,15 @@ title: A simple static occupancy model in NIMBLE
 category: blog
 ---
 
-I have to be honest. It's been a while since I've actually thought about fitting a static, or single season, occupancy model. Why? The lab I am part of has been camera trapping in Chicago for over a decade. So naturally, we generally use different classes of occuapncy models with our data. Yet, new camera trap studies are springing up all over the place, and so while I may not need this class of model all that often, other researchers certainly do! 
+I have to be honest. It's been a while since I've actually thought about fitting a static, or single season, occupancy model. Why? The lab I am part of has been camera trapping in Chicago for over a decade. So naturally, we generally use different classes of occupancy models with our data. Yet, while I may not use this model, other researchers certainly do! Likewise, if you want to understand more complicated occupancy models, it makes sense to get a decent grasp of some of the earliest models.
 
-So if you are just getting into occupancy modeling and need a gentle introduction, look no futher! However, before jumping into this, I would be remiss to not point out that there are a LOAD of wonderful resources that provide a much more thorough explanation then I will here. Some that come to mind are [MacKenzie et al. (2017)](https://www.sciencedirect.com/book/9780124071971/occupancy-estimation-and-modeling) or [Volume 1 of Applied Hierarchical Modeling in Ecology](https://www.mbr-pwrc.usgs.gov/pubanalysis/keryroylebook/) by Kéry and Royle.
+So if you are just getting into occupancy modeling and need a gentle introduction, look no further! However, before jumping into this, I would be remiss to not point out that there are a LOAD of wonderful resources that provide a much more thorough explanation then I will here. Some that come to mind are [MacKenzie et al. (2017)](https://www.sciencedirect.com/book/9780124071971/occupancy-estimation-and-modeling) or [Volume 1 of Applied Hierarchical Modeling in Ecology](https://www.mbr-pwrc.usgs.gov/pubanalysis/keryroylebook/) by Kéry and Royle.
+
+After providing a brief motivating example, I'll show four separate static occupancy models. Without getting ahead of myself, there are a few different ways to write these models out, and which one you choose to use will depend on your study design and research goals.
 
 ## A motivating example
 
-Occupancy models are a style of zero-inflated logistic regression. When we go out and try to determine if a species occupies an area of interest, we end up with 'false-absences' in our observed data in the event that a species occupies an area and we fail to detect it. 
-
-For this example, let's assume we have 100 locations we are sampling and the true probability of occupancy for our species of interest is 0.75. If we wanted to simulate such data in R we could do something like:
+When we go out and try to determine if a species occupies an area of interest, we end up with 'false-absences' in our observed data in the event that a species occupies an area and we fail to detect it. For this example, let's assume we have 100 locations we are sampling and the true probability of occupancy for our species of interest is 0.75. If we wanted to simulate such data in R we could do something like:
 
 ```R
 # True Pr(occupancy) on landscape
@@ -46,7 +46,7 @@ abline(v = occ_prob, lty = 2, lwd = 3)
 
 ![Histogram of 1000 simulations of 100 Bernoulli(0.75) trails]({{site.url}}/blog/images/stocc01.JPEG#center)
 
-If ecologists had the power of a Disney princess and all the animals of the forest would line up and say hello, we would perfectly observe the occupancy status of our species of interest at each site. It would be great, and modeling could simply be done with logistic regression. However, ecologists are fallible. We make mistakes, and species can be present at a location and go undetected. To continue our example, lets assume we only have a 0.35 probability of detecting a species if it is present. If we only go out and visit each site one time, the observed occupancy we find at the end of our study is going to be substantially lower then the true occupancy on the landscape.
+If ecologists had the power of a Disney princess and all the animals of the forest would line up and say hello, we would perfectly observe the occupancy status of our species of interest at each site. It would be great, and modeling could simply be done with logistic regression. However, ecologists are fallible. We make mistakes, and species can be present at a location and go undetected. To continue our example, lets assume we only have a 0.35 probability of detecting a species if it is present. If we only visit each site one time, the observed occupancy we find at the end of our study is going to be substantially lower then the true occupancy on the landscape based on the way we set up this example.
 
 ```R
 # Add in observational error
@@ -81,7 +81,7 @@ abline(v = occ_prob * det_prob, lty = 2, lwd = 3)
 
 ![Histogram of 1000 simulations of 100 Bernoulli(0.75 * 0.35) trails]({{site.url}}/blog/images/stocc02.JPEG#center)
 
-While the example I use here is meant to show a large difference, you can see pretty clearly that if you do not detect species perfectly on the landscape, then going out to a site only once can add more false-absences, or zeroes, in your data then you'd expect simply on a species distribution. 
+In reality, occupancy is 0.75, but our observed data suggests it is much lower! Of course, the example I used here is meant to show a large difference. If you do not detect species perfectly on the landscape, then going out to a site only once can add more false-absences, or zeroes, in your data then you'd expect based on a species distribution. 
 
 Occupancy models are meant to help with this, but they do not do so for 'free.' In fact, to separately estimate species occupancy and detectability they require repeat visits to sites under a time frame that you expect species occupancy to be constant. By revisiting sites, you can generate repeated observations of the detection process. This makes it possible to create a 'capture history' at each site, which can be represented as a series of 1's and 0's to reflect times a species was and was not detected on a repeat visit. If we were just going to simulate some data once (instead of 1000 times as above), this could look something like:
 
@@ -158,7 +158,7 @@ $$y_{i,j} \sim Bernoulli(\rho \times z_{i})$$
 
 Conversely, if we assume that each of the *J* revisits are independent and identically distributed (you often see this written as i.i.d.), then we could just use the Binomial distribution instead of independent Bernoulli trials. For modeling, this could be helpful as it could dramatically speed up your run times, but it would not be possible if there are observation level covariates that vary across visits (e.g., a different observer goes out across visits, precipitation, etc.). If this assumption holds with your own data, then you let <span>$$r_{i}$$</span> be the number of times the species was detected across *J* surveys (i.e,. the row sum of the *Y* matrix) and
 
-$$r_{i} \sim Binomial(\rho \times z_{i}, J)$$
+$$r_{i} \sim Binomial(J, \rho \times z_{i})$$
 
 Following this, we need to add a parameter model to our Bayesian analysis. As we are modeling everything on the probability scale we will assume vague and uninformative priors for <span>$$\Psi$$</span> and <span>$$\rho$$</span> such that:
 
@@ -170,7 +170,7 @@ which is essentially a uniform distribution between 0 and 1.
 
 Given the data we generated above, the two detection models I presented are equivalent. Let's write them both out in NIMBLE.
 
-## Model 1: static occupancy model with independent Bernoulli trials at the observation level
+## Model 1: a static occupancy model with independent Bernoulli trials at the observation level
 
 To be honest, it takes more code to simulate these data then it does to write it out in NIMBLE. To fit the model to the data we simulated above we need to write out the model using NIMBLE's syntax and then prepare all the necessary objects to supply to the model. To do this we'll load the `nimble` package, as well as `MCMCvis`, which provides some excellent model summary tools.
 
@@ -241,7 +241,7 @@ rho 0.36 0.029 0.30 0.36  0.42    1  1827
 As a reminder, we set <span>$$\Psi = 0.75$$</span> and <span>$$\rho = 0.35$$</span>, which both fall within the 95% credible intervals of this model. So in general, it looks like we did a decent job estimating species occupancy and detectability!
 
 
-## Model 2: static occupancy model with a Binomial at the observation level
+## Model 2: a static occupancy model with a Binomial at the observation level
 
 Again, this model is almost completely identical, we mostly just need to summarize the data in a slightly different way. In fact, the model estimates are essentially identical!
 
@@ -317,7 +317,7 @@ where <span>$$\pmb{\beta}\pmb{x}_i$$</span> represents a vector of regression co
 
 $$logit(\Psi_{i,}) = \beta_0 \times 1 + \beta_1 \times x_i$$
 
-where <span>$$\beta_0$$</span> is the intercept for the latent state model and <span>$$\beta_2$$</span> is the slope term. In the former representation the first element of the $\pmb{x}_i$ is a 1 (to indicate that the model intercept is always included). We could simplify this secondary representation even further if we wanted to so that it becomes:
+where <span>$$\beta_0$$</span> is the intercept for the latent state model and <span>$$\beta_2$$</span> is the slope term. In the former representation the first element of the <span>$$\pmb{x}_i$$</span> is a 1 (to indicate that the model intercept is always included). We could simplify this secondary representation even further if we wanted to so that it becomes:
 
 $$logit(\Psi_{i,}) = \beta_0 + \beta_1 \times x_i$$
 
@@ -325,7 +325,7 @@ Anyways, the latent state model can now incorporate covariates. Let's do the sam
 
 $$logit(\rho_{i,j}) = \pmb{\alpha}\pmb{w}_{i,j}$$
 
-$$y_{i,j} \sim Bernoulli(\rho_{i,j} \times z_{i,j})$$
+$$y_{i,j} \sim Bernoulli(\rho_{i,j} \times z_{i})$$
 
 where <span>$$\pmb{\alpha}\pmb{w}_{i,j}$$</span> represents a vector of regression coefficients for the observation model and their associated covariates (that vary at each site and survey).
 
@@ -333,13 +333,13 @@ If we did not have covariates that change over surveys then we could use the Bin
 
 $$logit(\rho_{i}) = \pmb{\alpha}\pmb{w}_{i}$$
 
-$$r_{i} \sim Binomial(\rho_{i} \times z_{i}, J)$$
+$$r_{i} \sim Binomial(J, \rho_{i} \times z_{i})$$
 
 Finally, we need to add the parameter model. For logit scale coefficients, a standard choice for a vague prior would be to use Logistic(0,1) distributions, which converts back to a uniform distribution on the probability scale.
 
 Let's simulate some data under both models with covariates and fit them in nimble.
 
-## Model 3: static occupancy model with covariates and independent Bernoulli trials at the observation level
+## Model 3: a static occupancy model with covariates and independent Bernoulli trials at the observation level
 
 Simulating the observation level model can be a little difficult to do (it'd be easier to read if I used more for loops / less matrix math to do so). Regardless, here is some simulated data to demonstrate this model, and we compare the results at the end to the parameters that simulated the data.
 
@@ -538,7 +538,7 @@ legend(
 ![Comparison of estimated parameter values to the ones that simulated the data from a static occupancy model that uses covariates and an independent Bernoulli parameterization for the observation model. All true values are estimated well. ]({{site.url}}/blog/images/stocc03.JPEG#center)
 
 
-## Model 4: static occupancy model with covariates an Binomial at the observation level
+## Model 4: a static occupancy model with covariates an Binomial at the observation level
 
 This model is much simpler to simulate. Again, given the sample size we have here and the small number of parameters it does a good job estimating the true values that simulated the data.
 
