@@ -16,7 +16,9 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### *in press*
 
-[28] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (in press). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*.
+[29] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (*in press*).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*.
+
+[28] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (*in press*). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*.
 
 [27] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (*in press*). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*.
 
