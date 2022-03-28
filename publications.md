@@ -16,14 +16,17 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### *in press*
 
+[30] Leinwand, J. G., **Fidino, M.**, Ross, S. R., and Hopper, L. M. (*in press*). Familiarity mediates apes’ attentional biases towards human faces. *Proceedings of the Royal Society B*.
+
 [29] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (*in press*).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*.
 
-[28] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (*in press*). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*.
 
-[27] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (*in press*). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*.
+[28] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (*in press*). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*.
 
 
 #### 2022
+
+[27] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (*in press*). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*. [PDF](../public/Bates_2022.pdf)
 
 [26] **Fidino, M.**,  Limbrick, K., Bender, J., Gallo, T., and Magle, S. B. (2021). Strolling through a century: recreating historical bird surveys to explore 100 years of change in an urban bird community. *American Naturalist*. [PDF](../public/Fidino_amnat_2022.pdf)
 
