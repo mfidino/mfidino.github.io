@@ -16,7 +16,7 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### *in press*
 
-[31] Gallo, T., **Fidino, M.**, Gerber, B., Ahlers, A. A., Angstmann, J. L., Amaya, M., Concilio, A. L., Drake, D., Gray, D., Lehrer, E. W., Murray, M. H., Ryan, T. J., Cassady St. Clair, C., Salsbury, C. M., Sander, H. A., Stankowich, T., Williamson, J., Belaire, J. A., Simon, K., and Magle, S. B. (*in press*). Mammals adjust diel activity across gradients of urbanizaiton. *eLife*.
+[31] Gallo, T., **Fidino, M.**, Gerber, B., Ahlers, A. A., Angstmann, J. L., Amaya, M., Concilio, A. L., Drake, D., Gray, D., Lehrer, E. W., Murray, M. H., Ryan, T. J., Cassady St. Clair, C., Salsbury, C. M., Sander, H. A., Stankowich, T., Williamson, J., Belaire, J. A., Simon, K., and Magle, S. B. (*in press*). Mammals adjust diel activity across gradients of urbanization. *eLife*.
 
 [30] Leinwand, J. G., **Fidino, M.**, Ross, S. R., and Hopper, L. M. (*in press*). Familiarity mediates apes’ attentional biases towards human faces. *Proceedings of the Royal Society B*.
 
