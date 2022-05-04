@@ -18,15 +18,20 @@ This site contains copyrighted material, the use of which has not always been sp
 
 
 
-[31] Leinwand, J. G., **Fidino, M.**, Ross, S. R., and Hopper, L. M. (*in press*). Familiarity mediates apes’ attentional biases towards human faces. *Proceedings of the Royal Society B*.
-
-[30] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (*in press*).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*.
 
 
-[29] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (*in press*). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*.
+[31] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (*in press*).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*.
+
+
+
 
 
 #### 2022
+
+[30] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (*in press*). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*.
+
+[29] Leinwand, J. G., **Fidino, M.**, Ross, S. R., and Hopper, L. M. (*in press*). Familiarity mediates apes’ attentional biases towards human faces. *Proceedings of the Royal Society B*. [Link](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2021.2599?af=R)
+
 
 [28] Gallo, T., **Fidino, M.**, Gerber, B., Ahlers, A. A., Angstmann, J. L., Amaya, M., Concilio, A. L., Drake, D., Gray, D., Lehrer, E. W., Murray, M. H., Ryan, T. J., Cassady St. Clair, C., Salsbury, C. M., Sander, H. A., Stankowich, T., Williamson, J., Belaire, J. A., Simon, K., and Magle, S. B. (2022). Mammals adjust diel activity across gradients of urbanization. *eLife*. [Link](https://elifesciences.org/articles/74756)
 
