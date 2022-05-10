@@ -14,19 +14,12 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
-#### *in press*
-
-
-
-
-
-[31] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (*in press*).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*.
-
-
-
 
 
 #### 2022
+
+
+[31] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (2022).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*.
 
 [30] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (2022). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*.
 
