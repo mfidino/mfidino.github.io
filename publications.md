@@ -28,7 +28,7 @@ This site contains copyrighted material, the use of which has not always been sp
 
 [28] Gallo, T., **Fidino, M.**, Gerber, B., Ahlers, A. A., Angstmann, J. L., Amaya, M., Concilio, A. L., Drake, D., Gray, D., Lehrer, E. W., Murray, M. H., Ryan, T. J., Cassady St. Clair, C., Salsbury, C. M., Sander, H. A., Stankowich, T., Williamson, J., Belaire, J. A., Simon, K., and Magle, S. B. (2022). Mammals adjust diel activity across gradients of urbanization. *eLife*. [Link](https://elifesciences.org/articles/74756)
 
-[27] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (*in press*). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*. [PDF](../public/Bates_2022.pdf)
+[27] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (2022). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*. [PDF](../public/Bates_2022.pdf)
 
 [26] **Fidino, M.**,  Limbrick, K., Bender, J., Gallo, T., and Magle, S. B. (2021). Strolling through a century: recreating historical bird surveys to explore 100 years of change in an urban bird community. *American Naturalist*. [PDF](../public/Fidino_amnat_2022.pdf)
 
