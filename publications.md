@@ -19,9 +19,9 @@ This site contains copyrighted material, the use of which has not always been sp
 #### 2022
 
 
-[31] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (2022).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*.
+[31] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (2022).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*. [PDF](../public/Fidino_eco_apps_2022.pdf)
 
-[30] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (2022). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*.
+[30] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (2022). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*. [Link](https://www.journals.uchicago.edu/doi/10.1086/720714)
 
 [29] Leinwand, J. G., **Fidino, M.**, Ross, S. R., and Hopper, L. M. (2022). Familiarity mediates apes’ attentional biases towards human faces. *Proceedings of the Royal Society B*. [Link](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2021.2599?af=R)
 
