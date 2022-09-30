@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Using the mapview package to quickly investigate spatial coordiantes in R
+title: Using the mapview package to quickly investigate spatial coordinates in R
 category: blog
 ---
 
@@ -8,9 +8,9 @@ When cleaning data for different analyses one of the first things you need to do
 
 From my experience, spatial data is rife with errors. Some common errors I've experienced way too often include:
 
-- Latitude and Longitude have swapped places.
+- Latitude and longitude have swapped places.
 - The decimal is not in the correct location when working with lat / long data in decimal degrees.
-- Latitude or Longitude are listed as positive when they should actually be negative.
+- Latitude or longitude are listed as positive when they should actually be negative.
 - If working with coordinates in universal transverse mercator (UTM), the UTM zone is not supplied, or is incorrect.
 
 To plot out the points onto a map though, you need a map to plot on. If you are working with data in a region you've already got a raster or a shapefile of, it is easy enough to pull that in and plot on top of. However, what if you do not have a map available? Or what if you are working with data from all over the world and you don't want to have to hunt down shapefiles for every study area?
