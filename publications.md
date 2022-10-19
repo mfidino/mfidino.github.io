@@ -20,7 +20,7 @@ This site contains copyrighted material, the use of which has not always been sp
 
 [33] Hursh, S. H., Bauder, J. M., **Fidino, M.**, and Drake, D. (2022). An urban cast of characters: Landscape use and cover influencing mammal occupancy in an american midwestern city. *Landscape and Urban Planning*.
 
-[32] Murray, M. H., Buckley, J., Lehrer, E. W., Kay, C., **Fidino, M.**, Magle, S. B., and German, D. (2022). Public perception of urban wildlife during a covid-19 stay-at-home quarantine order in Chicago. *Urban Ecosystems*.
+[32] Murray, M. H., Buckley, J., Lehrer, E. W., Kay, C., **Fidino, M.**, Magle, S. B., and German, D. (2022). Public perception of urban wildlife during a covid-19 stay-at-home quarantine order in Chicago. *Urban Ecosystems*. [Link](https://link.springer.com/article/10.1007/s11252-022-01284-x)
 
 [31] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (2022).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*. [PDF](../public/Fidino_eco_apps_2022.pdf)
 
