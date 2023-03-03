@@ -14,7 +14,7 @@ As such, in this post I'm going to cover how to interpret the parameters from th
 What I am not going to cover in this post is all the mathematical details of this model. Why? Because the Rota et al. (2016) paper is not paywalled, you can [read it there]( https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12587)! However, one thing I will note that is a deviation from the Rota et al. model is that I use a Categorical distribution instead of a multivariate Bernoulli distribution. Save for how you set up your response variables, they are equivalent distributions. However, the multivariate Bernoulli distribution is not a standard distribution in `nimble`, `JAGS`, or `stan` and so you'd have to write custom code for it. Conversely, the Categorical distribution is a standard distribution in those languages, so it is a **much easier option to use.** For example, when I generalized the Rota et al. (2016) model to a dynamic model, [I used the Categorical distribution instead](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13117).
 
 
-#### Links to different parts of this post
+## Links to different parts of this post
 
 1. [The model and all those confusing parameters](#the-model-and-all-those-confusing-parameters)
 2. [Estimating interactions between gray squirrel and coyote throughout Chicago](#estimating-interactions-between-gray-squirrel-and-coyote-throughout-chicago)
@@ -24,7 +24,7 @@ What I am not going to cover in this post is all the mathematical details of thi
 
 I also link to it below, but just to make it more visible, all the data and code to recreate the analysis and plot the results can be found in [this GitHub repo](https://github.com/mfidino/rota_model).
 
-#### The model and all those confusing parameters
+## The model and all those confusing parameters
 
 Honestly, I think the most confusing part with respect to this model is that some of the model parameters are used in multiple logit-linear predictors. Take, for example, the two species representation of the model. With two species, there are four possible states: 1) both species are not present, 2) species A is present, 3) species B is present, and 4) species A and B are present. Given <span>$$N$$</span> possible states, there are <span>$$N-1$$</span> linear predictors and that last state (species A and B) uses ALL of the parameters and covariates in state "species A is present" and "species B is present" PLUS more (if you add them to the model). For an intercept only model, the linear predictors of each state for the latent process is:
 $$
@@ -313,7 +313,7 @@ $$
 
 <p><a href="#top" style>Back to top ⤒</a></p>
 
-#### Estimating interactions between gray squirrel and coyote throughout Chicago
+## Estimating interactions between gray squirrel and coyote throughout Chicago
 
  My colleagues and I at the Lincoln Park Zoo have been doing camera trapping in urban green space along a gradient of urban intensity throughout Chicago, Illinois for over a decade. To be honest, the reason why I got interested in statistics was because of this dataset. There were so many questions we were interested in answering with these data and, at the time, there were not models that were available to answer them with! For this example, I am just going to grab one season's worth of data for coyote (*Canis latrans*) and eastern gray squirrel (*Sciurus carolinensis*) at 92 sites throughout the Chicago metropolitan area. The data have already been assembled into daily detection histories for each species. However, because we are using the Categorical distribution in our model, we need to go from the seperate binary detection / non-detection states for each species and convert them to observational states. Likewise, we are going to add an urban intensity covariate to this model, which I constructed by applying Principal Component Analysis (PCA) to the proportion of impervious cover within 1 km of each site, the mean Normalized Difference Vegetation Index (NDVI) within 1 km of each site, and the human population density within 1 km of each site. I used PCA here because urbanization often influences multiple environmental features in tandem. So in Chicago, for example, these three variables are often **incredibly** correlated to one another. So, in my opinion, it's better to capture the gradient via PCA instead of just choosing one of these highly correlated variables to include. All data and code for this can be found on this GitHub repo, but the code to fit the model in `nimble` is [here](https://github.com/mfidino/rota_model). In fact, you won't be able to run this code here without going to that repo because you won't have the data otherwise!
 
@@ -647,7 +647,7 @@ rota_model <- nimble::nimbleCode(
  ```
 <p><a href="#top" style>Back to top ⤒</a></p>
 
-#### Interpreting the model output
+## Interpreting the model output
 
  Now, let's take a look at the model summary, where species A = coyote and species B = gray squirrel. The parameter names should be pretty self explanatory, but just in case they are not to you here are some details. All second-order parameters have AB in them, whereas first-order parameters just have A or B respectively. Occupancy parameters are labeled `psi` and detection parameters are labeled `rho`. Finally, Intercepts all have `[1]` after them while the urban intensity slope terms have `[2]` after them.
 
@@ -691,7 +691,7 @@ Again, if this was for something beyond an example I would most certainly run th
 
 <p><a href="#top" style>Back to top ⤒</a></p>
 
-#### Make some plots of the results
+## Make some plots of the results
 
 Anyways, let's get on to plotting out the results here. To do so, we need to do a few things:
 
@@ -1079,7 +1079,7 @@ dev.off()
 ```
 <p><a href="#top" style>Back to top ⤒</a></p>
 
-#### On the difference between ecological and statistical interactions
+## On the difference between ecological and statistical interactions
 
 In closing, I just want to return back to one really important thing you must be cautious about when interpreting the results from these models: **statistical interactions are not the same thing as ecological interactions.** In the coyote & gray squirrel example, we estimated that they occurred together more often as urban intensity increased. This does not mean that these species have a mutualistic relationship. Likewise, if we estimated negative covariance among species that does not mean that these species are competing with one another, or one is inherently trying to avoid the other. More often then not with any of these community models that estimate interactions among species, it just means that there is some environmental gradient you did not include into the model that the two species positively or negatively covary along. When that gradient is not included, the covariance among species can binned into the interaction terms, which could result in strong 'statistical interactions' that actually have no ecological meaning.
 
