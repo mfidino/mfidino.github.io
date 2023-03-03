@@ -1,6 +1,6 @@
 ---
 layout: post
-title: How to interpret and make plots with a Bayesian implementaion of the Rota et al. (2016) multi-species occupancy model for interacting species
+title: How to interpret and make plots with a Bayesian implementation of the Rota et al. (2016) multi-species occupancy model for interacting species
 category: blog
 ---
 
