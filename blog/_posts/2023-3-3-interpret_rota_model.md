@@ -51,9 +51,9 @@ In it's intercept only form, a two species model like this would have three para
 2. <span>$$b_0$$</span>: The log-odds of occupancy for species B given the absence of species A.
 3. <span>$$c_0$$</span>: The log-odds **difference** in occupancy of both species occuring together.
 
-That first two parameters, which Rota et al. (2016) call *first-order parameters*, are **always** going to be related to just one species. That last parameter, which is the tricky one, is called a *second-order parameter* because it is related to two species. To me, it helps to think of second order parameters as a statistical interaction term. A statistical interaction term means that two or more variables, which in this case means <span>$$a_0$$</span> and <span>$$b_0$$</span>, may interact in a non-additive way. So, if  <span>$$c_0$$</span> is positive, that means that both species occur together more than you would expect by chance and if <span>$$c_0$$</span> is negative that means that both species occur together less than you would expect by chance. Breaking this down further, let's say the probability of occupancy of species A is <span>$$0.4$$</span> and species B is <span>$$0.7$$</span>. Just based off of random chance, we would expect these species to occur together in about half of the sites we would monitor (i.e., <span>$$0.4 \times 0.7 = 0.49$$</span>). Let's say we go out and find that they occur together 90% of the time. If we fit this model to these data then we would expect <span>$$c_0$$</span> to be positive. Conversely, if we look at the data and see that they occur together 20% of the time then <span>$$c_0$$</span> would likely be negative. And, just to be complete, if we collected our data and saw that they occurred together 49% of the time, then <span>$$c_0$$</span> would likely get estimated to be zero (or something very close to that). Essentially, if that term is zero it effectively means that the species occur together as often as you'd expect given chance.
+That first two parameters, which Rota et al. (2016) call *first-order parameters*, are always going to be related to just one species. That last parameter, which is the tricky one, is called a *second-order parameter* because it is related to two species. To me, it helps to think of second order parameters as a statistical interaction term. A statistical interaction term means that two or more variables (i.e., <span>$$a_0$$</span> and <span>$$b_0$$</span>), may interact in a non-additive way. So, if  <span>$$c_0$$</span> is positive, that means that both species occur together more than you would expect by chance and if <span>$$c_0$$</span> is negative that means that both species occur together less than you would expect by chance. 
 
-With a vector of probabilities, the Rota et al. (2016) parameterization uses a multivariate Bernoulli distribution to estimate those parameters from data. I am not going to do that. Why? Because the multivariate Bernoulli distribution is not a standard distribution in `nimble`, `JAGS`, or `stan` and as such you would need to create a custom function for it, which is not ideal. However, the Categorical distribution is available, and it's honestly the way to go with this. Essentially, the Categorical distribution is a generalized Bernoulli distribution with more than two states. So, for example, if you supply a probability to a Bernoulli distribution
+Breaking this down further, let's say the probability of occupancy of species A is <span>$$0.4$$</span> and species B is <span>$$0.7$$</span>. Just based off of random chance, we would expect these species to occur together in about half of the sites we would monitor (i.e., <span>$$0.4 \times 0.7 = 0.49$$</span>). Let's say we go out and find that they occur together 90% of the time. If we fit this model to these data then we would expect <span>$$c_0$$</span> to be positive. Conversely, if we look at the data and see that they occur together 20% of the time then <span>$$c_0$$</span> would likely be negative. And, just to be complete, if we collected our data and saw that they occurred together 49% of the time, then <span>$$c_0$$</span> would likely get estimated to be zero (or something very close to that).
 
 An incredible selling point of this model, however, is that you can also include spatial or temporal covariates on all of these linear predictors. Now, you do not need to include the same covariates in each linear predictor of this model, and sometimes you would have good reason not to (e.g., if you knew that your species are associated to different environmental features). But in this case we will just use the same generic covariate, <span>$$x$$</span>, in each. For <span>$$i$$</span> in <span>$$1, \cdots, I$$</span> sites the logit linear predictors could be
 
@@ -251,8 +251,8 @@ Note the zeroes in the matrix here. This means that given the true state (i.e., 
 
 $$
 \begin{eqnarray}
-\logit(\rho_{Ai}) &=& f_0 + f_1 \times x_i \\
-\logit(\rho_{Bi}) &=& g_0 + g_1 \times x_i
+\text{logit}(\rho_{Ai}) &=& f_0 + f_1 \times x_i \\
+\text{logit}(\rho_{Bi}) &=& g_0 + g_1 \times x_i
 \end{eqnarray}
 $$
 
@@ -275,7 +275,7 @@ $$
  1 & 0 & 0 & 0 \\
  1  & \beta^{\rho_2} & 0 & 0 \\
  1 & 0 & \beta^{\rho_3} & 0 \\
- 1 &  beta^{\rho_2} & \beta^{\rho_3} & \beta^{\rho_4}
+ 1 &  \beta^{\rho_2} & \beta^{\rho_3} & \beta^{\rho_4}
  \end{bmatrix} 
  $$
 
@@ -296,7 +296,9 @@ $$
 \end{eqnarray}
 $$
 
-And then we drop these into <span>$$\boldsymbol{\omega}$$</span>
+Here, <span>$$f_0$$</span> and <span>$$g_0$$</span> are the first-order detection parameters while <span>$$h_0$$</span> and <span>$$j_0$$</span> are the second-order detection parameters. More specifically, <span>$$h_0$$</span> is the log-odds difference in detecting species A when species B is present whereas <span>$$j_0$$</span> is the log-odds difference in detecting species B when species A is present.
+
+And then we drop these linear predictors into <span>$$\boldsymbol{\omega}$$</span>
 
 $$
 \boldsymbol{\omega} = \begin{bmatrix}
@@ -307,7 +309,9 @@ $$
  \end{bmatrix} 
 $$
 
- #### Estimating interactions between gray squirrel and coyote throughout Chicago
+<p><a href="#top" style>Back to top ⤒</a></p>
+
+#### Estimating interactions between gray squirrel and coyote throughout Chicago
 
  My colleagues and I at the Lincoln Park Zoo have been doing camera trapping in urban green space along a gradient of urban intensity throughout Chicago, Illinois for over a decade. To be honest, the reason why I got interested in statistics was because of this dataset. There were so many questions we were interested in answering with these data and, at the time, there were not models that were available to answer them with! For this example, I am just going to grab one season's worth of data for coyote (*Canis latrans*) and eastern gray squirrel (*Sciurus carolinensis*) at 92 sites throughout the Chicago metropolitan area. The data have already been assembled into daily detection histories for each species. However, because we are using the Categorical distribution in our model, we need to go from the seperate binary detection / non-detection states for each species and convert them to observational states. Likewise, we are going to add an urban intensity covariate to this model, which I constructed by applying Principal Component Analysis (PCA) to the proportion of impervious cover within 1 km of each site, the mean Normalized Difference Vegetation Index (NDVI) within 1 km of each site, and the human population density within 1 km of each site. I used PCA here because urbanization often influences multiple environmental features in tandem. So in Chicago, for example, these three variables are often **incredibly** correlated to one another. So, in my opinion, it's better to capture the gradient via PCA instead of just choosing one of these highly correlated variables to include. All data and code for this can be found on this GitHub repo, but the code to fit the model in `nimble` is [here](https://github.com/mfidino/rota_model). In fact, you won't be able to run this code here without going to that repo because you won't have the data otherwise!
 
@@ -639,6 +643,7 @@ rota_model <- nimble::nimbleCode(
 
 
  ```
+<p><a href="#top" style>Back to top ⤒</a></p>
 
 #### Interpreting the model output
 
@@ -669,7 +674,7 @@ my_summary <- MCMCvis::MCMCsummary(
 Aside from the fact that it looks like I should sample this model a little longer to increase the effective sample size of the posteriors, here is what I see for the latent state of the model as a 'first pass interpretation'.
 
 1. On average, gray squirrel are much more common than coyote (`spB_psi[1] > spA_psi[1]`).
-2. Both species are more common at lower levels of urban intensity ( `spA_psi[2]` and ` spB_psi[2]` are negative). However, we have much stronger evidence of this relationship with gray squirrel because the 95% CI for spB_psi[2] does not bound zero (while  spA_psi[2] does).
+2. Both species are more common at lower levels of urban intensity ( `spA_psi[2]` and `spB_psi[2]` are negative). However, we have much stronger evidence of this relationship with gray squirrel because the 95% CI for spB_psi[2] does not bound zero (while  spA_psi[2] does).
 3. At an average location, there was insufficient evidence to determine that coyote and gray squirrel co-occur more or less than expected by chance (`spAB_psi[1]` is close to zero and 95% CI bounds zero).
 4. However, as urban intensity increases we have strong evidence that coyote and gray squirrel co-occur more than expected (`spAB_psi[2]` is positive and 95% CI does not bound zero).
 
@@ -681,6 +686,8 @@ For the observational process we can see that:
 4. However, it seems as if a site is in 'coyote & gray squirrel present' we appear to be less likely to observe that state as urban intensity increases (`spAB_rho[2]` is negative and BARELY bounds zero, it's like a 94% probability of effect which is good enough for me to bet on).
 
 Again, if this was for something beyond an example I would most certainly run this model more to increase the effective sample size. We want to ensure we have accurate 95% CI and with only about 1000 samples for these parameters I would want to boost that a bit. Conversely, instead of running the model for longer I could use slice samplers instead of the default Metropolis-Hasting algorithm that likely got used. Slice samplers are a bit slower but they often have a greater acceptance rate for proposals, which could in turn increase the effective sample size in the posterior. 
+
+<p><a href="#top" style>Back to top ⤒</a></p>
 
 #### Make some plots of the results
 
@@ -1068,9 +1075,12 @@ for(i in 1:4){
 dev.off()
 
 ```
+<p><a href="#top" style>Back to top ⤒</a></p>
 
 #### On the difference between ecological and statistical interactions
 
 In closing, I just want to return back to one really important thing you must be cautious about when interpreting the results from these models: **statistical interactions are not the same thing as ecological interactions.** In the coyote & gray squirrel example, we estimated that they occurred together more often as urban intensity increased. This does not mean that these species have a mutualistic relationship. Likewise, if we estimated negative covariance among species that does not mean that these species are competing with one another, or one is inherently trying to avoid the other. More often then not with any of these community models that estimate interactions among species, it just means that there is some environmental gradient you did not include into the model that the two species positively or negatively covary along. When that gradient is not included, the covariance among species can binned into the interaction terms, which could result in strong 'statistical interactions' that actually have no ecological meaning.
 
  As such, please be cautious when interpreting this class of models! My own cautious interpretation of the example above is that urbanization makes for strange bedfellows. In downtown Chicago, this means that species likely occupy the same habitat patch more often simply because that is what is available. Essentially, habitat is limited, and so the species are more often found together. 
+
+ <p><a href="#top" style>Back to top ⤒</a></p>
