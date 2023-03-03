@@ -22,7 +22,9 @@ What I am not going to cover in this post is all the mathematical details of thi
 4. [Make some plots of the results](#make-some-plots-of-the-results)
 5. [On the difference between ecological and statistical interactions](#on-the-difference-between-ecological-and-statistical-interactions)
 
-## The model and all those confusing parameters
+I also link to it below, but just to make it more visible, all the data and code to recreate the analysis and plot the results can be found in [this GitHub repo](https://github.com/mfidino/rota_model).
+
+#### The model and all those confusing parameters
 
 Honestly, I think the most confusing part with respect to this model is that some of the model parameters are used in multiple logit-linear predictors. Take, for example, the two species representation of the model. With two species, there are four possible states: 1) both species are not present, 2) species A is present, 3) species B is present, and 4) species A and B are present. Given <span>$$N$$</span> possible states, there are <span>$$N-1$$</span> linear predictors and that last state (species A and B) uses ALL of the parameters and covariates in state "species A is present" and "species B is present" PLUS more (if you add them to the model). For an intercept only model, the linear predictors of each state for the latent process is:
 $$
