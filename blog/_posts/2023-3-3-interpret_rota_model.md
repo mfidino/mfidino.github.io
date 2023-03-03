@@ -18,7 +18,7 @@ What I am not going to cover in this post is all the mathematical details of thi
 
 1. [The model and all those confusing parameters](#the-model-and-all-those-confusing-parameters)
 2. [Estimating interactions between gray squirrel and coyote throughout Chicago](#estimating-interactions-between-gray-squirrel-and-coyote-throughout-chicago)
-3. [Interpreting the model output](#interpretting-the-model-output)
+3. [Interpreting the model output](#interpreting-the-model-output)
 4. [Make some plots of the results](#make-some-plots-of-the-results)
 5. [On the difference between ecological and statistical interactions](#on-the-difference-between-ecological-and-statistical-interactions)
 
