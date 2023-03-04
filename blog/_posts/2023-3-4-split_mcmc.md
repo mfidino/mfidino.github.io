@@ -91,9 +91,9 @@ colnames(
 
 ```
 
-You can see above that the indexing gets added to the column names. This is great as we can use it to determine what species the parameter is associated to as well as if it is that intercept or slope term. However, it makes it a bit
+You can see above that the indexing gets added to the column names. This is great as we can use it to determine what species the parameter is associated to as well as if the parameter is an intercept or slope term. However, it makes it a bit
 difficult to work with the MCMC output, especially when we get around to making predictions from the model. Instead,
-it would be awesome if we could make it so that each parameter type (e.g., `psi_beta`, `rho_beta`, etc.) was appropriately indexed in an array instead of storing the array information in the column name itself. A couple months back I wrote a function to do exactly this, and have been using it for the last few analysis I've been working on, and I absolutely love it. I'm regularly sending said function to collaborators and the like, and as a result I figured it would be a good idea to showcase it here so you can use it as well!
+it would be awesome if we could make it so that each parameter type (e.g., `psi_beta`, `rho_beta`, etc.) was appropriately indexed in an array instead of storing the array information in the column name itself. A couple months back I wrote a function to do exactly this, and have been using it for the last few analyses I've been working on, and I absolutely love it. I'm regularly sending said function to collaborators and the like, and as a result I figured it would be a good idea to showcase it here so you can use it as well!
 
 The function, `split_mcmc()`, takes in the full MCMC matrix (i.e., you have to join together all of the chains into one big matrix) and then returns a named list object, one name for every parameter type, that is indexed exactly as it would be in your Bayesian model, save for the fact that the first dimension is always your MCMC samples. The code for this 
 function is:
@@ -205,8 +205,7 @@ dim(my_mcmc$psi_beta)
 [1] 10000     7     2
 
 ```
-The first dimension is for the 10,000 MCMC samples, the second dimension is for each species, and the third is for the two parameters associated to that species. So, if I wanted to get all the MCMC samples as well as the intercept and slope
-term for the third species, all I would need to do is
+The first dimension is for the 10,000 MCMC samples, the second dimension is for species, and the third is for the two parameters associated to that species. So, if I wanted to take a peek at the first few MCMC samples of the intercept and slope for the third species, I can just subset the second dimension of `my_mcmc$psi_beta`!
 
 ```R
 head(my_mcmc$psi_beta[,3,])
@@ -227,9 +226,9 @@ dim(my_mcmc$psi_beta_mu)
 [1] 10000     2
 
 ```
-Here we just have a matrix with 10,000 MCMC samples and two parameters. This makes it very easy to work with the model output to make predictions with. See the plotting part of [this blog post here](https://masonfidino.com/interpret_rota_model/) as an example!
+Here we just have a matrix with 10,000 MCMC samples and two parameters. I cannot stress how much easier this makes it to work with the model output / make model predictions with. See the plotting part of [this blog post here](https://masonfidino.com/interpret_rota_model/) as an example.
 
-Anways, I just wanted to highlight this function as it has definitely made my life easier when working with more complex outputs from different analyses. And just to demonstrate that it absolutely works in the right way, here is a little
+Anways, I just wanted to highlight this function as it has definitely made my life easier when working with more complex outputs from different analyses. And just to demonstrate that it works correctly, here is a little
 matrix you can use to test it with. Enjoy!
 
 
