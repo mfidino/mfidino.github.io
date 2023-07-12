@@ -14,24 +14,36 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
+#### In press
+
+[35] Haight, J. D., Hall, S. J., **Fidino, M.**, Adalsteinsson, S. A., Anthonysamy, W. J. B., Biro, E., Collins, M. K., Dugelby, B., Gallo, T., Green, A. M., Hartley, L., Jordan, M. J., Kay, C. A. M., W., L. E., Long, R. A., MacDougall, B., Magle, S. B., Minier, D. E., Mowry, C., Murray, M., Nininger, K., Pendergast, M. E., Remine, K. R., Ryan, T., Salsbury, C., Schell, C. J., Sekercioglu, C. H., Shier, C. J., Simon, K. C., St. Clair, C. C., Stankowich, T., Stevenson, C. J., Wayne, L., Williamson, J., Wilson, L., Zellmer, A. J., and Lewis, J. S. (*in press*). Urbanization, climate, and species traits shape mammal communities from local to continental scales. Nature Ecology and Evolution.
+
+#### 2023
+
+
+[34] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (2022). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*. [PDF](../public/Bates_2022.pdf)
+
+[33] Cervantes, A. M., Schooley, R., Lehrer, E. W., Gallo, T., Allen, M. L., **Fidino, M.**, and Magle, S. B. (2023). Carnivore coexistence in Chicago: niche partitioning of coyotes and red foxes. Urban Ecosystems. [Link](https://link.springer.com/article/10.1007/s11252-023-01368-2)
+
+[32] Hursh, S. H., Bauder, J. M., **Fidino, M.**, and Drake, D. (2023). An urban cast of characters: Landscape use and cover influencing mammal occupancy in an american midwestern city. *Landscape and Urban Planning*.[PDF](../public/Hursh_2022.pdf)
+
+[31] Murray, M. H., Buckley, J., Lehrer, E. W., Kay, C., **Fidino, M.**, Magle, S. B., and German, D. (2023). Public perception of urban wildlife during a covid-19 stay-at-home quarantine order in Chicago. *Urban Ecosystems*. [Link](https://link.springer.com/article/10.1007/s11252-022-01284-x)
 
 
 #### 2022
 
-[33] Hursh, S. H., Bauder, J. M., **Fidino, M.**, and Drake, D. (2022). An urban cast of characters: Landscape use and cover influencing mammal occupancy in an american midwestern city. *Landscape and Urban Planning*.[PDF](../public/Hursh_2022.pdf)
-
-[32] Murray, M. H., Buckley, J., Lehrer, E. W., Kay, C., **Fidino, M.**, Magle, S. B., and German, D. (2022). Public perception of urban wildlife during a covid-19 stay-at-home quarantine order in Chicago. *Urban Ecosystems*. [Link](https://link.springer.com/article/10.1007/s11252-022-01284-x)
-
-[31] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (2022).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*. [PDF](../public/Fidino_eco_apps_2022.pdf)
-
-[30] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (2022). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*. [Link](https://www.journals.uchicago.edu/doi/10.1086/720714)
-
-[29] Leinwand, J. G., **Fidino, M.**, Ross, S. R., and Hopper, L. M. (2022). Familiarity mediates apes’ attentional biases towards human faces. *Proceedings of the Royal Society B*. [Link](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2021.2599?af=R)
 
 
-[28] Gallo, T., **Fidino, M.**, Gerber, B., Ahlers, A. A., Angstmann, J. L., Amaya, M., Concilio, A. L., Drake, D., Gray, D., Lehrer, E. W., Murray, M. H., Ryan, T. J., Cassady St. Clair, C., Salsbury, C. M., Sander, H. A., Stankowich, T., Williamson, J., Belaire, J. A., Simon, K., and Magle, S. B. (2022). Mammals adjust diel activity across gradients of urbanization. *eLife*. [Link](https://elifesciences.org/articles/74756)
+[30] **Fidino, M.**, Lehrer, E. W., Kay, C. A. M., Yarmey, N., Murray, M. H., Fake, K., Adams, H. C., and Magle, S. B. (2022).  Integrated species distribution models reveal spatiotemporal patterns of human-wildlife conflict. *Ecological Applications*. [PDF](../public/Fidino_eco_apps_2022.pdf)
 
-[27] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (2022). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*. [PDF](../public/Bates_2022.pdf)
+[29] Rivera, K., **Fidino, M.**, Farris, Z. J., Magle, S. B., Murphy, A., and Gerber, B. D. (2022). Rethinking habitat occupancy modeling and the role of diel activity in an anthropogenic world. *American Naturalist*. [Link](https://www.journals.uchicago.edu/doi/10.1086/720714)
+
+[28] Leinwand, J. G., **Fidino, M.**, Ross, S. R., and Hopper, L. M. (2022). Familiarity mediates apes’ attentional biases towards human faces. *Proceedings of the Royal Society B*. [Link](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2021.2599?af=R)
+
+
+[27] Gallo, T., **Fidino, M.**, Gerber, B., Ahlers, A. A., Angstmann, J. L., Amaya, M., Concilio, A. L., Drake, D., Gray, D., Lehrer, E. W., Murray, M. H., Ryan, T. J., Cassady St. Clair, C., Salsbury, C. M., Sander, H. A., Stankowich, T., Williamson, J., Belaire, J. A., Simon, K., and Magle, S. B. (2022). Mammals adjust diel activity across gradients of urbanization. *eLife*. [Link](https://elifesciences.org/articles/74756)
+
+
 
 [26] **Fidino, M.**,  Limbrick, K., Bender, J., Gallo, T., and Magle, S. B. (2021). Strolling through a century: recreating historical bird surveys to explore 100 years of change in an urban bird community. *American Naturalist*. [PDF](../public/Fidino_amnat_2022.pdf)
 
