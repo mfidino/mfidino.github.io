@@ -14,12 +14,15 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
+#### In press
+
+[36] Gerber, B., Devarajan, K., Farris, Z. J., and Fidino, M. (*in press*). A model-based hypothesis framework to define and estimate the diel niche via the ’diel.niche’ r package. Journal of Animal Ecology.
 
 
 
 #### 2023
 
-[35] [35] Haight, J. D., Hall, S. J., **Fidino, M.**, Adalsteinsson, S. A., Anthonysamy, W. J. B., Biro, E., Collins, M. K., Dugelby, B., Gallo, T., Green, A. M., Hartley, L., Jordan, M. J., Kay, C. A. M., W., L. E., Long, R. A., MacDougall, B., Magle, S. B., Minier, D. E., Mowry, C., Murray, M., Nininger, K., Pendergast, M. E., Remine, K. R., Ryan, T., Salsbury, C., Schell, C. J., Sekercioglu, C. H., Shier, C. J., Simon, K. C., St. Clair, C. C., Stankowich, T., Stevenson, C. J., Wayne, L., Williamson, J., Wilson, L., Zellmer, A. J., and Lewis, J. S. (2023). Urbanization, climate, and species traits shape mammal communities from local to continental scales. Nature Ecology and Evolution. [PDF](../public/Haight_2023.pdf)
+[35] Haight, J. D., Hall, S. J., **Fidino, M.**, Adalsteinsson, S. A., Anthonysamy, W. J. B., Biro, E., Collins, M. K., Dugelby, B., Gallo, T., Green, A. M., Hartley, L., Jordan, M. J., Kay, C. A. M., W., L. E., Long, R. A., MacDougall, B., Magle, S. B., Minier, D. E., Mowry, C., Murray, M., Nininger, K., Pendergast, M. E., Remine, K. R., Ryan, T., Salsbury, C., Schell, C. J., Sekercioglu, C. H., Shier, C. J., Simon, K. C., St. Clair, C. C., Stankowich, T., Stevenson, C. J., Wayne, L., Williamson, J., Wilson, L., Zellmer, A. J., and Lewis, J. S. (2023). Urbanization, climate, and species traits shape mammal communities from local to continental scales. Nature Ecology and Evolution. [PDF](../public/Haight_2023.pdf)
 
 
 [34] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (2022). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*. [PDF](../public/Bates_2022.pdf)
