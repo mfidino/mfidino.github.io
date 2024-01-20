@@ -16,7 +16,7 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### 2024
 
-[36] Gerber, B., Devarajan, K., Farris, Z. J., and **Fidino, M.** (2024). A model-based hypothesis framework to define and estimate the diel niche via the ’Diel.Niche’ R package. Journal of Animal Ecology.[PDF](../public/Gerber_Diel_Niche.pdf)
+[36] Gerber, B., Devarajan, K., Farris, Z. J., and **Fidino, M.** (2024). A model-based hypothesis framework to define and estimate the diel niche via the ’Diel.Niche’ R package. Journal of Animal Ecology. [PDF](../public/Gerber_Diel_Niche.pdf)
 
 
 
