@@ -14,20 +14,26 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
+#### *In press*
+
+[38] **Fidino, M.**, Sander, H., Lewis, J., Lehrer, E. W., Rivera, K., Murray, M. H., Adams, H. C., Kase, A., Flores, A., Stankowich, T., Schell, C. J., Salsbury, C. M., Rohnke, A. T., Jordan, M. J., Green, A. M., Gramza, A. R., Zellmer, A. J., Williamson, J., Surasinghe, T. D., Storm, H., Sparks, K. L., Ryan, T. J., Remine, K., Pendergast, M. E., Mullen, K., Minier, D. E., Middaugh, C. R., Mertl, A. L., McClung, M. R., Long, R. A., Larson, R. N., Kohl, M. T., Harris, L. R., Hall, C. T., Haight, J. D., Drake, D., Davidge, A. M., Cheek, A. O., Bloch, C. P., Biro, E. G., Anthonysamy, W. J., Angstmann, J. L., Allen, M. L., Adalsteinsson, S. A., Short-Gianotta, A., LaMontagne, J. M., Gelmi-Candusso, T. A., and Magle, S. (*in press*). Gentrification drives patterns of alpha and beta diversity in cities. *PNAS*.
+
+[37] Rivera, K., **Fidino, M.**, Lehrer, E. W., Torsey, H. R., Allen, S., Touille, L., and Magle, S. (*in press*). Optimizing community science contributions in ecology: a case study on Zooniverse’s Chicago Wildlife Watch. *Biological Conservation*.
+
 #### 2024
 
-[36] Gerber, B., Devarajan, K., Farris, Z. J., and **Fidino, M.** (2024). A model-based hypothesis framework to define and estimate the diel niche via the ’Diel.Niche’ R package. Journal of Animal Ecology. [PDF](../public/Gerber_Diel_Niche.pdf)
+[36] Gerber, B., Devarajan, K., Farris, Z. J., and **Fidino, M.** (2024). A model-based hypothesis framework to define and estimate the diel niche via the ’Diel.Niche’ R package. *Journal of Animal Ecology*. [PDF](../public/Gerber_Diel_Niche.pdf)
 
 
 
 #### 2023
 
-[35] Haight, J. D., Hall, S. J., **Fidino, M.**, Adalsteinsson, S. A., Anthonysamy, W. J. B., Biro, E., Collins, M. K., Dugelby, B., Gallo, T., Green, A. M., Hartley, L., Jordan, M. J., Kay, C. A. M., W., L. E., Long, R. A., MacDougall, B., Magle, S. B., Minier, D. E., Mowry, C., Murray, M., Nininger, K., Pendergast, M. E., Remine, K. R., Ryan, T., Salsbury, C., Schell, C. J., Sekercioglu, C. H., Shier, C. J., Simon, K. C., St. Clair, C. C., Stankowich, T., Stevenson, C. J., Wayne, L., Williamson, J., Wilson, L., Zellmer, A. J., and Lewis, J. S. (2023). Urbanization, climate, and species traits shape mammal communities from local to continental scales. Nature Ecology and Evolution. [PDF](../public/Haight_2023.pdf)
+[35] Haight, J. D., Hall, S. J., **Fidino, M.**, Adalsteinsson, S. A., Anthonysamy, W. J. B., Biro, E., Collins, M. K., Dugelby, B., Gallo, T., Green, A. M., Hartley, L., Jordan, M. J., Kay, C. A. M., W., L. E., Long, R. A., MacDougall, B., Magle, S. B., Minier, D. E., Mowry, C., Murray, M., Nininger, K., Pendergast, M. E., Remine, K. R., Ryan, T., Salsbury, C., Schell, C. J., Sekercioglu, C. H., Shier, C. J., Simon, K. C., St. Clair, C. C., Stankowich, T., Stevenson, C. J., Wayne, L., Williamson, J., Wilson, L., Zellmer, A. J., and Lewis, J. S. (2023). Urbanization, climate, and species traits shape mammal communities from local to continental scales. *Nature Ecology and Evolution*. [PDF](../public/Haight_2023.pdf)
 
 
 [34] Bates, J. M., **Fidino, M.**, Nowak-Boyd, L., Strausberger, B. M., Schmidt, K. A., and Whelan, C. J. (2022). Climate change affects bird nesting phenology: comparing contemporary field and historical museum nesting records. *Journal of Animal Ecology*. [PDF](../public/Bates_2022.pdf)
 
-[33] Cervantes, A. M., Schooley, R., Lehrer, E. W., Gallo, T., Allen, M. L., **Fidino, M.**, and Magle, S. B. (2023). Carnivore coexistence in Chicago: niche partitioning of coyotes and red foxes. Urban Ecosystems. [Link](https://link.springer.com/article/10.1007/s11252-023-01368-2)
+[33] Cervantes, A. M., Schooley, R., Lehrer, E. W., Gallo, T., Allen, M. L., **Fidino, M.**, and Magle, S. B. (2023). Carnivore coexistence in Chicago: niche partitioning of coyotes and red foxes. *Urban Ecosystems*. [Link](https://link.springer.com/article/10.1007/s11252-023-01368-2)
 
 [32] Hursh, S. H., Bauder, J. M., **Fidino, M.**, and Drake, D. (2023). An urban cast of characters: Landscape use and cover influencing mammal occupancy in an american midwestern city. *Landscape and Urban Planning*.[PDF](../public/Hursh_2022.pdf)
 
