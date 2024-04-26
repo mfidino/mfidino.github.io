@@ -14,6 +14,11 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
+#### *In press*
+
+[39] Estien, C. O., **Fidino, M.**, Wilkinson, C. E., Morello-Frosch, R., and Schell, C. J. (*in press*). Historical redlining is associated with disparities in wildlife biodiversity in four California cities. PNAS.
+
+
 #### 2024
 
 [38] **Fidino, M.**, Sander, H., Lewis, J., Lehrer, E. W., Rivera, K., Murray, M. H., Adams, H. C., Kase, A., Flores, A., Stankowich, T., Schell, C. J., Salsbury, C. M., Rohnke, A. T., Jordan, M. J., Green, A. M., Gramza, A. R., Zellmer, A. J., Williamson, J., Surasinghe, T. D., Storm, H., Sparks, K. L., Ryan, T. J., Remine, K., Pendergast, M. E., Mullen, K., Minier, D. E., Middaugh, C. R., Mertl, A. L., McClung, M. R., Long, R. A., Larson, R. N., Kohl, M. T., Harris, L. R., Hall, C. T., Haight, J. D., Drake, D., Davidge, A. M., Cheek, A. O., Bloch, C. P., Biro, E. G., Anthonysamy, W. J., Angstmann, J. L., Allen, M. L., Adalsteinsson, S. A., Short-Gianotta, A., LaMontagne, J. M., Gelmi-Candusso, T. A., and Magle, S. (2024). Gentrification drives patterns of alpha and beta diversity in cities. *PNAS*. [PDF](../public/Fidino_gentrification.pdf)
