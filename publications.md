@@ -200,7 +200,7 @@ Conservation*, 19(2):163–175. [PDF](../public/Magle_2016.pdf)
 
 ## Book chapters
 
-[2] Magle, S. B., **Fidino, M.**, Lehrer, E., Magle, T., and Aronson, M. F. J. (2023). Multicity ecological networks for addressing urban biodiversity conservation. In Urban Biodiversity and Equity, pages 132–144. Oxford University Press.
+[2] Magle, S. B., **Fidino, M.**, Lehrer, E., Magle, T., and Aronson, M. F. J. (2023). Multicity ecological networks for addressing urban biodiversity conservation. In Urban Biodiversity and Equity, pages 132–144. Oxford University Press. [PDF](../public/Magle_et_al_chapter-8.pdf)
 
 [1] **Fidino, M.** and Magle, S. B. (2017). Trends in long-term urban bird research. In
 Ecology and Conservation of Birds in Urban Environments, pages 161–184. Springer. [PDF](../public/fidino_trends_2017.pdf)
