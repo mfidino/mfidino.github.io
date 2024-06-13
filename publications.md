@@ -19,10 +19,10 @@ This site contains copyrighted material, the use of which has not always been sp
 
 [41] Palomo-Munoz, G., **Fidino, M.**, Werdel, T., Piper, C., Gallo, T., Peek, M., Ricketts, A., and Ahlers, A. (*in press*). Mesopredators have differing influences on prey habitat use and diel activity in a multipredator landscape. *Ecosphere*.
 
-[40] Estien, C. O., **Fidino, M.**, Wilkinson, C. E., Morello-Frosch, R., and Schell, C. J. (*in press*). Historical redlining is associated with disparities in wildlife biodiversity in four California cities. *PNAS*.
-
 
 #### 2024
+
+[40] Estien, C. O., **Fidino, M.**, Wilkinson, C. E., Morello-Frosch, R., and Schell, C. J. (2024). Historical redlining is associated with disparities in wildlife biodiversity in four California cities. *PNAS*. [Link](https://www.pnas.org/doi/10.1073/pnas.2321441121)
 
 [39] Herrera, D. J., **Fidino, M.**, Luther, D., Mullinax, J. M., and Gallo, T. (2024). Historical park planning is associated with modern-day patterns of bird diversity in cities. *Landscape and Urban Planning*. [PDF](../public/herrera_historical_bird.pdf)
 
