@@ -17,6 +17,8 @@ This site contains copyrighted material, the use of which has not always been sp
 #### *In press*
 
 
+[42] Wierzal, N. K., Keeley, L., **Fidino, M.**, and Cronin, K. A. (*in press*). Can you dig it? the impact of a movable substrate ’dig pit’ on naked mole rat (Heterocephalus glaber) behavior and welfare. *Zoo Biology*.
+
 [41] Palomo-Munoz, G., **Fidino, M.**, Werdel, T., Piper, C., Gallo, T., Peek, M., Ricketts, A., and Ahlers, A. (*in press*). Mesopredators have differing influences on prey habitat use and diel activity in a multipredator landscape. *Ecosphere*.
 
 
