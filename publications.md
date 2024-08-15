@@ -19,14 +19,16 @@ This site contains copyrighted material, the use of which has not always been sp
 
 
 
-[43] Wierzal, N. K., Keeley, L., **Fidino, M.**, and Cronin, K. A. (*in press*). Can you dig it? the impact of a movable substrate ’dig pit’ on naked mole rat (Heterocephalus glaber) behavior and welfare. *Zoo Biology*.
 
-[42] Palomo-Munoz, G., **Fidino, M.**, Werdel, T., Piper, C., Gallo, T., Peek, M., Ricketts, A., and Ahlers, A. (*in press*). Mesopredators have differing influences on prey habitat use and diel activity in a multipredator landscape. *Ecosphere*.
+
+[43] Palomo-Munoz, G., **Fidino, M.**, Werdel, T., Piper, C., Gallo, T., Peek, M., Ricketts, A., and Ahlers, A. (*in press*). Mesopredators have differing influences on prey habitat use and diel activity in a multipredator landscape. *Ecosphere*.
 
 
 #### 2024
 
-[41] Larson, R., Sander, H., **Fidino, M.**, Hayes Hursh, S., Magle, S., Moore, K., Salsbury, C., Stankowich, T., Tombs, K., Barczak, L., Davidge, A., Drake, D., Hartley, L., Reed Sanchez, P., Robey, A., Snyder, T., Will, D., Williamson, J., and Zellmer, A. (*in press*). Patterns in tree squirrel co-occurrence vary with responses to local land cover in US cities. *Urban Ecosystems*. [Link](https://link.springer.com/article/10.1007/s11252-024-01581-7)
+[42] Wierzal, N. K., Keeley, L., **Fidino, M.**, and Cronin, K. A. (*in press*). Can you dig it? the impact of a movable substrate ’dig pit’ on naked mole rat (Heterocephalus glaber) behavior and welfare. *Zoo Biology*. [PDF](../public/Wierzal_2024.pdf)
+
+[41] Larson, R., Sander, H., **Fidino, M.**, Hayes Hursh, S., Magle, S., Moore, K., Salsbury, C., Stankowich, T., Tombs, K., Barczak, L., Davidge, A., Drake, D., Hartley, L., Reed Sanchez, P., Robey, A., Snyder, T., Will, D., Williamson, J., and Zellmer, A. (2024). Patterns in tree squirrel co-occurrence vary with responses to local land cover in US cities. *Urban Ecosystems*. [PDF](../public/Larson_2024.pdf)
 
 [40] Estien, C. O., **Fidino, M.**, Wilkinson, C. E., Morello-Frosch, R., and Schell, C. J. (2024). Historical redlining is associated with disparities in wildlife biodiversity in four California cities. *PNAS*. [Link](https://www.pnas.org/doi/10.1073/pnas.2321441121)
 
