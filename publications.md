@@ -18,7 +18,7 @@ This site contains copyrighted material, the use of which has not always been sp
 
 
 
-
+[44] Murray, M. H., Buckley, J. Y., de la Sancha, N., **Fidino, M.**, Byers, K. A., Fyffe, R., and Magle, S. B. (*in press*). Widespread exposure to anticoagulant rodenticides among common urban mesopredators in chicago. *Science of the Total Environment*.
 
 
 [43] Palomo-Munoz, G., **Fidino, M.**, Werdel, T., Piper, C., Gallo, T., Peek, M., Ricketts, A., and Ahlers, A. (*in press*). Mesopredators have differing influences on prey habitat use and diel activity in a multipredator landscape. *Ecosphere*.
