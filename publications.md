@@ -14,17 +14,12 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
-#### *In press*
-
-
-
-[44] Murray, M. H., Buckley, J. Y., de la Sancha, N., **Fidino, M.**, Byers, K. A., Fyffe, R., and Magle, S. B. (*in press*). Widespread exposure to anticoagulant rodenticides among common urban mesopredators in chicago. *Science of the Total Environment*.
-
-
-[43] Palomo-Munoz, G., **Fidino, M.**, Werdel, T., Piper, C., Gallo, T., Peek, M., Ricketts, A., and Ahlers, A. (*in press*). Mesopredators have differing influences on prey habitat use and diel activity in a multipredator landscape. *Ecosphere*.
-
 
 #### 2024
+
+[44] Palomo-Munoz, G., **Fidino, M.**, Werdel, T., Piper, C., Gallo, T., Peek, M., Ricketts, A., and Ahlers, A. (2024). Mesopredators have differing influences on prey habitat use and diel activity in a multipredator landscape. *Ecosphere*. [Link](https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.70006)
+
+[43] Murray, M. H., Buckley, J. Y., de la Sancha, N., **Fidino, M.**, Byers, K. A., Fyffe, R., and Magle, S. B. (2024). Widespread exposure to anticoagulant rodenticides among common urban mesopredators in Chicago. *Science of the Total Environment*. [PDF](../public/Murray_meso_2024.pdf)
 
 [42] Wierzal, N. K., Keeley, L., **Fidino, M.**, and Cronin, K. A. (*in press*). Can you dig it? the impact of a movable substrate ’dig pit’ on naked mole rat (Heterocephalus glaber) behavior and welfare. *Zoo Biology*. [PDF](../public/Wierzal_2024.pdf)
 
