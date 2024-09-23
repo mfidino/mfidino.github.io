@@ -14,6 +14,10 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
+#### In press
+
+[45] Gelmi-Candusso, T., Rodriguez, P., **Fidino, M.**, Rivera, K., Lehrer, E. W., Magle, S. B., and Fortin, M.-H. (*in press*). Leveraging open-source geographic databases to enhance the representation of landscape heterogeneity in ecological models. *Ecology and Evolution*.
+
 
 #### 2024
 
