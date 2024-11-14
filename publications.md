@@ -14,16 +14,13 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
-#### In press
-
-[45] Gelmi-Candusso, T., Rodriguez, P., **Fidino, M.**, Rivera, K., Lehrer, E. W., Magle, S. B., and Fortin, M.-H. (*in press*). Leveraging open-source geographic databases to enhance the representation of landscape heterogeneity in ecological models. *Ecology and Evolution*.
-
-
 #### 2024
+
+[45] Gelmi-Candusso, T., Rodriguez, P., **Fidino, M.**, Rivera, K., Lehrer, E. W., Magle, S. B., and Fortin, M.-H. (2024). Leveraging open-source geographic databases to enhance the representation of landscape heterogeneity in ecological models. *Ecology and Evolution*. [Link](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.70402)
 
 [44] Palomo-Munoz, G., **Fidino, M.**, Werdel, T., Piper, C., Gallo, T., Peek, M., Ricketts, A., and Ahlers, A. (2024). Mesopredators have differing influences on prey habitat use and diel activity in a multipredator landscape. *Ecosphere*. [Link](https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.70006)
 
-[43] Murray, M. H., Buckley, J. Y., de la Sancha, N., **Fidino, M.**, Byers, K. A., Fyffe, R., and Magle, S. B. (2024). Widespread exposure to anticoagulant rodenticides among common urban mesopredators in Chicago. *Science of the Total Environment*. [PDF](../public/Murray_meso_2024.pdf)
+[43]  Buckley, J. Y.<sup>\*</sup>, Murray, M. H.<sup>\*</sup>, de la Sancha, N., **Fidino, M.**, Byers, K. A., Fyffe, R., and Magle, S. B. (2024). Widespread exposure to anticoagulant rodenticides among common urban mesopredators in Chicago. *Science of the Total Environment*. [PDF](../public/Murray_meso_2024.pdf)
 
 [42] Wierzal, N. K., Keeley, L., **Fidino, M.**, and Cronin, K. A. (*in press*). Can you dig it? the impact of a movable substrate ’dig pit’ on naked mole rat (Heterocephalus glaber) behavior and welfare. *Zoo Biology*. [PDF](../public/Wierzal_2024.pdf)
 
