@@ -17,8 +17,14 @@ This site contains copyrighted material, the use of which has not always been sp
 #### In press
 
 
+[50] Anthonysamy, W., Biro, E., Adalsteinsson, S. A., **Fidino, M.**, Moylan, M. A., and Zahrai, L. M. (*in press*). Urban intensity predicts eastern gray squirrel (Sciurus carolinensis) and fox squirrel (Sciurus niger) occupancy and detection
+in St. Louis green spaces. *Journal of Urban Ecology*.
 
-[47] Murray, M. H., Suranasinghe, T., Gelmi Candusso, T., Sander, H. A., **Fidino, M.**, Adalsteinsson, S., Rivera, K., Flores, A., Lilly, M., Diuk-Wasser, M. A., and Magle, S. B. (*in press*). Multi-city research networks are needed to address global one health challenges. *BioScience*.
+[49] Werdel, T. J., **Fidino, M.**, Piper, C. W., Ricketts, A. M., Peek, M. S., and Ahlers, A. A. (*in press*). Influence of landscape composition on spatiotemporal interactions between sympatric canids. *Ecological Applications*.
+
+
+
+[48] Murray, M. H., Suranasinghe, T., Gelmi Candusso, T., Sander, H. A., **Fidino, M.**, Adalsteinsson, S., Rivera, K., Flores, A., Lilly, M., Diuk-Wasser, M. A., and Magle, S. B. (*in press*). Multi-city research networks are needed to address global one health challenges. *BioScience*.
 
 
 #### 2025
