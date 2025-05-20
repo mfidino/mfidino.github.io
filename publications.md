@@ -17,7 +17,7 @@ This site contains copyrighted material, the use of which has not always been sp
 #### In press
 
 
-
+[51] Murray<sup>\*</sup>, M. H., Wilkinson<sup>\*</sup>, C. E., Gelmi Candusso<sup>\*</sup>, T., Larson, K. L., Short Gianotti, A. G., Morzillo, A. T., Young, J. K., **Fidino, M.**, Magle, S. B., Riley, S. P. D., Sikich, J. A., and Schell, C. J. (*in press*). One health and human-wildlife interactions: Drivers, feedbacks, and implications for health equity. *BioScience*.
 
 [50] Werdel, T. J., **Fidino, M.**, Piper, C. W., Ricketts, A. M., Peek, M. S., and Ahlers, A. A. (*in press*). Influence of landscape composition on spatiotemporal interactions between sympatric canids. *Ecological Applications*.
 
