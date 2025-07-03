@@ -17,14 +17,12 @@ This site contains copyrighted material, the use of which has not always been sp
 #### In press
 
 
-[51] Murray<sup>\*</sup>, M. H., Wilkinson<sup>\*</sup>, C. E., Gelmi Candusso<sup>\*</sup>, T., Larson, K. L., Short Gianotti, A. G., Morzillo, A. T., Young, J. K., **Fidino, M.**, Magle, S. B., Riley, S. P. D., Sikich, J. A., and Schell, C. J. (*in press*). One health and human-wildlife interactions: Drivers, feedbacks, and implications for health equity. *BioScience*.
-
-
-
-[50] Murray, M. H., Suranasinghe, T., Gelmi Candusso, T., Sander, H. A., **Fidino, M.**, Adalsteinsson, S., Rivera, K., Flores, A., Lilly, M., Diuk-Wasser, M. A., and Magle, S. B. (*in press*). Multi-city research networks are needed to address global one health challenges. *BioScience*.
+[51] Murray, M. H., Suranasinghe, T., Gelmi Candusso, T., Sander, H. A., **Fidino, M.**, Adalsteinsson, S., Rivera, K., Flores, A., Lilly, M., Diuk-Wasser, M. A., and Magle, S. B. (*in press*). Multi-city research networks are needed to address global one health challenges. *BioScience*.
 
 
 #### 2025
+
+[50] Murray<sup>\*</sup>, M. H., Wilkinson<sup>\*</sup>, C. E., Gelmi Candusso<sup>\*</sup>, T., Larson, K. L., Short Gianotti, A. G., Morzillo, A. T., Young, J. K., **Fidino, M.**, Magle, S. B., Riley, S. P. D., Sikich, J. A., and Schell, C. J. (2025). One health and human-wildlife interactions: Drivers, feedbacks, and implications for health equity. *BioScience*. [PDF](../public/murray_hwi_2025.pdf)
 
 [49] Werdel, T. J., **Fidino, M.**, Piper, C. W., Ricketts, A. M., Peek, M. S., and Ahlers, A. A. (2025). Influence of landscape composition on spatiotemporal interactions between sympatric canids. *Ecological Applications*. [PDF](../public/Werdel_2025.pdf)
 
