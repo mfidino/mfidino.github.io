@@ -22,7 +22,7 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### 2025
 
-[50] Murray<sup>\*</sup>, M. H., Wilkinson<sup>\*</sup>, C. E., Gelmi Candusso<sup>\*</sup>, T., Larson, K. L., Short Gianotti, A. G., Morzillo, A. T., Young, J. K., **Fidino, M.**, Magle, S. B., Riley, S. P. D., Sikich, J. A., and Schell, C. J. (2025). One health and human-wildlife interactions: Drivers, feedbacks, and implications for health equity. *BioScience*. [PDF](../public/murray_hwi_2025.pdf)
+[50] Murray<sup>\*</sup>, M. H., Wilkinson<sup>\*</sup>, C. E., Gelmi Candusso<sup>\*</sup>, T., Larson, K. L., Short Gianotti, A. G., Morzillo, A. T., Young, J. K., **Fidino, M.**, Magle, S. B., Riley, S. P. D., Sikich, J. A., and Schell, C. J. (2025). Health as an outcome and driver of human-wildlife interactions. *BioScience*. [PDF](../public/murray_hwi_2025.pdf)
 
 [49] Werdel, T. J., **Fidino, M.**, Piper, C. W., Ricketts, A. M., Peek, M. S., and Ahlers, A. A. (2025). Influence of landscape composition on spatiotemporal interactions between sympatric canids. *Ecological Applications*. [PDF](../public/Werdel_2025.pdf)
 
