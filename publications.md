@@ -16,7 +16,7 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### In press
 
-[53] Larson, R. N., **Fidino, M.**, and Sander, H. A. (*in press*). Urban deer mouse
+[53] Larson, R. N., Sander, H. A., and **Fidino, M.** (*in press*). Urban deer mouse
 abundance is more strongly correlated with predator occurrence than land cover.
 *Biological Conservation*.
 
