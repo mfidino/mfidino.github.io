@@ -24,7 +24,7 @@ abundance is more strongly correlated with predator occurrence than land cover.
 
 #### 2025
 
-[52] **Fidino, M.** (*in press*). Estimating species occupancy across multiple sampling seasons with autologistic occupancy models via the autoOcc R package. *Journal of Animal Ecology*. [PDF](../public/Fidino_2025_autoOcc.pdf)
+[52] **Fidino, M.** (2025). Estimating species occupancy across multiple sampling seasons with autologistic occupancy models via the `autoOcc` R package. *Journal of Animal Ecology*. [PDF](../public/Fidino_2025_autoOcc.pdf)
 
 [51] Murray, M. H., Suranasinghe, T., Gelmi Candusso, T., Sander, H. A., **Fidino, M.**, Adalsteinsson, S., Rivera, K., Flores, A., Lilly, M., Diuk-Wasser, M. A., and Magle, S. B. (2025). Multi-city research networks are needed to address global one health challenges. *BioScience*. [PDF](../public/Murray_multicity_bio.pdf)
 
