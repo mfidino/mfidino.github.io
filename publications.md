@@ -33,7 +33,7 @@ abundance is more strongly correlated with predator occurrence than land cover.
 [49] Werdel, T. J., **Fidino, M.**, Piper, C. W., Ricketts, A. M., Peek, M. S., and Ahlers, A. A. (2025). Influence of landscape composition on spatiotemporal interactions between sympatric canids. *Ecological Applications*. [PDF](../public/Werdel_2025.pdf)
 
 [48] Anthonysamy, W., Biro, E., Adalsteinsson, S. A., **Fidino, M.**, Moylan, M. A., and Zahrai, L. M. (2025). Urban intensity predicts eastern gray squirrel (Sciurus carolinensis) and fox squirrel (Sciurus niger) occupancy and detection
-in St. Louis green spaces. *Journal of Urban Ecology*. [PDF](../public/Anthonysamy_2025.PDF)
+in St. Louis green spaces. *Journal of Urban Ecology*. [PDF](../public/Anthonysamy_2025.pdf)
 
 [47] Kase, A., **Fidino, M.**, Lehrer, E. W., and Magle, S. B. (2025). Local and long-distance colonization influence the distribution of a species in a fragmented landscape. *Stacks Journal*. [Link](https://www.stacksjournal.org/article/kase-25001/)
 
