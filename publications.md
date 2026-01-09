@@ -48,7 +48,7 @@ in St. Louis green spaces. *Journal of Urban Ecology*. [PDF](../public/Anthonysa
 
 [43]  Buckley, J. Y.<sup>\*</sup>, Murray, M. H.<sup>\*</sup>, de la Sancha, N., **Fidino, M.**, Byers, K. A., Fyffe, R., and Magle, S. B. (2024). Widespread exposure to anticoagulant rodenticides among common urban mesopredators in Chicago. *Science of the Total Environment*. [PDF](../public/Murray_meso_2024.pdf)
 
-[42] Wierzal, N. K., Keeley, L., **Fidino, M.**, and Cronin, K. A. (*in press*). Can you dig it? the impact of a movable substrate ’dig pit’ on naked mole rat (Heterocephalus glaber) behavior and welfare. *Zoo Biology*. [PDF](../public/Wierzal_2024.pdf)
+[42] Wierzal, N. K., Keeley, L., **Fidino, M.**, and Cronin, K. A. (2024). Can you dig it? the impact of a movable substrate ’dig pit’ on naked mole rat (Heterocephalus glaber) behavior and welfare. *Zoo Biology*. [PDF](../public/Wierzal_2024.pdf)
 
 [41] Larson, R., Sander, H., **Fidino, M.**, Hayes Hursh, S., Magle, S., Moore, K., Salsbury, C., Stankowich, T., Tombs, K., Barczak, L., Davidge, A., Drake, D., Hartley, L., Reed Sanchez, P., Robey, A., Snyder, T., Will, D., Williamson, J., and Zellmer, A. (2024). Patterns in tree squirrel co-occurrence vary with responses to local land cover in US cities. *Urban Ecosystems*. [PDF](../public/Larson_2024.pdf)
 
