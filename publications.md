@@ -14,6 +14,13 @@ This site contains copyrighted material, the use of which has not always been sp
 
 <sup>\*</sup> denotes shared first authorship
 
+
+#### *In press*
+
+[54] Gallo, T., **Fidino, M.**, Schell, C. J., Hendricks, M. D., and Magle, S. B. (*in
+press*). The legacy effects of housing segregation on the distribution of greenspaces
+in u.s. cities. *Frontiers in Ecology and the Environment*.
+
 #### 2026
 
 [53] Larson, R. N., Sander, H. A., and **Fidino, M.** (2026). Urban deer mouse
