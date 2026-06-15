@@ -17,6 +17,9 @@ This site contains copyrighted material, the use of which has not always been sp
 
 #### *In press*
 
+[55] Gelmi-Candusso<sup>\*</sup>, T., Murray<sup>\*</sup>, M., Rodriguez, P., Angstmann, J., Fink, S., Fortin, M.-J., Gallo, T., Gentry, P., Guerrero, D., Haight, J., Hara, S., Jordan, M., Kohl, M., Lewis, J., Long, R., Molnar, P., Mortimer, M., Patterson, B., Raymond, S., Remine, K., Ryan, T., Salsbury, C., Schell, C., Shier, C., Cassady St. Clair, C., Stevenson, C., Vargas Soto, J., Wheeldon, T., Magle, S., and **Fidino, M**.
+(*in press*). Wildlife disease occurrence increases with urban densification, habitat connectivity loss, and climate change. *Nature Cities*.
+
 [54] Gallo, T., **Fidino, M.**, Schell, C. J., Hendricks, M. D., and Magle, S. B. (*in
 press*). The legacy effects of housing segregation on the distribution of greenspaces
 in u.s. cities. *Frontiers in Ecology and the Environment*.
