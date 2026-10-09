@@ -16,7 +16,12 @@ This site contains copyrighted material, the use of which has not always been sp
 
 
 
+#### In press
 
+[56] Gelmi-Candusso, T., **Fidino, M.**, Murray, M. H., Jimenez, M. F., Limonciello,
+L., and Magle, S. (*in press*). A systematic review on mammalian behavioral
+responses to urbanization and implications for urban planning and conservation.
+*Mammal Review*.
 
 
 #### 2026
